@@ -2,13 +2,20 @@ package com.example.questionnaire.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity(name = "schema.fields")
 public class Field {
-    @Id
+    @Override
+	public String toString() {
+		return "Field [id=" + id + ", isActive=" + isActive + ", label=" + label + ", required=" + required + ", type="
+				+ type + "]";
+	}
+	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @Column(name = "isactive")
@@ -18,7 +25,8 @@ public class Field {
     @Column(name = "required")
     private boolean required;
     @Column(name = "type")
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private Type type;
     
     
 	public long getId() {
@@ -33,10 +41,10 @@ public class Field {
 	public void setLabel(String label) {
 		this.label = label;
 	}
-	public String getType() {
+	public Type getType() {
 		return type;
 	}
-	public void setType(String type) {
+	public void setType(Type type) {
 		this.type = type;
 	}
 	public boolean isRequired() {
@@ -45,10 +53,10 @@ public class Field {
 	public void setRequired(boolean required) {
 		this.required = required;
 	}
-	public boolean isActive() {
+	public boolean isisActive() {
 		return isActive;
 	}
-	public void setActive(boolean isActive) {
+	public void setisActive(boolean isActive) {
 		this.isActive = isActive;
 	}
 }

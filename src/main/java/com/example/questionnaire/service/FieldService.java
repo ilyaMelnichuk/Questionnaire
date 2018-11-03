@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.questionnaire.dao.FieldRepository;
 import com.example.questionnaire.model.Field;
+import com.example.questionnaire.model.Type;
 
 
 
@@ -23,5 +24,12 @@ public class FieldService {
 			fields.add(field);
 		}
 		return fields;
+	}
+	
+	public void insertField(long id, String label, String type, boolean required, boolean isactive) {
+		fieldRepository.insertField(id, label, type, required, isactive);
+	}
+	public void deleteField(long id) {
+		fieldRepository.deleteField(id);
 	}
 }
