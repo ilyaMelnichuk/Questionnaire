@@ -1,0 +1,1 @@
+INSERT INTO 'security.roles' VALUES(1, 'USER');

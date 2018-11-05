@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.validation.BindingResult;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @Configuration
@@ -37,6 +38,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                 .antMatchers("/login").permitAll()
                 .antMatchers("/login-error").permitAll()
                 .antMatchers("/signup/**").permitAll()
+                .antMatchers("/create-user/**").permitAll()
+                .antMatchers("/success/**").permitAll()
                 .antMatchers("/responses/**").hasRole("USER")
                 .antMatchers("/edit-profiles/**").hasRole("USER")
                 .antMatchers("/change-password/**").hasRole("USER")

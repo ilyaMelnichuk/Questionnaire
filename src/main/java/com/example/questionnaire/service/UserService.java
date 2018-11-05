@@ -29,7 +29,7 @@ public class UserService {
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         Role userRole = roleRepository.findByRoleName("USER");
         user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
-        userRepository.save(user);
+        userRepository.createUser(user.getEmail(), user.getPassword() ,user.getFirstName(), user.getLastName(), user.getPhoneNumber());
 	}
 	
 	public void editUser(User user) {

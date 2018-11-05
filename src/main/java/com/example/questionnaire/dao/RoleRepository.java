@@ -8,6 +8,6 @@ import com.example.questionnaire.model.Role;
 
 @Repository
 public interface RoleRepository extends CrudRepository<Role, Long>{
-	@Query(value = "SELECT * FROM SECURITY.ROLES WHERE ROLE_NAME = ?", nativeQuery = true)
+	@Query(value = "SELECT * FROM SECURITY.ROLES WHERE ROLE_NAME = ?1", nativeQuery = true)
     Role findByRoleName(String RoleName);
 }
