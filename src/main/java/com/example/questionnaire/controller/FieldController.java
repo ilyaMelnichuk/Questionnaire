@@ -1,4 +1,4 @@
-package com.example.questionnaire.controller.rest;
+package com.example.questionnaire.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,14 +13,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.questionnaire.service.FieldService;
 
 @RestController
-public class MainRestController {
+public class FieldController{
 	@Autowired
 	private FieldService fieldService;
-	
-	@GetMapping(value = "/")
-    public String defaultMapping() {
-		return "Hi";
-	}
 	
 	@RequestMapping("/fields")
 	public ModelAndView getAllFields(HttpServletRequest request){
