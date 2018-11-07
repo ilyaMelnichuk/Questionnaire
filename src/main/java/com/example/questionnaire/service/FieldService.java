@@ -18,17 +18,17 @@ public class FieldService {
 	
 	public List<Field> findAllFields(){
 		List<Field> fields = new ArrayList<Field>();
-		Iterable<Field> f = fieldRepository.findAllFields("text");
+		Iterable<Field> f = fieldRepository.findAll();
 		for(Field field : f) {
 			fields.add(field);
 		}
 		return fields;
 	}
 	
-	public void insertField(long id, String label, String type, boolean required, boolean isactive) {
-		fieldRepository.insertField(id, label, type, required, isactive);
+	public void insertField(Field field) {
+		fieldRepository.save(field);
 	}
-	public void deleteField(long id) {
-		fieldRepository.deleteField(id);
+	public void deleteField(Field field) {
+		fieldRepository.delete(field);
 	}
 }

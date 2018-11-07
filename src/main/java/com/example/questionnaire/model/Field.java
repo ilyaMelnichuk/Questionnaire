@@ -7,8 +7,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Entity(name = "schema.fields")
+@Entity
+@Table(name = "fields" , schema = "schema")
 public class Field {
     @Override
 	public String toString() {

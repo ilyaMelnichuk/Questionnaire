@@ -1,5 +1,6 @@
 package com.example.questionnaire.model;
 
+import java.util.Collection;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -11,35 +12,38 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-@Entity(name = "security.users")
-public class User {
+@Entity
+@Table(name = "user", schema="security")
+public class User implements UserDetails{
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="user_id")
-	private long id;
     @Column(name = "email")
-    @Email(message = "*Please provide a valid Email")
+    @Email(message = "*Please provide a valid email")
     @NotEmpty(message = "*Please provide an email")
     private String email;
     @Column(name = "password")
     @Length(min = 6, message = "*Your password must have at least 6 characters")
     @NotEmpty(message = "*Please provide your password")
     private String password;
-    @Column(name = "first_name")
+	@Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
-    public long getId() {
-		return id;
-	}
-	public void setId(long id) {
-		this.id = id;
-	}
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_role", schema = "security", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "email"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_name"))
+    private Set<Role> roles;
+    
+    
 	public String getEmail() {
 		return email;
 	}
@@ -76,10 +80,28 @@ public class User {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-	@Column(name = "phone_number")
-    private String phoneNumber;
-
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return roles;
+	}
+	@Override
+	public String getUsername() {
+		return email;
+	}
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
 }

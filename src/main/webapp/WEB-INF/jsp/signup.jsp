@@ -10,20 +10,31 @@
        <link rel="stylesheet" href="/bootstrap-3.3.7/css/bootstrap.min.css" />
        <script src="/jquery-3.3.1.min.js/js/bootstrap.min.js"></script>
        <script src="/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+       
+       <!-- <script>function doAjax(){
+    	   $.ajax({
+    	       url: "success",
+    	       data:({name : $('#password').val}),
+    	       success: function(data){
+    	    	   $('#errorMessage').html(data);
+    	       }
+    	   })
+       }</script> -->
    </head>
    <body class="text-center">
-   <form:form method="POST" modelAttribute="user" action="/create-user" class="form-signup">
+   <form:form method="POST" modelAttribute="user" action="/signup/create-user" class="form-signup">
       <fieldSet>
       <h1 class="h3 mb-3 font-weight-normal">Please sign up</h1>
-      <form:label path="email"  class="sr-only">Email address</form:label>
+      <label>${error}</label>
+      <form:label path="email"  class="sr-only">email address</form:label>
       <form:input path="email" id="inputEmail" class="form-control" placeholder="Email address"/>
-      <form:label path="password" class="sr-only">Password</form:label>
+      <form:label path="password" class="sr-only">password</form:label>
       <form:input path="password" id="inputPassword" class="form-control" placeholder="Password"/>
-      <form:label path="firstName" class="sr-only">First Name</form:label>
+      <form:label path="firstName" class="sr-only">first name</form:label>
       <form:input path="firstName" id="inputFirstName" class="form-control" placeholder="First name"/>
-      <form:label path="lastName" class="sr-only">Last Name</form:label>
+      <form:label path="lastName" class="sr-only">last name</form:label>
       <form:input path="lastName" id="inputLastName" class="form-control" placeholder="Last name" />
-      <form:label path="phoneNumber" class="sr-only">Password</form:label>
+      <form:label path="phoneNumber" class="sr-only">phone number</form:label>
       <form:input path="phoneNumber" id="inputPhoneNumber" class="form-control" placeholder="Phone number"/>
            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
           <p class="mt-5 mb-3 text-muted"></p>
