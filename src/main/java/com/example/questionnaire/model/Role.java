@@ -20,7 +20,8 @@ public class Role implements GrantedAuthority{
 	private String roleName;
 	@ManyToMany(mappedBy = "roles")
 	private Set<User> users;
-    public String getRoleName() {
+
+	public String getRoleName() {
 		return roleName;
 	}
 	public void setRoleName(String roleName) {
@@ -35,6 +36,11 @@ public class Role implements GrantedAuthority{
 	}
 	@Override
 	public String getAuthority() {
+		return roleName;
+	}
+	
+    @Override
+	public String toString() {
 		return roleName;
 	}
 }

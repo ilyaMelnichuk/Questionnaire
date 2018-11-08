@@ -29,8 +29,7 @@ public class User implements UserDetails{
     @NotEmpty(message = "*Please provide an email")
     private String email;
     @Column(name = "password")
-    @Length(min = 6, message = "*Your password must have at least 6 characters")
-    @NotEmpty(message = "*Please provide your password")
+    @Length(min = 6, max = 255, message = "*Your password must have at least 6 and no more than 255 characters")
     private String password;
 	@Column(name = "first_name")
     private String firstName;

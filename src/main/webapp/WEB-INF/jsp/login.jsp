@@ -24,7 +24,15 @@
             <td><input type="password" name="password" /></td>
          </tr>
          <tr>
+            <td>Remember me</td>
+            <td><input type="checkbox" name="remember_me" /></td>
+         </tr>
+         <tr>
             <td><input name="submit" type="submit" value="submit" /></td>
+         </tr>
+         <tr>
+            <td>Don't have account? </td>
+            <td><a href="<c:url value="/signup" />">Sign up</a></td>
          </tr>
       </table>
   </form>

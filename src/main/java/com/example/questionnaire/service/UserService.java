@@ -28,7 +28,12 @@ public class UserService {
 	
     public void saveUser(User user) {
     	user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-    	//user.setActive(1);
+    	Set<Role> roles = new HashSet<Role>();
+    	roles.add(roleRepository.findByRoleName("ROLE_USER"));
+        user.setRoles(roles);
+        userRepository.save(user);
+    }
+    public void saveUserWithoutEncoding(User user) {
     	Set<Role> roles = new HashSet<Role>();
     	roles.add(roleRepository.findByRoleName("ROLE_USER"));
         user.setRoles(roles);

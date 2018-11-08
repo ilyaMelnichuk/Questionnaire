@@ -7,7 +7,7 @@
 <title>Fields</title>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="stylesheet" href="/bootstrap-3.3.7/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
 
 </head>
 <body>
@@ -25,7 +25,17 @@
                 <a class="nav-link" href="#">Responses</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">John Doe</a>
+                <a href="<c:url value="/logout" />">${name}</a>
+            </li>
+            <li class="nav-item">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</button>
+                <div class="dropdown-menu">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <a class="dropdown-item" href="#">Something else here</a>
+                <div role="separator" class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Separated link</a>
+                </div>
             </li>
         </ul>
     </div>
@@ -77,8 +87,8 @@
   
   
 
-<script src="/jquery-3.3.1.min.js/js/bootstrap.min.js"></script>
-<script src="/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 </body>
 </html>
