@@ -6,8 +6,6 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
@@ -32,8 +30,10 @@ public class User implements UserDetails{
     @Length(min = 6, max = 255, message = "*Your password must have at least 6 and no more than 255 characters")
     private String password;
 	@Column(name = "first_name")
+	@Length(max = 255, message = "*Your first name must have no more than 255 characters")
     private String firstName;
     @Column(name = "last_name")
+    @Length(max = 255, message = "*Your last name must have no more than 255 characters")
     private String lastName;
     @Column(name = "phone_number")
     private String phoneNumber;

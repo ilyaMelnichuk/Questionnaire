@@ -7,37 +7,62 @@
 <!DOCTYPE html>
 <html>
    <head>
-   
-       <meta charset="utf-8" />
-       <meta name="viewport" content="width=device-width, initial-scale=1" />
+       <title>LOGOTYPE</title>
+       <meta charset="utf-8">
+       <meta http-equiv="X-UA-Compatible" content="IE=edge">
+       <meta name="viewport" content="width=device-width, initial-scale=1">
+       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
    </head>
    <body>
+       <div class="container" align="center">
+           <div class="col-lg-4"></div>
+           <div class="col-lg-4">
+               <div class="jumbotron" style="margin-top:150px; min-width: 500px;">
+                   <form method="POST" action="${contextPath}/login">
+                       <div class="form-group" align="center">
+                           <h2>
+                               LOGOTYPE
+                           </h2>
+                       </div>
+                       <div class="form-group" align="center">
+                           <h4>
+                               Log In
+                           </h4>
+                       </div>
+                       <div class="form-group" align="center">
+                           <h5>
+                               ${message}
+                           </h5>
+                       </div>
+                       <div class="form-group">
+                           <input type="text" name="email" placeholder="Email" class="form-control">
+                       </div>
+                       <div class="form-group">
+                           <input type="password" name="password" placeholder="Password" class="form-control"/>
+                       </div>
+                       <div class="from-group" align="center">
+                           <label>
+                               <input type="checkbox" name="remember_me">
+                               Remember me
+                               <a href="/forgot-password" >Forgot your password?</a>
+                           </label>
+                       </div> 
+                       <button class="btn-primary form-control" type="submit">LOG IN</button>
+                       <div class="form-group" align="center">
+                           <label>
+                               Don't have account?
+                               <a href="<c:url value="/signup" />">Sign up</a>
+                           </label>
+                       </div>
+                </form>
+               </div>
+           </div>
+           <div class="col-lg-4">
+           </div>
+       </div>
     
-    <form method="POST" action="${contextPath}/login">
-      <table>
-         <tr>
-            <td>User:</td>
-            <td><input type="text" name="email" value=""></td>
-         </tr>
-         <tr>
-            <td>Password:</td>
-            <td><input type="password" name="password" /></td>
-         </tr>
-         <tr>
-            <td>Remember me</td>
-            <td><input type="checkbox" name="remember_me" /></td>
-         </tr>
-         <tr>
-            <td><input name="submit" type="submit" value="submit" /></td>
-         </tr>
-         <tr>
-            <td>Don't have account? </td>
-            <td><a href="<c:url value="/signup" />">Sign up</a></td>
-         </tr>
-      </table>
-  </form>
-    
-       
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>   
      
  </body>
 </html>

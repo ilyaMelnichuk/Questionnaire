@@ -11,25 +11,6 @@
        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-       <script>
-          $(document).ready(function() {
-    	       $(':button[type="submit"]').prop('disabled', true);
-    	       $('#inputPassword').keyup(function() {
-    	           if($(this).val() == $('#inputConfirmPassword')) {
-    	               $(':button[type="submit"]').prop('disabled', false);
-    	           }else{
-    	        	   $(':button[type="submit"]').prop('disabled', true);
-    	           }
-    	       };
-    	       $('#inputConfirmPassword').keyup(function() {
-        	       if($(this).val() == $('#inputPassword')) {
-        	           $(':button[type="submit"]').prop('disabled', false);
-        	       }else{
-    	        	   $(':button[type="submit"]').prop('disabled', true);
-    	           }
-    	       };
-    	     });
-       </script>
        
    </head>
    <body class="text-center">
@@ -42,7 +23,6 @@
           <form:input path="email" id="inputEmail" class="form-control" placeholder="Email*"/>
           <form:errors path="password"/>
           <form:input path="password" id="inputPassword" class="form-control" placeholder="Password*"/>
-          <input id="inputConfirmPassword" class="form-control" placeholder="Confirm Password*"/>
           <form:errors path="firstName"/>
           <form:input path="firstName" id="inputFirstName" class="form-control" placeholder="First name"/>
           <form:errors path="lastName"/>

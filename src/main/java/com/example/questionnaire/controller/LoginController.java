@@ -41,6 +41,10 @@ public class LoginController {
     public ModelAndView authenticate(@Valid @ModelAttribute User user, BindingResult bindingResult) {
     	ModelAndView model = new ModelAndView("/fields");
     	model.addObject("user", user);
+    	if(bindingResult.hasErrors()) {
+
+        	model.addObject("message", bindingResult.getAllErrors().toString());
+    	}
     	return model;
     }
     
@@ -52,7 +56,7 @@ public class LoginController {
     }
     
     @RequestMapping(value="/signup", method = RequestMethod.POST)
-    public ModelAndView registerNewUser(@Valid @ModelAttribute User userToRegister, BindingResult bindingResult) {
+    public ModelAndView registerNewUser(@Valid @ModelAttribute("userToRegister") User userToRegister, BindingResult bindingResult) {
     	ModelAndView model = new ModelAndView("signup");
     	if(!bindingResult.hasErrors()) {
     		User newUser = userService.findByEmail(userToRegister.getEmail());
@@ -60,9 +64,8 @@ public class LoginController {
         	if(newUser==null) {
         		userService.saveUser(userToRegister);
                 emailService.sendMessage(userToRegister.getEmail(), "Registration in Questionnaire Portal",
-               	    userToRegister.getFirstName() + " " + userToRegister.getLastName() + ",\n" + "You have been successfully registered in Questionnaire Portal!",
-               	    "Questionnaire.portal");
-            	model.setViewName("/signup/success");
+               	    userToRegister.getFirstName() + " " + userToRegister.getLastName() + ",\n" + "You have been successfully registered in Questionnaire Portal!");
+                model.addObject("error", "You have been successfully signed up!");
         	}else {
         		model.addObject("error", "User with this email has been already registered!");
         	}

@@ -10,12 +10,12 @@ public class EmailService{
     @Autowired
     private JavaMailSender emailSender;
     
-    public void sendMessage(String to, String subject, String text, String from) {
+    public void sendMessage(String to, String subject, String text) {
     	SimpleMailMessage message = new SimpleMailMessage();
     	message.setTo(to);
     	message.setSubject(subject);
     	message.setText(text);
-    	message.setFrom(from);
+    	message.setFrom("Questionnaire.portal");
     	
     	emailSender.send(message);
     }

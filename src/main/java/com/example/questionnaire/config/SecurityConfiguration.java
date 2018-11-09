@@ -7,8 +7,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
 import com.example.questionnaire.service.UserDetailsServiceImpl;
 
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -30,7 +28,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
     	 http.authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/login/**").anonymous()
-                .antMatchers("/authenticate/**").permitAll()
+                .antMatchers("/forgot-password/**").permitAll()
+                .antMatchers("/reset-password/**").permitAll()
                 .antMatchers("/signup/**").permitAll()
                 .antMatchers("/signup/create-user/**").permitAll()
                 .antMatchers("/success/**").permitAll()
@@ -39,7 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                 .antMatchers("/fields/**").hasRole("USER")
                 .antMatchers("/responses/**").hasRole("USER")
                 .antMatchers("/edit-profiles/**").hasRole("USER")
-                .antMatchers("/change-password/**").hasRole("USER")
+                .antMatchers("/change-password/**").permitAll()
                 .anyRequest()
                 .authenticated().and().csrf().disable().formLogin()
                 .loginPage("/login").permitAll().defaultSuccessUrl("/responses").failureUrl("/login")
