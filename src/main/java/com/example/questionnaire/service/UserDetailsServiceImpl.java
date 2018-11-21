@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.questionnaire.dao.UserRepository;
-import com.example.questionnaire.model.Role;
-import com.example.questionnaire.model.User;
+import com.example.questionnaire.entity.Role;
+import com.example.questionnaire.entity.User;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService{

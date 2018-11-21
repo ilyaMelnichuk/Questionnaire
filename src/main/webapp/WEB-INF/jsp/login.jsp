@@ -13,15 +13,15 @@
        <meta name="viewport" content="width=device-width, initial-scale=1">
        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
    </head>
-   <body>
+   <body style="background-color:#f1f1f1;">
        <div class="container" align="center">
            <div class="col-lg-4"></div>
            <div class="col-lg-4">
-               <div class="jumbotron" style="margin-top:150px; min-width: 500px;">
+               <div class="jumbotron" style="margin-top:150px; min-width: 450px; background-color:white;">
                    <form method="POST" action="${contextPath}/login">
                        <div class="form-group" align="center">
                            <h2>
-                               LOGOTYPE
+                               <strong>LOGO</strong><span style="color:blue;">TYPE</span>
                            </h2>
                        </div>
                        <div class="form-group" align="center">
@@ -47,7 +47,9 @@
                                <a href="/forgot-password" >Forgot your password?</a>
                            </label>
                        </div> 
+                       <br>
                        <button class="btn-primary form-control" type="submit">LOG IN</button>
+                       <br>
                        <div class="form-group" align="center">
                            <label>
                                Don't have account?

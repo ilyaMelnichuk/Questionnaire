@@ -1,4 +1,4 @@
-package com.example.questionnaire.model;
+package com.example.questionnaire.entity;
 
 import java.util.Set;
 

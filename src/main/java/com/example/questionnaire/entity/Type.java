@@ -1,4 +1,4 @@
-package com.example.questionnaire.model;
+package com.example.questionnaire.entity;
 
 public enum Type {
 	SINGLE_LINE_TEXT("Single line text"),

@@ -13,8 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.example.questionnaire.dao.PasswordResetTokenRepository;
-import com.example.questionnaire.model.PasswordResetToken;
-import com.example.questionnaire.model.User;
+import com.example.questionnaire.entity.PasswordResetToken;
+import com.example.questionnaire.entity.User;
 
 @Service
 public class SecurityService {
@@ -36,7 +36,6 @@ public class SecurityService {
 		Date date = new Date();
 	    if ((passwordResetToken.getExpirationDate()
 	        .getTime() - date.getTime()) <= 0) {
-	    	System.out.print("Still here!");
 	        return "expired";
 	    }
 		
@@ -45,6 +44,7 @@ public class SecurityService {
 	      user, null, Arrays.asList(
 	      new SimpleGrantedAuthority("ROLE_CHANGE_PASSWORD")));
 	    SecurityContextHolder.getContext().setAuthentication(auth);
+	    passwordResetTokenRepository.delete(passwordResetToken);
 	    return null;
 	}
 	

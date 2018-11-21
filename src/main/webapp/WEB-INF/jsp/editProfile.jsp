@@ -5,48 +5,119 @@
 <html lang="en">
 <head>
   <title>LOGOTYPE</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="/bootstrap/3.3.7/css/bootstrap.min.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
 </head>
-<body>
 
-<nav class="navbar">
-  <div class="container-fluid">
+<body style="background-color:#f1f1f1;">
+    <nav class="navbar navbar-collapsible" style="background-color:white; border-bottom-color:#dddddd; border-radius:0px;">
+    <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">WebSiteName</a>
+      <a class="navbar-brand" href="/"><span style="color:black;"><strong>LOGO</strong></span><span style="color:blue;">TYPE</span></a>
     </div>
-    <ul class="nav navbar-nav">
-      <li class="active"><a href="#">Home</a></li>
-      <li ><a href="#">Page 1</a></li>
-      <li><a href="#">Page 2</a></li>
-      <li><a href="#">Page 3</a></li>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="/fields">Fields</a></li>
+      <li><a href="/responses">Responses</a></li>
+      <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">${name}
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li ><a href="/edit-profile">Edit Profile</a></li>
+          <li><a href="/change-password">Change Password</a></li>
+          <li><a href="/logout">Log Out</a></li>
+        </ul>
+      </li>
     </ul>
-  </div>
-</nav>
-  
-<form:form method="POST" modelAttribute="userToChange" action="/editProfile" class="form-signup">
-      <fieldSet>
-          <h1 class="h3 mb-3 font-weight-normal">Edit Profile</h1>
-          <label>${error}</label>
-          <form:label path="firstName">First Name</form:label>
-          <form:errors path="firstName"/>
-          <form:input path="firstName" id="inputFirstName" class="form-control" placeholder="First name"/>
-          <form:label path="lastName">Last Name</form:label>
-          <form:errors path="lastName"/>
-          <form:input path="lastName" id="inputLastName" class="form-control" placeholder="Last name" />
-          <form:label path="email">Email*</form:label>
-          <form:errors path="email"/>
-          <form:input path="email" id="inputEmail" class="form-control" placeholder="Email*"/>
-          <form:label path="phoneNumber">Phone Number</form:label>
-          <form:errors path="phoneNumber"/>
-          <form:input path="phoneNumber" id="inputPhoneNumber" class="form-control" placeholder="Phone number"/>
-           <button class="btn btn-lg btn-primary btn-block" type="submit">SAVE</button>
-          <p class="mt-5 mb-3 text-muted"></p>
-      </fieldSet>
-    </form:form>
-    <script src="jquery/3.3.1/jquery.min.js"></script>
-    <script src="bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="/js/getrequest.js"></script>
+    </div>
+    </nav>
+    
+    <div class="container" align="center">
+           <div class="col-lg-4"></div>
+           <div class="col-lg-4">
+               <div class="panel panel-default" style="margin-top:10px; min-width: 400px;">
+                   <div class="panel-heading" align="left" style="background-color:white;">
+                        <h4>
+                            Edit Profile
+                        </h4>
+                        <span id='message'></span>
+                   </div>
+                   <div class="panel-body" style="margin-left:15px; margin-right:15px;">
+                   <form id="form"  action="/check-changes" method="post">
+                       <div class="form-group" align="left">
+                           <label><span style="color:grey;">First Name</span></label> <br>
+                           <input type="text" id = "firstName" class="form-control">
+                           <span id='current-message' style="color:red;"></span>
+                       </div>
+                       <div class="form-group" align="left">
+                           <label><span style="color:grey;">Last Name</span></label> <br>
+                           <input type="text" id = "lastName" class="form-control">
+                           <span id='password-message' style="color:red;"></span>
+                       </div>
+                       <div class="form-group" align="left">
+                           <label><span style="color:grey;">Email</span> *</label>
+                           <input type="email" id = "email" class="form-control"/>
+                           <span id='confirm-message' style="color:red;"></span>
+                       </div>
+                       <div class="form-group" align="left">
+                           <label><span style="color:grey;">Phone Number</span></label>
+                           <input type="text" id = "phoneNumber" class="form-control"/>
+                           <span id='confirm-message' style="color:red;"></span>
+                       </div>
+                       <div class="form-group" align="left">
+                           <input class="btn-primary form-control" id="button" style="max-width:100px;" type="submit" value="SAVE">
+                       </div>
+                   </form>
+                   </div>
+               </div>
+           </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function(){
+        	$.ajax({
+        		url: "load-user-data",
+        		type: "GET",
+        		dataType: "json",
+        		success: function(data){
+        			$.each(data, function(key, value){
+        				$("#" + key).val(value);
+        			})
+        		},
+        	    error: function(error){
+        	    	alert(JSON.stringify(error));
+        	    }
+        	});
+        });
+        $('#form').on("submit", function(e) {
+        	    e.preventDefault(); 
+        	    var form = $(this);
+        	    var url = form.attr('action');
+        	    var object = {};
+        	    object["email"] = $("#email").val();
+        	    object["firstName"] = $("#firstName").val();
+        	    object["lastName"] = $("#lastName").val();
+        	    object["phoneNumber"] = $("#phoneNumber").val();
+
+        	    $.ajax({
+        	           type: "POST",
+        	           dataType: "json",
+        	           contentType: "application/json",
+        	           url: url,
+        	           data: JSON.stringify(object),
+        	           success: function(data)
+        	           {
+                	           $("#message").html(data["message"]);
+        	           },
+        	           error: function(data){
+        	        	   alert(JSON.stringify(data));
+        	           }
+                });
+
+        	    
+        }); 
+        
+    </script>
 </body>
 </html>

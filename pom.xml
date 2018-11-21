@@ -49,6 +49,17 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
         </dependency>
+        
+        <dependency>
+           <groupId>com.fasterxml.jackson.core</groupId>
+           <artifactId>jackson-databind</artifactId>
+        </dependency>
+       
+        <dependency>
+           <groupId>org.modelmapper</groupId>
+           <artifactId>modelmapper</artifactId>
+           <version>2.3.1</version>
+        </dependency>
             
         <dependency>
             <groupId>org.hibernate.validator</groupId>
@@ -95,6 +106,15 @@
 	        <artifactId>jquery</artifactId>
 	        <version>3.3.1-1</version>
 	    </dependency>
+	    <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>5.4.1.Final</version>
+        </dependency>
 		
 	</dependencies>
 
