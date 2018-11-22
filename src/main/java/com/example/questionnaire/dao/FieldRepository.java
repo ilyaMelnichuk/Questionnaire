@@ -19,5 +19,6 @@ public interface FieldRepository extends JpaRepository<Field, String>{
     void updateByLabel(String oldLabel, String newLabel, Type newType, boolean newRequired, boolean newActive);
 	
 	Iterable<Field> findByIsActive(boolean isActive);
+	Field findByLabel(String label);
 	boolean existsByLabel(String label);
 }

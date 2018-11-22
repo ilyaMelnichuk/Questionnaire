@@ -16,11 +16,12 @@ public class Option {
 	@Id
 	@Column(name = "id")
     private long id;
-    @Column(name = "value")
-    private String value;
-    @ManyToOne
+	@ManyToOne
     @Id
     private Field field;
+    @Column(name = "value")
+    private String value;
+    
     
     public Field getField() {
 		return field;

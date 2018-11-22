@@ -15,9 +15,9 @@
 	        	$.ajax({
 	        		url:"get-default-page",
 	        		type:"GET",
-	        		datatyp:"json",
+	        		datatype:"json",
 	        		success: function(data){		
-	        		    alert(JSON.stringify(data));
+	        		    //alert(JSON.stringify(data));
 	        			var fields = data["content"];
 	        			
 	        			$("#tbody").append("<tr></tr>")
@@ -82,8 +82,8 @@
 	        		    $activeField = $(e.relatedTarget).closest("tr").children("td"); 
 	        		    $("#label-input").val($activeField.eq(0).html());
 	        		    $("#type-input").val($activeField.eq(1).html());
-	        		    if($activeField.eq(1).html() == "COMBOBOX"){
-	        		    	alert($activeField.eq(1).data("options"));
+	        		    if($activeField.eq(1).html() == "Combobox" || $activeField.eq(1).html() == "Radio button"){
+	        		    	//alert($activeField.eq(1).data("options"));
 	        			    $("#options-div").show();
 	        			    $("#options-input").val($activeField.eq(1).data("options"));
 	        		    }else{
@@ -104,7 +104,7 @@
 	        	});
 	        	//changing type of a field
 	        	$("#type-input").on("change", function() {
-	        		  if(this.value == "COMBOBOX"){
+	        		  if(this.value == "Combobox" || this.value == "Radio button"){
 	        			  $("#options-div").show();
 	        		  }else{
 	        			  //$("#options-input").val('');
@@ -120,7 +120,7 @@
 	        		
 	        		    object["required"]=$("#required-input").is(":checked");
         		        object["isActive"]=$("#isActive-input").is(":checked");
-        		        if($("#type-input").val() == "COMBOBOX"){
+        		        if($("#type-input").val() == "Combobox" || $("#type-input").val() == "Radio button"){
         		    	    object["options"]=$("#options-input").val();
         		        }else{
         		        	object["options"]="";
@@ -129,7 +129,7 @@
 	        			    object["oldLabel"]=$activeField.eq(0).html();
 	        		        $activeField.eq(0).html($("#label-input").val());
 	        		        $activeField.eq(1).html($("#type-input").val());
-	        		        if($("#type-input").val() == "COMBOBOX"){
+	        		        if($("#type-input").val() == "Combobox" || $("#type-input").val() == "Radio button"){
 	        		    	    $activeField.eq(1).data("options", $("#options-input").val());
 	        		        }
 	        		        $activeField.eq(2).html($("#required-input").is(":checked")?"true":"false");
@@ -137,7 +137,7 @@
 	        		    }else{
 	        			    object["oldLabel"]="";
 	        		    }
-	        		    alert(JSON.stringify(object));
+	        		    //alert(JSON.stringify(object));
 	        		}else{
 	        			$("#message").html("label shouldn't be empty");
 	        		}    
@@ -153,7 +153,7 @@
 	        			      object["oldLabel"]=$activeField.eq(0).html();
 	        		          $activeField.eq(0).html($("#label-input").val());
 	        		          $activeField.eq(1).html($("#type-input").val());
-	        		          if($("#type-input").val() == "COMBOBOX"){
+	        		          if($("#type-input").val() == "Combobox" || $("#type-input").val() == "Radio button"){
 	        		    	      $activeField.eq(1).data("options", $("#options-input").val());
 	        		          }
 	        		          $activeField.eq(2).html($("#required-input").is(":checked")?"true":"false");
@@ -167,22 +167,11 @@
 	        	$(document).on("hidden.bs.modal", "#editModal", function(e){
 	        		$("#message").html("");
         			$("#label-input").val("");
-        		    $("#type-input").val("SINGLE_LINE_TEXT");
+        		    $("#type-input").val("Single line text");
         			$("#options-div").hide();
         			$("#required-input").prop("checked", false);
         			$("#isActive-input").prop("checked", false);
 	        	});
-	        	/* $("#getJSON").on("click", function(){
-	        		$.ajax({
-		        		url:"get-json",
-		        		type:"GET",
-		        		datatype:"json",
-		        		success: function(data){
-		        			alert(JSON.stringify(data));
-		        			saveField(JSON.stringify(data));
-		        		}
-		        	});
-	        	}); */
 	       });
 	       function saveField(field){
 	    	   $.ajax({
@@ -273,12 +262,12 @@
                   <div class="form-group">
                     <label><span style="color:grey">Type</span>*</label>
                     <select class="form-control" id="type-input">
-                        <option value="SINGLE_LINE_TEXT">Single line text</option>
-                        <option value="MULTILINE_TEXT">Multiline text</option>
-                        <option value="RADIO_BUTTON">Radio button</option>
-                        <option value="CHECKBOX">Checkbox</option>
-                        <option value="COMBOBOX">Combobox</option>
-                        <option value="DATE">Date</option>
+                        <option value="Single line text">Single line text</option>
+                        <option value="Multiline text">Multiline text</option>
+                        <option value="Radio button">Radio button</option>
+                        <option value="Checkbox">Checkbox</option>
+                        <option value="Combobox">Combobox</option>
+                        <option value="Date">Date</option>
                     </select>
                   </div>
                   <div class="form-group" id="options-div">

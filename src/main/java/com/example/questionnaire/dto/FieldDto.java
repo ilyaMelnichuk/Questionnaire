@@ -9,6 +9,7 @@ import javax.validation.constraints.*;
 import com.example.questionnaire.entity.Field;
 import com.example.questionnaire.entity.Option;
 import com.example.questionnaire.entity.OptionId;
+import com.example.questionnaire.entity.Type;
 
 public class FieldDto {
 	public interface Save{}

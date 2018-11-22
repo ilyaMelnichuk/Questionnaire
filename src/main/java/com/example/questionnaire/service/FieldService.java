@@ -12,6 +12,7 @@ import com.example.questionnaire.dao.FieldRepository;
 import com.example.questionnaire.dao.OptionRepository;
 import com.example.questionnaire.entity.Field;
 import com.example.questionnaire.entity.Option;
+import com.example.questionnaire.entity.OptionId;
 
 
 
@@ -38,8 +39,19 @@ public class FieldService {
 	public void updateField(String oldLabel, Field field) {
 		fieldRepository.updateByLabel(oldLabel, field.getLabel(), field.getType(), field.isRequired(), field.isisActive());
 		List<Option> options = field.getOptions();
-		for(Option option : options) {
-			optionRepository.save(option);
+		if((field.getType().name() ==  "COMBOBOX" || field.getType().name() ==  "RADIO_BUTTON")&& options != null) {
+			int counter = 0;
+			for(Option option : options) {
+			    optionRepository.save(option);
+			    counter++;
+		    }
+			if(optionRepository.existsById(new OptionId(counter, field.getLabel()))) {
+				optionRepository.deleteWhereIdMoreThan(counter - 1, field);
+			}
+		}else {
+			if(optionRepository.existsByFieldLabel(field.getLabel())) {
+				optionRepository.deleteByFieldLabel(field);	
+			}
 		}
 	}
 	
@@ -52,5 +64,8 @@ public class FieldService {
 	}
 	public void deleteField(String label) {
 		fieldRepository.deleteById(label);
+	}
+	public Field findByLabel(String label) {
+		return fieldRepository.findByLabel(label);
 	}
 }

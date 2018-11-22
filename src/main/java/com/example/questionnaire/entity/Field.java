@@ -74,13 +74,28 @@ public class Field {
 	public void setisActive(boolean isActive) {
 		this.isActive = isActive;
 	}
-	public String convertOptionsToString() {
+	public String convertOptionsToStringNL() {
 		String result = "";
 		if(this.options == null || this.options.isEmpty()) {
 			result = null;
 		}else {
 			for(Option option: this.options) {
 			    result += option.getValue() + "\n";
+			}    
+			result = result.substring(0, result.length() - 1);
+		}
+		return result;
+	}
+	public String convertEnumToString() {
+		return type.getText();
+	}
+	public String convertOptionsToStringPipe() {
+		String result = "";
+		if(this.options == null || this.options.isEmpty()) {
+			result = null;
+		}else {
+			for(Option option: this.options) {
+			    result += option.getValue() + "|";
 			}    
 			result = result.substring(0, result.length() - 1);
 		}

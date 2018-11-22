@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.Embeddable;
 
-@Embeddable
 public class OptionId implements Serializable{
     private long id;
     private String field;

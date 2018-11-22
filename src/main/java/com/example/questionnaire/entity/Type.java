@@ -8,18 +8,22 @@ public enum Type {
 	COMBOBOX("Combobox"),
 	DATE("Date");
 	
-	private String name; 
+	private String text; 
 	
-	Type(String name){
-		this.name = name;
+	Type(String text){
+		this.text= text;
 	}
 	
-	public String getName() {
-		return this.name();
+	public void setText(String text) {
+		this.text = text;
+	}
+	
+	public String getText() {
+		return text;
 	}
 	
 	@Override
 	public String toString() {
-		return this.name();
+		return text;
 	}
 }
