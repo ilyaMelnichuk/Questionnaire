@@ -7,6 +7,6 @@ import com.example.questionnaire.entity.Response;
 import com.example.questionnaire.entity.ResponseId;
 
 public interface ResponseRepository extends JpaRepository<Response, ResponseId>{
-	@Query("select coalesce(max(r.id), 0) FROM Response r")
+	@Query("select coalesce(max(r.id) + 1, 0) FROM Response r")
     public long getMaximalId();
 }

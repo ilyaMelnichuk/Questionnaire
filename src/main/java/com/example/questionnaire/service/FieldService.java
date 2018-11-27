@@ -39,7 +39,7 @@ public class FieldService {
 	public void updateField(String oldLabel, Field field) {
 		fieldRepository.updateByLabel(oldLabel, field.getLabel(), field.getType(), field.isRequired(), field.isisActive());
 		List<Option> options = field.getOptions();
-		if((field.getType().name() ==  "COMBOBOX" || field.getType().name() ==  "RADIO_BUTTON")&& options != null) {
+		if((field.getType().name() ==  "COMBOBOX" || field.getType().name() ==  "RADIO_BUTTON" || field.getType().name() ==  "CHECKBOX")&& options != null) {
 			int counter = 0;
 			for(Option option : options) {
 			    optionRepository.save(option);

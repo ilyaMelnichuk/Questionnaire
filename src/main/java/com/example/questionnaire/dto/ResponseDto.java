@@ -1,11 +1,29 @@
 package com.example.questionnaire.dto;
 
+import com.example.questionnaire.validation.Required;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@Required
 public class ResponseDto {
+
 	private long id;
 	
 	private String label;
 	
 	private String value;
+	
+	public ResponseDto() {
+		
+	}
+	
+	@JsonCreator
+	public ResponseDto(@JsonProperty("id") long id, @JsonProperty("label") String label, @JsonProperty("value") String value) {
+		super();
+		this.id = id;
+		this.label = label;
+		this.value = value;
+	}
 
 	public long getId() {
 		return id;

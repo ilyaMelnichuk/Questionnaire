@@ -6,15 +6,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.validation.Valid;
+
 import org.springframework.validation.annotation.Validated;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public class ResponseList<T extends ResponseDto> implements List<ResponseDto> {
-	
-	private List<ResponseDto> response;
+	@Valid
+	private List<ResponseDto> response = new ArrayList<>();
 	
 	public ResponseList() {
 		this.response = new ArrayList<ResponseDto>();
 	}
+	@JsonCreator
 	public ResponseList(List<ResponseDto> response) {
 		this.response = response;
 	}
@@ -24,7 +29,7 @@ public class ResponseList<T extends ResponseDto> implements List<ResponseDto> {
 		return response;
 	}
 
-	public void setResponse(@Validated() List<ResponseDto> response) {
+	public void setResponse(List<ResponseDto> response) {
 		this.response = response;
 	}
 	

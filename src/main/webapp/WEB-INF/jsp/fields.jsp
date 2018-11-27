@@ -39,11 +39,40 @@
 	        				$row.attr("id", fields[key].label);
 	        				$("#tbody").append($row);
 	        			}
-	        			$("#paging").append("<label>" + data.number*data["pageable"].pageSize + "-" + (data.number*data["pageable"].pageSize + data.numberOfElements) + " of "+data.totalElements+"</label>");
-	        			
+	        			/* $("#tfooter").append(
+	        			          "<nav aria-label=\"Page navigation\" style=\"float:right\">"+
+	        					  "<ul class=\"pagination\" style=\"max-height:40px;\">"+
+	        					  "<li>"+
+	        					  "<span>" + data.number*data["pageable"].pageSize + "-" + (data.number*data["pageable"].pageSize + data.numberOfElements) + " of "+data.totalElements+"</span>"+
+	        					  "</li>"+
+	        		              "<li class=\"page-item disabled\">"+
+	        		              "<a href=\"#\" aria-label=\"Previous\" class=\"page-link\">"+
+	        		              "<span aria-hidden=\"true\" class=\"glyphicon glyphicon-triangle-left\" style=\"vertical-align:middle\"></span>"+
+	        		              "</a>"+
+	        		              "</li>"+
+	        		              "<li class=\"page-item active\"><a href=\"#\" class=\"page-link\">1 <span class=\"sr-only\">(current)</span></a></li>"+
+	        		              "<li class=\"page-item\"><a href=\"#\" class=\"page-link\">2</a></li>"+
+	        		              "<li class=\"page-item\"><a href=\"#\" class=\"page-link\">3</a></li>"+
+	        		              "<li class=\"page-item\"><a href=\"#\" class=\"page-link\">4</a></li>"+
+	        		              "<li class=\"page-item\"><a href=\"#\" class=\"page-link\">5</a></li>"+
+	        		              "<li class=\"page-item\">"+
+	        		              "<li class=\"dropdown\">"+
+	        		              "<a class=\"dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\">"+
+	        		              "<span>"+
+	        		              "</span></a>"+
+	        		              "<ul class=\"dropdown-menu\">"+
+	        		              "<li ><a href=\"#\">5</a></li>"+
+	        		              "<li><a href=\"#\">10</a></li>"+
+	        		              "<li><a href=\"#\">15</a></li>"+
+	        		              "<li><a href=\"#\">20</a></li>"+
+	        		              "<a href=\"#\" aria-label=\"Next\" class=\"page-link\">"+
+	        		              "<span aria-hidden=\"true\" class=\"glyphicon glyphicon-triangle-right\" style=\"vertical-align:middle\"></span>"+
+	        		              "</a>"+
+	        		              "</li>"+
+	        		              "</ul>"+
+	        		              "</nav>");
 	    			    
-	        		}
-	        	    
+	        		    } */
 	        	});
 	        	
 	        	var $activeField;
@@ -82,7 +111,7 @@
 	        		    $activeField = $(e.relatedTarget).closest("tr").children("td"); 
 	        		    $("#label-input").val($activeField.eq(0).html());
 	        		    $("#type-input").val($activeField.eq(1).html());
-	        		    if($activeField.eq(1).html() == "Combobox" || $activeField.eq(1).html() == "Radio button"){
+	        		    if($activeField.eq(1).html() == "Combobox" || $activeField.eq(1).html() == "Radio button" || $activeField.eq(1).html() == "Checkbox"){
 	        		    	//alert($activeField.eq(1).data("options"));
 	        			    $("#options-div").show();
 	        			    $("#options-input").val($activeField.eq(1).data("options"));
@@ -104,7 +133,7 @@
 	        	});
 	        	//changing type of a field
 	        	$("#type-input").on("change", function() {
-	        		  if(this.value == "Combobox" || this.value == "Radio button"){
+	        		  if(this.value == "Combobox" || this.value == "Radio button" || this.value == "Checkbox"){
 	        			  $("#options-div").show();
 	        		  }else{
 	        			  //$("#options-input").val('');
@@ -120,7 +149,7 @@
 	        		
 	        		    object["required"]=$("#required-input").is(":checked");
         		        object["isActive"]=$("#isActive-input").is(":checked");
-        		        if($("#type-input").val() == "Combobox" || $("#type-input").val() == "Radio button"){
+        		        if($("#type-input").val() == "Combobox" || $("#type-input").val() == "Radio button" || $("#type-input").val() == "Checkbox"){
         		    	    object["options"]=$("#options-input").val();
         		        }else{
         		        	object["options"]="";
@@ -129,7 +158,7 @@
 	        			    object["oldLabel"]=$activeField.eq(0).html();
 	        		        $activeField.eq(0).html($("#label-input").val());
 	        		        $activeField.eq(1).html($("#type-input").val());
-	        		        if($("#type-input").val() == "Combobox" || $("#type-input").val() == "Radio button"){
+	        		        if($("#type-input").val() == "Combobox" || $("#type-input").val() == "Radio button" || $("#type-input").val() == "Checkbox"){
 	        		    	    $activeField.eq(1).data("options", $("#options-input").val());
 	        		        }
 	        		        $activeField.eq(2).html($("#required-input").is(":checked")?"true":"false");
@@ -153,7 +182,7 @@
 	        			      object["oldLabel"]=$activeField.eq(0).html();
 	        		          $activeField.eq(0).html($("#label-input").val());
 	        		          $activeField.eq(1).html($("#type-input").val());
-	        		          if($("#type-input").val() == "Combobox" || $("#type-input").val() == "Radio button"){
+	        		          if($("#type-input").val() == "Combobox" || $("#type-input").val() == "Radio button" || $("#type-input").val() == "Checkbox"){
 	        		    	      $activeField.eq(1).data("options", $("#options-input").val());
 	        		          }
 	        		          $activeField.eq(2).html($("#required-input").is(":checked")?"true":"false");
@@ -186,7 +215,7 @@
 	       } 
 	</script>
 </head>
-<body style="bakcground-color:#f1f1f1">
+<body style="background-color:#f1f1f1;">
 
 <nav class="navbar navbar-collapsible" style="background-color:white; border-bottom-color:#dddddd; border-radius:0px;">
     <div class="container-fluid">
@@ -212,31 +241,29 @@
 </nav>
 
 <div class="container" align="center">
-        <table id="table" class="table table-striped">
-           <thead>
-               <tr>
-                   <th><h4>Fields</h4></th>
-                   <th></th>
-                   <th></th>
-                   <th></th>
-                   <th><div align="right"><input type="button" data-button="add" data-edit-id="add" data-toggle="modal" data-target="#editModal" id="addButton" class="btn-primary form-control edit" value="+ ADD FIELD" style="max-width:120px; text-align:center"></div></th>
-               </tr>         
-           </thead>
-           <thead>
-               <tr>
-                   <th>Label</th>
-                   <th>Type</th>
-                   <th>Required</th>
-                   <th>Is Active</th>
-                   <th></th>
-               </tr>         
-           </thead>
-           <tbody id="tbody" class="table table-striped">
-           </tbody>
-       </table>
-       <div id="paging">
-           
+    <div class="jumbotron" style="background-color:white; padding-top:20px; padding-bottom:0px; padding-left:0px; padding-right:0px;">
+        <div style="border-bottom: 2px solid #dddddd; min-height:45px; padding-left:10px; padding-right:10px;">
+            <h4 style="float:left;">Fields</h4>
+            <input type="button" data-button="add" data-edit-id="add" data-toggle="modal" data-target="#editModal" id="addButton" class="btn-primary form-control edit" value="+ ADD FIELD" style="max-width:120px; text-align:center; float:right;">
+        </div>
+        <div id="content" style="padding-left:20px;padding-right:20px;">
+            <table id="table" class="table table-striped">
+               <thead>
+                   <tr>
+                       <th>Label</th>
+                       <th>Type</th>
+                       <th>Required</th>
+                       <th>Is Active</th>
+                       <th></th>
+                   </tr>         
+               </thead>
+               <tbody id="tbody" class="table table-striped">
+               </tbody>
+               <tfoot id="tfooter" align="center">
+               </tfoot>
+           </table>
        </div>
+   </div>    
 </div>
 
 <div class="modal" id="editModal" tabindex="-1" role="dialog" 
@@ -254,10 +281,10 @@
                 <span id="message"></span>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" role="form">
+                <form role="form">
                   <div class="form-group">
-                      <label><span style="color:grey">Label</span>*</label>
-                      <input type="text" class="form-control" id="label-input">
+                      <label style="justify-content:center"><span style="color:grey">Label</span>*</label>
+                      <input type="text" class="form-control" id="label-input" style="justify-content:center">
                   </div>
                   <div class="form-group">
                     <label><span style="color:grey">Type</span>*</label>

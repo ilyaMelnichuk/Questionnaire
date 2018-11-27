@@ -26,7 +26,7 @@
         			
         			//alert(JSON.stringify(data));
         			$.each(data, function(key, value){
-        				    $group = $("<div name=\"fsd\" class=\"form-group\" align=\"left\">"+
+        				    $group = $("<div name=\"fsd\" class=\"form-group input\" align=\"left\">"+
             					  	"<label>"+
             						"<span style=\"color:grey;\">"+
             						value["label"]+
@@ -35,45 +35,39 @@
             						"</label> <br>"+
             						"</div>"
             						);
+        				    $group.attr("id", value["type"]);
         				    switch(value["type"]){
         				    case "Single line text":
-        				    	$group.attr("id", "text");
-        				    	$input = $("<input type=\"text\" class=\"form-control\" id=\""+ value["label"] +"\"/>");
+        				    	$input = $("<input type=\"text\" class=\"form-control\" id=\""+ value["label"] +"\" required=\"" + value["required"] + "\"/>").appendTo($group);
         				    	break;
         				    case "Multiline text":
-        				    	$group.attr("id", "textarea");
-        				    	$input = $("<textarea rows=\"5\" cols=\"25\" class=\"form-control\" id=\""+ value["label"] +"\"></textarea>");
+        				    	$input = $("<textarea rows=\"5\" cols=\"25\" class=\"form-control\" id=\""+ value["label"] +"\" required=\"" + value["required"] + "\"></textarea>").appendTo($group);
         				    	break;
         				    case "Radio button":
-        				    	$group.attr("id", "radio");
         				    	var options = value["options"].split("|");
         				        $.each(options, function(i, opt){
-        				    	    $input = $("<input type=\"radio\" name=\"" + value["label"] + " value=\""+opt+"\"\">");
-        				    	    $(opt).after($input);
-        				    	    $group.append($input);
+        				    	    $input = $("<input type=\"radio\" name=\"" + value["label"] + "\" value=\""+opt+"\" required=\"" + value["required"] + "\"/> <span>" + opt + "</span> <br>").appendTo($group);
         				   	    });
         				    	break;
         				    case "Checkbox":
-        				    	$group.attr("id", "checkbox");
-        				    	$input = $("<input type=\"checkbox\" id=\""+ value["label"] +"\">");
-        				    	break;
-        				    case "Combobox":
-        				    	$group.attr("id", "select");
-        				    	$input = $("<select class=\"form-control\" id=\""+ value["label"] +"\">"+"</select>");
-        				    	$option;
         				    	var options = value["options"].split("|");
         				    	$.each(options, function(i, opt){
-        				    		$option = $("<option value=\""+opt+"\">" + opt + "</option>");
-        				    		$input.html($option);
+        				    	    $input = $("<input type=\"checkbox\" value=\""+opt+"\"  name=\""+ opt +"\"/> <span>" + opt + "</span> <br>").appendTo($group);
+        				   	    });
+        				    	break;
+        				    case "Combobox":
+        				    	$input = $("<select>").attr("class", "form-control").appendTo($group);
+        				    	$input.attr("required", value["required"]);
+        				    	var options = value["options"].split("|");
+        				    	$.each(options, function(i, opt){
+        				    		$input.append($("<option>").attr("value",opt).text(opt));
         				    	});
         				    	break;
         				    case "Date":
-        				    	$group.attr("id", "date");
-        				    	$input = $("<input type=\"date\" class=\"form-control\" id=\""+ value["label"] +"\">");
+        				    	$input = $("<input type=\"date\" class=\"form-control\" id=\""+ value["label"] +"\" required=\"" + value["required"] + "\"/>").appendTo($group);
         				    default:	
-        				    }  
-        				$group.append($input);
-        				$("#form").children().last().before($group);
+        				    }
+        				    $("#form").children().last().before($group);
         			})
         		},
         	    error: function(error){
@@ -82,44 +76,46 @@
         	});
         	$(document).on("submit", "#form", function(e){
         		e.preventDefault();
-        		
                 var object = {
-                		list:[]
+                		"response":[]
                 }
-        		var response;
-        		$.each($(this).children("div.form-group"), function(){
-        			response = {};
-        			response["id"] = null;
-        			response["value"] = "";
+        		var resp;
+        		$.each($(this).children("div.form-group.input"), function(){
+        			resp = {};
+        			resp["id"] = null;
+        			resp["value"] = "";
         			switch($(this).attr("id")){
-        			    case "text":
-        			    	response["label"] = $(this).children("label").eq(0).children("span").eq(0).html();
-        			    	response["value"] = $(this).children("input").eq(0).val();
+        			    case "Single line text":
+        			    	resp["label"] = $(this).children("label").eq(0).children("span").eq(0).html();
+        			    	resp["value"] = $(this).children("input").eq(0).val();
         			    	break;
-        			    case "textarea":
-        			    	response["label"] = $(this).children("label").eq(0).children("span").eq(0).html();
-        			    	response["value"] = $(this).children("textarea").eq(0).text();
+        			    case "Multiline text":
+        			    	resp["label"] = $(this).children("label").eq(0).children("span").eq(0).html();
+        			    	resp["value"] = $(this).children("textarea").eq(0).val();
         			    	break;
-        			    case "radio":
-        			    	response["label"] = $(this).children("label").eq(0).children("span").eq(0).html();
-        			    	response["value"]= $(this).children("input[name=" + $(this).children("label").eq(0).children("span").eq(0).html() + "]:checked").val(); 
+        			    case "Radio button":
+        			    	resp["label"] = $(this).children("label").eq(0).children("span").eq(0).html();
+        			    	resp["value"]= $(this).children("input[name=" + $(this).children("label").eq(0).children("span").eq(0).html() + "]:checked").val(); 
         			    	break;
-        			    case "checkbox":
-        			    	response["label"] = $(this).children("label").eq(0).children("span").eq(0).html();
-        			    	response["value"] = $(this).children("input").eq(0).is(":checked");
+        			    case "Checkbox":
+        			    	resp["label"] = $(this).children("label").eq(0).children("span").eq(0).html();
+        			    	var value = "";
+        			    	$(this).children("input").each(function(){
+        			    		value = value.concat($(this).attr("name")).concat(":").concat($(this).is(":checked")).concat(",");
+        			    	});
+        			    	value = value.substring(0, value.length - 1);
+        			    	resp["value"] = value;
         			    	break;
-        			    case "select":
-        			    	response["label"] = $(this).children("label").eq(0).children("span").eq(0).html();
-        			    	response["value"] = $(this).children("select").eq(0).val();
+        			    case "Combobox":
+        			    	resp["label"] = $(this).children("label").eq(0).children("span").eq(0).html();
+        			    	resp["value"] = $(this).children("select").eq(0).val();
         			    	break;
-        			    case "date":
-        			        response["label"] = $(this).children("label").eq(0).children("span").eq(0).html();
-    			    	    response["value"] = $(this).children("input").eq(0).val();
+        			    case "Date":
+        			        resp["label"] = $(this).children("label").eq(0).children("span").eq(0).html();
+    			    	    resp["value"] = $(this).children("input").eq(0).val();
         			}
-        			object.list.push(response);
+        			object["response"].push(resp);
         		});
-        	
-        		alert(JSON.stringify(object));
         		$.ajax({
 	  	    		  url:"send-response",
 	  	    		  type:"POST",
@@ -127,12 +123,35 @@
 	  	    		  datatype:"json",
 	  	    		  contentType:"application/json",
 	  	    		  success:function(data){
-	  	    	          alert(data["message"]);
+	  	    			window.location.href = "/success";
 	  	    		  }
 	  	    	 });
         	});
-        });        
-        
+        	$(document).on("click", "#reset", function(e){$.each($(this).closest("form").children("div.form-group.input"), function(){
+        			switch($(this).attr("id")){
+        			    case "Single line text": 
+        			    	$(this).children("input").eq(0).val("");
+        			    	break;
+        			    case "Multiline text":
+        			    	var value = $(this).children("textarea").eq(0).text("");
+        			    	break;
+        			    case "Radio button":
+        			    	$(this).children("input[name=" + $(this).children("label").eq(0).children("span").eq(0).html() + "]:checked").prop("checked", false); 
+        			    	break;
+        			    case "Checkbox":
+        			    	$(this).children("input").each(function(){
+        			    		value = $(this).prop("checked", false);
+        			    	});
+        			    	break;
+        			    case "Combobox":
+        			    	$(this).children("select").eq(0).val("Single line text");
+        			    	break;
+        			    case "Date":
+        			    	$(this).children("input").eq(0).val("");
+        			}
+        		}); 
+        	});
+        });
   </script>
 </head>
 
@@ -153,8 +172,9 @@
     <div class="container" align="center">
            <div class = "jumbotron p-2" style="max-width:400px; background-color:white; padding-bottom:5px; padding-left:30px; padding-top:15px">
                <form id="form" action="send-response" method="post">
-                   <div align="left" id="last">
-                        <input class="btn-primary form-control" id="button" style="max-width:100px;" type="submit" value="SUBMIT">
+                   <div align="left" id="last" class="form-group" style="min-height:35px;">
+                        <input class="btn-primary form-control" id="button" style="max-width:100px; float:left;" type="submit" value="SUBMIT">
+                        <input class="btn-primary form-control" id="reset" style="max-width:100px; float:right;" type="button" value="RESET">
                    </div>
                </form>
            </div>

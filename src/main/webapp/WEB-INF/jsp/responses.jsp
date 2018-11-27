@@ -10,6 +10,49 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
+    <script type="text/javascript">
+    $('document').ready(function(){
+    	$.ajax({
+    		url:"get-default-page",
+    		type:"GET",
+    		datatype:"json",
+    		success: function(data){
+    			var fields = data["content"];
+    			var count = 0;
+    			for(var key in fields){
+    				$th = $("<th>" + fields[key].label + "</th>");
+    				$th.attr("id", key + "");
+    				$("#head").append($th);
+    				count++;
+    			}
+    			$("head").attr("name", count+"");
+    		}
+    	});
+    	
+    	$.ajax({
+    		url:"get-all-responses",
+    		type:"GET",
+    		datatype:"json",
+    		success: function(responses){
+    			for(var key in responses){
+    		            $row = $("<tr>"+"</tr>");
+    		            $td;
+    		            $.each($("#head").children("<th>"), function(){
+    		            	$td = $("<td></td>");
+    		            	$td.attr("name", $("this").html());
+    		            	$row.append($td);
+    		        	});
+    		    }	
+    		}
+    	});
+   });
+  </script>
+    
+    
 </head>
 <body style="background-color:#f1f1f1;">
     <nav class="navbar navbar-collapsible" style="background-color:white; border-bottom-color:#dddddd; border-radius:0px;">
@@ -32,54 +75,28 @@
     </ul>
     </div>
     </nav>
-    <div class="container" style="text-align:center;">
-           <div class="col-lg-4"></div>
-           <div class="col-lg-4" style="displya:inline-block;">
-               <div class="panel panel-default" style="margin-top:10px; min-width: 1200px;">
-                   <div class="panel-heading" align="left" style="background-color:white;">
-                        <h4>
-                            Responses
-                        </h4>
-                   </div>
-                   <div class="panel-body" style="margin-left:15px; margin-right:15px;">
-                       <table class="table table-striped">
-          
-          <thead>
-               <tr>
-                   <th>field1</th>
-                   <th>field2</th>
-                   <th>field3</th>
-                   <th>field4</th>
-                   <th>field5</th>
-               </tr>    
-               <tr>
-                   <th>field1</th>
-                   <th>field2</th>
-                   <th>field3</th>
-                   <th>field4</th>
-                   <th>field5</th>
-               </tr>     
-          </thead>
-          <tbody class="table table-striped">
-                  <tr>
-                      <td>field_value1</td>
-                      <td>field_value2</td>
-                      <td>field_value3</td>
-                      <td>field_value4</td>
-                      <td>field_value5</td>
-                  </tr>
-          </tbody>
-      </table>
-                   </div>
-               </div>
-           </div>
-           <div class="col-lg-4">
-           </div>
-    </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript">
-        
-    </script>
+    <div class="container" align="center">
+    <div class="jumbotron" style="background-color:white; padding-top:20px; padding-bottom:0px; padding-left:0px; padding-right:0px;">
+        <div style="border-bottom: 2px solid #dddddd; min-height:45px; padding-left:10px; padding-right:10px;">
+            <h4 style="float:left;">Fields</h4>
+            <input type="button" data-button="add" data-edit-id="add" data-toggle="modal" data-target="#editModal" id="addButton" class="btn-primary form-control edit" value="+ ADD FIELD" style="max-width:120px; text-align:center; float:right;">
+        </div>
+        <div id="content" style="padding-left:20px;padding-right:20px;">
+            <table id="table" class="table table-striped">
+               <thead>
+                   <tr id="head">
+                       <!-- table header -->
+                   </tr>         
+               </thead>
+               <tbody id="tbody" class="table table-striped">
+               
+               </tbody>
+               <tfoot id="tfooter" align="center">
+                   
+               </tfoot>
+           </table>
+       </div>
+   </div>    
+   </div>
 </body>
 </html>
