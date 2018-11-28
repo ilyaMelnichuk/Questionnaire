@@ -28,7 +28,7 @@
     <div class="container" align="center">
            <div class = "jumbotron p-2" style="max-width:400px; background-color:white; padding-bottom:5px; padding-left:30px; padding-top:15px" align="center">
                <h4>Thank you!</h4><br>
-               <h5>Your response was saved.</h5>
+               <h5>Your response was saved</h5>
            </div>
     </div>
 </body>

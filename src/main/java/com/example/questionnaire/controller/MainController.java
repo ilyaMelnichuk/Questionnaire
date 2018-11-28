@@ -3,6 +3,7 @@ package com.example.questionnaire.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import javax.servlet.http.HttpServletRequest;
@@ -78,11 +79,12 @@ public class MainController{
 	public @ResponseBody List<ResponseDto> getAllResponses(){
 		List<Response> entities = responseService.findAllResponses();
 		List<ResponseDto> dtos = new ArrayList<ResponseDto>();
-		ResponseDto dto = new ResponseDto();
 		for(Response r: entities) {
+			ResponseDto dto = new ResponseDto();
 		    dto.setId(r.getId());
 		    dto.setLabel(r.getField().getLabel());
 		    dto.setValue(r.getValue());
+		    dto.toString();
 		    dtos.add(dto);
 		}
 		return dtos;
@@ -218,21 +220,35 @@ public class MainController{
 		}
 		return fieldsToDraw;
 	}
-	@PostMapping(value = "send-response", consumes = "application/json", produces = "application/json")
-	public @ResponseBody MessageDto getResponse(@RequestBody List<ResponseDto> responses) {
-		MessageDto message = new MessageDto();
-		ModelMapper mapper = new ModelMapper();
-		Response entity;
-		long id = responseService.getMaximalId();
-		for(ResponseDto dto : responses) {
-		    entity = mapper.map(dto, Response.class);
-		    entity.setField(fieldService.findByLabel(dto.getLabel()));
-		    entity.setId(id);
-		    entity.setValue(dto.getValue().replace("\n", "\\n"));
-		    responseService.saveResponse(entity);
+
+	@MessageMapping("/responses")
+	@SendTo("/topic/responses")
+	//@PostMapping(value = "send-response", consumes = "application/json", produces = "application/json")
+	public /*@ResponseBody MessageDto*/ List<ResponseDto> getResponse(/*@RequestBody */List<ResponseDto> responses) {
+		//MessageDto message = new MessageDto();
+		System.out.println("MESSAGE");
+		if(!responses.isEmpty()) {
+		    ModelMapper mapper = new ModelMapper();
+		    Response entity;
+		    long id = responseService.getMaximalId();
+		    List<ResponseDto> elementsToRemove = new ArrayList<ResponseDto>();
+		    for(ResponseDto dto : responses) {
+			    if(!dto.getValue().equals("")) {
+				    entity = mapper.map(dto, Response.class);
+			        entity.setField(fieldService.findByLabel(dto.getLabel()));
+			        entity.setId(id);
+			        entity.setValue(dto.getValue().replace("\n", "\\n"));
+			        responseService.saveResponse(entity);
+			    } else {
+			    	elementsToRemove.add(dto);
+			    }
+		    }
+		    responses.removeAll(elementsToRemove);
+		    //sendResponse(responses);
+		    
 		}
-		
-		return message;
+		return responses;
+        //return message;
 	}
 	
 	
@@ -248,9 +264,9 @@ public class MainController{
 		return model;
 	}
 	
-	/*public void sendResponse(ResponseList<ResponseDto> responses){
+	public void sendResponse(List<ResponseDto> responses){
 		template.convertAndSend("/topic/responses", responses);
-	}*/
+	}
 	
 	
 	private Function<Field, FieldDto> getConverter(){

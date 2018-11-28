@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.3.0/sockjs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
   <script>
         $(document).ready(function(){
         	$.ajax({
@@ -38,15 +40,15 @@
         				    $group.attr("id", value["type"]);
         				    switch(value["type"]){
         				    case "Single line text":
-        				    	$input = $("<input type=\"text\" class=\"form-control\" id=\""+ value["label"] +"\" required=\"" + value["required"] + "\"/>").appendTo($group);
+        				    	$input = $("<input type=\"text\" class=\"form-control\" id=\""+ value["label"] +"\" " + (value["required"]?"required":"") + "/>").appendTo($group);
         				    	break;
         				    case "Multiline text":
-        				    	$input = $("<textarea rows=\"5\" cols=\"25\" class=\"form-control\" id=\""+ value["label"] +"\" required=\"" + value["required"] + "\"></textarea>").appendTo($group);
+        				    	$input = $("<textarea rows=\"5\" cols=\"25\" class=\"form-control\" id=\""+ value["label"] +"\" " + (value["required"]?"required":"") + "></textarea>").appendTo($group);
         				    	break;
         				    case "Radio button":
         				    	var options = value["options"].split("|");
         				        $.each(options, function(i, opt){
-        				    	    $input = $("<input type=\"radio\" name=\"" + value["label"] + "\" value=\""+opt+"\" required=\"" + value["required"] + "\"/> <span>" + opt + "</span> <br>").appendTo($group);
+        				    	    $input = $("<input type=\"radio\" name=\"" + value["label"] + "\" value=\""+opt+"\" " + (value["required"]?"required":"") + "/> <span>" + opt + "</span> <br>").appendTo($group);
         				   	    });
         				    	break;
         				    case "Checkbox":
@@ -57,14 +59,13 @@
         				    	break;
         				    case "Combobox":
         				    	$input = $("<select>").attr("class", "form-control").appendTo($group);
-        				    	$input.attr("required", value["required"]);
         				    	var options = value["options"].split("|");
         				    	$.each(options, function(i, opt){
         				    		$input.append($("<option>").attr("value",opt).text(opt));
         				    	});
         				    	break;
         				    case "Date":
-        				    	$input = $("<input type=\"date\" class=\"form-control\" id=\""+ value["label"] +"\" required=\"" + value["required"] + "\"/>").appendTo($group);
+        				    	$input = $("<input type=\"date\" class=\"form-control\" id=\""+ value["label"] +"\" " + (value["required"]?"required":"") + "/>").appendTo($group);
         				    default:	
         				    }
         				    $("#form").children().last().before($group);
@@ -77,7 +78,7 @@
         	$(document).on("submit", "#form", function(e){
         		e.preventDefault();
                 var object = {
-                		"response":[]
+                		list:[]
                 }
         		var resp;
         		$.each($(this).children("div.form-group.input"), function(){
@@ -100,10 +101,10 @@
         			    case "Checkbox":
         			    	resp["label"] = $(this).children("label").eq(0).children("span").eq(0).html();
         			    	var value = "";
-        			    	$(this).children("input").each(function(){
-        			    		value = value.concat($(this).attr("name")).concat(":").concat($(this).is(":checked")).concat(",");
+        			    	$(this).children("input:checked").each(function(){
+        			    		value = value.concat($(this).attr("name")).concat(", ");
         			    	});
-        			    	value = value.substring(0, value.length - 1);
+        			    	value = value.substring(0, value.length - 2);
         			    	resp["value"] = value;
         			    	break;
         			    case "Combobox":
@@ -114,9 +115,17 @@
         			        resp["label"] = $(this).children("label").eq(0).children("span").eq(0).html();
     			    	    resp["value"] = $(this).children("input").eq(0).val();
         			}
-        			object["response"].push(resp);
+        			object.list.push(resp);
         		});
-        		$.ajax({
+        		//alert(JSON.stringify(object.list));
+        		var socket = new SockJS('/responses');
+        	    var stompClient = Stomp.over(socket);
+        	    stompClient.connect({}, function(frame){
+        	    	stompClient.send("/app/responses", {}, JSON.stringify(object.list));
+        	    });
+        	    window.location.href = "/success";
+        	    //stompClient.disconnect();
+        		/* $.ajax({
 	  	    		  url:"send-response",
 	  	    		  type:"POST",
 	  	    		  data:JSON.stringify(object.list),
@@ -125,7 +134,7 @@
 	  	    		  success:function(data){
 	  	    			window.location.href = "/success";
 	  	    		  }
-	  	    	 });
+	  	    	 }); */
         	});
         	$(document).on("click", "#reset", function(e){$.each($(this).closest("form").children("div.form-group.input"), function(){
         			switch($(this).attr("id")){
@@ -133,7 +142,7 @@
         			    	$(this).children("input").eq(0).val("");
         			    	break;
         			    case "Multiline text":
-        			    	var value = $(this).children("textarea").eq(0).text("");
+        			    	var value = $(this).children("textarea").eq(0).val("");
         			    	break;
         			    case "Radio button":
         			    	$(this).children("input[name=" + $(this).children("label").eq(0).children("span").eq(0).html() + "]:checked").prop("checked", false); 

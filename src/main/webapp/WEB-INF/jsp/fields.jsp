@@ -39,40 +39,7 @@
 	        				$row.attr("id", fields[key].label);
 	        				$("#tbody").append($row);
 	        			}
-	        			/* $("#tfooter").append(
-	        			          "<nav aria-label=\"Page navigation\" style=\"float:right\">"+
-	        					  "<ul class=\"pagination\" style=\"max-height:40px;\">"+
-	        					  "<li>"+
-	        					  "<span>" + data.number*data["pageable"].pageSize + "-" + (data.number*data["pageable"].pageSize + data.numberOfElements) + " of "+data.totalElements+"</span>"+
-	        					  "</li>"+
-	        		              "<li class=\"page-item disabled\">"+
-	        		              "<a href=\"#\" aria-label=\"Previous\" class=\"page-link\">"+
-	        		              "<span aria-hidden=\"true\" class=\"glyphicon glyphicon-triangle-left\" style=\"vertical-align:middle\"></span>"+
-	        		              "</a>"+
-	        		              "</li>"+
-	        		              "<li class=\"page-item active\"><a href=\"#\" class=\"page-link\">1 <span class=\"sr-only\">(current)</span></a></li>"+
-	        		              "<li class=\"page-item\"><a href=\"#\" class=\"page-link\">2</a></li>"+
-	        		              "<li class=\"page-item\"><a href=\"#\" class=\"page-link\">3</a></li>"+
-	        		              "<li class=\"page-item\"><a href=\"#\" class=\"page-link\">4</a></li>"+
-	        		              "<li class=\"page-item\"><a href=\"#\" class=\"page-link\">5</a></li>"+
-	        		              "<li class=\"page-item\">"+
-	        		              "<li class=\"dropdown\">"+
-	        		              "<a class=\"dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\">"+
-	        		              "<span>"+
-	        		              "</span></a>"+
-	        		              "<ul class=\"dropdown-menu\">"+
-	        		              "<li ><a href=\"#\">5</a></li>"+
-	        		              "<li><a href=\"#\">10</a></li>"+
-	        		              "<li><a href=\"#\">15</a></li>"+
-	        		              "<li><a href=\"#\">20</a></li>"+
-	        		              "<a href=\"#\" aria-label=\"Next\" class=\"page-link\">"+
-	        		              "<span aria-hidden=\"true\" class=\"glyphicon glyphicon-triangle-right\" style=\"vertical-align:middle\"></span>"+
-	        		              "</a>"+
-	        		              "</li>"+
-	        		              "</ul>"+
-	        		              "</nav>");
-	    			    
-	        		    } */
+	        		    }
 	        	});
 	        	
 	        	var $activeField;
@@ -197,6 +164,7 @@
 	        		$("#message").html("");
         			$("#label-input").val("");
         		    $("#type-input").val("Single line text");
+        		    $("#options-input").html("");
         			$("#options-div").hide();
         			$("#required-input").prop("checked", false);
         			$("#isActive-input").prop("checked", false);
@@ -224,7 +192,7 @@
     </div>
     <div style="margin-right:150px">
     <ul class="nav navbar-nav navbar-right">
-      <li class="active"><a href="/fields">Fields</a></li>
+      <li><a href="/fields">Fields</a></li>
       <li><a href="/responses">Responses</a></li>
       <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">${name}
@@ -241,7 +209,7 @@
 </nav>
 
 <div class="container" align="center">
-    <div class="jumbotron" style="background-color:white; padding-top:20px; padding-bottom:0px; padding-left:0px; padding-right:0px;">
+    <div class="jumbotron" style="background-color:white; padding-top:10px; padding-bottom:0px; padding-left:0px; padding-right:0px;">
         <div style="border-bottom: 2px solid #dddddd; min-height:45px; padding-left:10px; padding-right:10px;">
             <h4 style="float:left;">Fields</h4>
             <input type="button" data-button="add" data-edit-id="add" data-toggle="modal" data-target="#editModal" id="addButton" class="btn-primary form-control edit" value="+ ADD FIELD" style="max-width:120px; text-align:center; float:right;">
