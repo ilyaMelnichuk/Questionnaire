@@ -43,9 +43,10 @@
                         <h4>
                             Change Password
                         </h4>
+                        <span id='message'></span>
                    </div>
                    <div class="panel-body" style="margin-left:15px; margin-right:15px;">
-                   <form id="form"  onsubmit="return validate()" method="post">
+                   <form id="form"  method="post">
                        <div class="form-group" align="left">
                            <label><span style="color:grey;">Current Password</span> *</label> <br>
                            <input type="password" id = "password" class="form-control">
@@ -76,7 +77,7 @@
 	    e.preventDefault(); 
 	    
 	    var b = true;
-	    if($("#currentPassword").val().length < 6){
+	    if($("#password").val().length < 6){
         	$("#current-message").html("please enter your current password");
         	b = false;
         }
@@ -101,9 +102,6 @@
 	    object["newPassword"] = $("#newPassword").val();
 	    
 	    var json = JSON.stringify(object);
-	    
-	    alert(json);
-
 	    $.ajax({
 	           type: "POST",
 	           dataType: "json",

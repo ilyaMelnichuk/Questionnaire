@@ -17,16 +17,7 @@
         		url: "get-fields-to-draw",
         		type: "GET",
         		dataType: "json",
-        		success: function(data){/* 
-        			
-        			<div class="form-group" align="left">
-                    <label><span style="color:grey;">First Name</span></label> <br>
-                    <input type="text" id = "firstName" class="form-control">
-                    <span id='current-message' style="color:red;"></span>
-                    </div> */
-        			
-        			
-        			//alert(JSON.stringify(data));
+        		success: function(data){
         			$.each(data, function(key, value){
         				    $group = $("<div name=\"fsd\" class=\"form-group input\" align=\"left\">"+
             					  	"<label>"+
@@ -96,7 +87,7 @@
         			    	break;
         			    case "Radio button":
         			    	resp["label"] = $(this).children("label").eq(0).children("span").eq(0).html();
-        			    	resp["value"]= $(this).children("input[name=" + $(this).children("label").eq(0).children("span").eq(0).html() + "]:checked").val(); 
+        			    	resp["value"]= ($(this).children("input[name=\"" + $(this).children("label").eq(0).children("span").eq(0).html() + "\"]:checked").val()==undefined?"":$(this).children("input[name=\"" + $(this).children("label").eq(0).children("span").eq(0).html() + "\"]:checked").val()); 
         			    	break;
         			    case "Checkbox":
         			    	resp["label"] = $(this).children("label").eq(0).children("span").eq(0).html();
@@ -117,24 +108,14 @@
         			}
         			object.list.push(resp);
         		});
-        		//alert(JSON.stringify(object.list));
         		var socket = new SockJS('/responses');
         	    var stompClient = Stomp.over(socket);
         	    stompClient.connect({}, function(frame){
         	    	stompClient.send("/app/responses", {}, JSON.stringify(object.list));
         	    });
-        	    window.location.href = "/success";
-        	    //stompClient.disconnect();
-        		/* $.ajax({
-	  	    		  url:"send-response",
-	  	    		  type:"POST",
-	  	    		  data:JSON.stringify(object.list),
-	  	    		  datatype:"json",
-	  	    		  contentType:"application/json",
-	  	    		  success:function(data){
-	  	    			window.location.href = "/success";
-	  	    		  }
-	  	    	 }); */
+        	    setTimeout(function(){
+        	    	window.location.href = "/success";
+	        	    }, 1000);
         	});
         	$(document).on("click", "#reset", function(e){$.each($(this).closest("form").children("div.form-group.input"), function(){
         			switch($(this).attr("id")){

@@ -8,7 +8,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.example.questionnaire.dao.ResponseRepository;
-import com.example.questionnaire.entity.Field;
 import com.example.questionnaire.entity.Response;
 
 @Service

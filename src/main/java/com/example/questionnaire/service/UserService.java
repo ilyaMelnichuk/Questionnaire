@@ -47,6 +47,12 @@ public class UserService {
         userRepository.save(user);
 	}
 	
+	public boolean checkPassword(String password, String email) {
+		User user = userRepository.findByEmail(email);
+		System.out.println(bCryptPasswordEncoder.encode(password) + "\n" + user.getPassword());
+		return bCryptPasswordEncoder.matches(password, user.getPassword());
+	}
+	
 	public void updateUser(String oldEmail, User user) {
 		userRepository.updateByEmail(oldEmail, user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhoneNumber());
 	}
@@ -55,13 +61,11 @@ public class UserService {
         userRepository.save(user);
     }
     
-    public boolean authenticateUser(User user) {
-    	return (findByEmail(user.getEmail()).getPassword() == bCryptPasswordEncoder.encode(user.getPassword()));
-    }
 	public void changeUserPassword(User user, String password) {
 		user.setPassword(bCryptPasswordEncoder.encode(password));
 		userRepository.save(user);
 	}
+	
 	public void editUser(User user) {
 		userRepository.save(user);
 	}

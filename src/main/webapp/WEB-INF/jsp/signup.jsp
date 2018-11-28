@@ -98,8 +98,6 @@
         	    
         	    var json = JSON.stringify(object);
         	    
-        	    alert(json);
-
         	    $.ajax({
         	           type: "POST",
         	           dataType: "json",

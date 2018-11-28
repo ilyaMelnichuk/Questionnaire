@@ -1,13 +1,10 @@
 package com.example.questionnaire.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -17,29 +14,35 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.questionnaire.dto.FieldDto;
 import com.example.questionnaire.dto.MessageDto;
 import com.example.questionnaire.dto.ResponseDto;
-import com.example.questionnaire.dto.ResponseList;
 import com.example.questionnaire.entity.Field;
 import com.example.questionnaire.entity.Option;
 import com.example.questionnaire.entity.Response;
 import com.example.questionnaire.entity.Type;
+import com.example.questionnaire.entity.User;
 import com.example.questionnaire.service.FieldService;
 import com.example.questionnaire.service.ResponseService;
 import com.example.questionnaire.service.UserService;
 
+
+@SessionAttributes("name")
 @Controller
 public class MainController{
 	@Autowired
@@ -90,17 +93,6 @@ public class MainController{
 		return dtos;
 	}
 	
-	/*@GetMapping(value = "/get-json", produces = "application/json")
-	public @ResponseBody ResponseList<ResponseDto> geton(){
-		ResponseDto dto = new ResponseDto();
-		dto.setId(12);
-		dto.setLabel("fds");
-		dto.setValue("fds");
-		ResponseList<ResponseDto> dtos = new ResponseList<ResponseDto>();
-		dtos.setResponse(Arrays.asList(dto));
-		return dtos;
-	}*/
-	
 	/*@PostMapping(value = "/get-page", consumes = "application/json" ,produces = "application/json")
 	public @ResponseBody Page<Field> getDefaultPage(@RequestBody MessageDto message){
 	    String page = message.getMessage();
@@ -112,28 +104,6 @@ public class MainController{
 	        return fieldService.findAll(PageRequest.of(pageNumber, pageSize));
 	    }
 		
-	}*/
-	
-/*	@PostMapping(value = "send-response", consumes = "application/json", produces = "application/json")
-	public @ResponseBody MessageDto getResponses(@RequestBody @Valid ResponseList<ResponseDto> responses, BindingResult bindingResult) {
-		MessageDto message = new MessageDto();
-		if(bindingResult.hasErrors()) {
-			message.setMessage("please fill in all required fields");
-		}else {
-		    ModelMapper mapper = new ModelMapper();
-		    Response entity;
-		    long id = responseService.getMaximalId();
-		    for(ResponseDto dto : responses.getResponse()) {
-		        entity = mapper.map(dto, Response.class);
-		        entity.setField(fieldService.findByLabel(dto.getLabel()));
-		        entity.setId(id);
-		        entity.setValue(dto.getValue().replace("\n", "\\n"));
-		        responseService.saveResponse(entity);
-		    }
-		    //sendResponse(responses);
-		    message.setMessage("success");
-		}
-		return message;
 	}*/
 	
 	@PostMapping(value = "/save-field", consumes = "application/json", produces = "application/json")
@@ -154,12 +124,9 @@ public class MainController{
 				ModelMapper mapper = new ModelMapper();
 				mapper.map(fieldDto, field);
 				field.setType(type);
-				System.out.println(field);
-				System.out.println(fieldDto);
 				if(!fieldDto.getOptions().equals("")) {
 					String opts = fieldDto.getOptions();
 					String[] options = opts.split("\n");
-					System.out.println(Arrays.toString(options));
 					Option option;
 					field.setOptions(new ArrayList<Option>());
 					for(int i = 0; i < options.length; i++) {/*
@@ -223,10 +190,7 @@ public class MainController{
 
 	@MessageMapping("/responses")
 	@SendTo("/topic/responses")
-	//@PostMapping(value = "send-response", consumes = "application/json", produces = "application/json")
-	public /*@ResponseBody MessageDto*/ List<ResponseDto> getResponse(/*@RequestBody */List<ResponseDto> responses) {
-		//MessageDto message = new MessageDto();
-		System.out.println("MESSAGE");
+	public List<ResponseDto> getResponse(List<ResponseDto> responses) {
 		if(!responses.isEmpty()) {
 		    ModelMapper mapper = new ModelMapper();
 		    Response entity;
@@ -244,11 +208,9 @@ public class MainController{
 			    }
 		    }
 		    responses.removeAll(elementsToRemove);
-		    //sendResponse(responses);
 		    
 		}
 		return responses;
-        //return message;
 	}
 	
 	
@@ -268,6 +230,13 @@ public class MainController{
 		template.convertAndSend("/topic/responses", responses);
 	}
 	
+	@ModelAttribute("name")
+	public String setUpUserName() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String email = auth.getName();
+		User user = userService.findByEmail(email);
+		return user.getFirstName() + " " + user.getLastName();
+	}
 	
 	private Function<Field, FieldDto> getConverter(){
 		return new Function<Field, FieldDto>() {

@@ -13,9 +13,10 @@
 <body style="background-color:#f1f1f1;">
     <nav class="navbar navbar-collapsible" style="background-color:white; border-bottom-color:#dddddd; border-radius:0px;">
     <div class="container-fluid">
-    <div class="navbar-header">
+    <div class="navbar-header" style="margin-left:150px">
       <a class="navbar-brand" href="/"><span style="color:black;"><strong>LOGO</strong></span><span style="color:blue;">TYPE</span></a>
     </div>
+    <div style="margin-right:150px">
     <ul class="nav navbar-nav navbar-right">
       <li><a href="/fields">Fields</a></li>
       <li><a href="/responses">Responses</a></li>
@@ -29,6 +30,7 @@
         </ul>
       </li>
     </ul>
+    </div>
     </div>
     </nav>
     
@@ -99,7 +101,6 @@
         	    object["firstName"] = $("#firstName").val();
         	    object["lastName"] = $("#lastName").val();
         	    object["phoneNumber"] = $("#phoneNumber").val();
-
         	    $.ajax({
         	           type: "POST",
         	           dataType: "json",
@@ -114,7 +115,6 @@
         	        	   alert(JSON.stringify(data));
         	           }
                 });
-
         	    
         }); 
         

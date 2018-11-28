@@ -56,7 +56,6 @@
 	    object["email"] = $("#email").val();
 	    
 	    var json = JSON.stringify(object);
-
 	    $.ajax({
 	           type: 'POST',
 	           dataType: "json",
@@ -72,7 +71,6 @@
 	        	   alert(JSON.stringify(data));
 	           }
         });
-
 	    
      }); 
         

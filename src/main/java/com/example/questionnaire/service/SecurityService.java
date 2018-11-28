@@ -28,9 +28,7 @@ public class SecurityService {
 	
 	public String validatePasswordResetToken(String mail, String token){
 		PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
-		
 		if(passwordResetToken == null || !passwordResetToken.getUser().getEmail().equals(mail)) {
-			
 			return "token is not valid!";
 		}
 		Date date = new Date();
