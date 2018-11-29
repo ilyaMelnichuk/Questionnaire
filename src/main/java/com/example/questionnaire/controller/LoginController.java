@@ -1,11 +1,17 @@
 package com.example.questionnaire.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,10 +28,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.questionnaire.dto.FieldDto;
 import com.example.questionnaire.dto.MessageDto;
+import com.example.questionnaire.dto.ResponseDto;
 import com.example.questionnaire.dto.UserDto;
+import com.example.questionnaire.entity.Field;
+import com.example.questionnaire.entity.Response;
 import com.example.questionnaire.entity.User;
 import com.example.questionnaire.service.EmailService;
+import com.example.questionnaire.service.FieldService;
+import com.example.questionnaire.service.ResponseService;
 import com.example.questionnaire.service.SecurityService;
 import com.example.questionnaire.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,6 +54,63 @@ public class LoginController {
     
     @Autowired 
     private EmailService emailService;
+    
+    @Autowired 
+    private FieldService fieldService;
+    
+    @Autowired 
+    private ResponseService responseService;
+    
+    @RequestMapping(value = "/")
+    public ModelAndView home() {
+		ModelAndView model = new ModelAndView("index");
+    	return model;
+    }
+    
+    @GetMapping(value = "/get-fields-to-draw", produces = "application/json")
+	public @ResponseBody List<FieldDto> getJson(){
+		List<Field> fieldsFromDb = fieldService.findAllActive();
+		ModelMapper mapper = new ModelMapper();
+		mapper.addMappings(new PropertyMap<Field, FieldDto>() {
+			  @Override
+			  protected void configure() {
+                map().setOptions(source.convertOptionsToStringPipe());
+			    map().setType(source.convertEnumToString());
+			  }
+	    });
+		List<FieldDto> fieldsToDraw = new ArrayList<FieldDto>();
+		for(Field entity: fieldsFromDb) {
+			fieldsToDraw.add(mapper.map(entity, FieldDto.class));
+		}
+		return fieldsToDraw;
+	}
+    
+    @MessageMapping("/responses")
+	@SendTo("/topic/responses")
+	public List<ResponseDto> getResponse(List<ResponseDto> responses) {
+		if(!responses.isEmpty()) {
+		    ModelMapper mapper = new ModelMapper();
+		    Response entity;
+		    long id = responseService.getMaximalId();
+		    List<ResponseDto> elementsToRemove = new ArrayList<ResponseDto>();
+		    for(ResponseDto dto : responses) {
+			    if(!dto.getValue().equals("")) {
+				    entity = mapper.map(dto, Response.class);
+			        entity.setField(fieldService.findByLabel(dto.getLabel()));
+			        entity.setId(id);
+			        entity.setValue(dto.getValue().replace("\n", "\\n"));
+			        responseService.saveResponse(entity);
+			    } else {
+			    	elementsToRemove.add(dto);
+			    }
+		    }
+		    responses.removeAll(elementsToRemove);
+		    
+		}
+		return responses;
+	}
+    
+    
     
     @GetMapping(value = "/forgot-password")
 	public ModelAndView forgotPassword(){
@@ -140,6 +209,7 @@ public class LoginController {
     		result.put("message", errors.toString());
     	}
     	return result.toString();
+    	
     }
     
 }

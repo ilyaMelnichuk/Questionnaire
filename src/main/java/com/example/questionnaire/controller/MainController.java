@@ -53,10 +53,8 @@ public class MainController{
 	private ResponseService responseService;
 	@Autowired
 	private SimpMessagingTemplate template;
-    @RequestMapping(value = "/")
-    public ModelAndView home() {
-    	return new ModelAndView("index");
-    }
+	
+
     
 	@GetMapping("/fields")
 	public ModelAndView getAllFields(HttpServletRequest request){
@@ -170,50 +168,6 @@ public class MainController{
 		return message;
 	}
 	
-	@GetMapping(value = "/get-fields-to-draw", produces = "application/json")
-	public @ResponseBody List<FieldDto> getJson(){
-		List<Field> fieldsFromDb = fieldService.findAllActive();
-		ModelMapper mapper = new ModelMapper();
-		mapper.addMappings(new PropertyMap<Field, FieldDto>() {
-			  @Override
-			  protected void configure() {
-                map().setOptions(source.convertOptionsToStringPipe());
-			    map().setType(source.convertEnumToString());
-			  }
-	    });
-		List<FieldDto> fieldsToDraw = new ArrayList<FieldDto>();
-		for(Field entity: fieldsFromDb) {
-			fieldsToDraw.add(mapper.map(entity, FieldDto.class));
-		}
-		return fieldsToDraw;
-	}
-
-	@MessageMapping("/responses")
-	@SendTo("/topic/responses")
-	public List<ResponseDto> getResponse(List<ResponseDto> responses) {
-		if(!responses.isEmpty()) {
-		    ModelMapper mapper = new ModelMapper();
-		    Response entity;
-		    long id = responseService.getMaximalId();
-		    List<ResponseDto> elementsToRemove = new ArrayList<ResponseDto>();
-		    for(ResponseDto dto : responses) {
-			    if(!dto.getValue().equals("")) {
-				    entity = mapper.map(dto, Response.class);
-			        entity.setField(fieldService.findByLabel(dto.getLabel()));
-			        entity.setId(id);
-			        entity.setValue(dto.getValue().replace("\n", "\\n"));
-			        responseService.saveResponse(entity);
-			    } else {
-			    	elementsToRemove.add(dto);
-			    }
-		    }
-		    responses.removeAll(elementsToRemove);
-		    
-		}
-		return responses;
-	}
-	
-	
 	@RequestMapping("/responses")
 	public ModelAndView responses(){
 		ModelAndView model = new ModelAndView("responses");
@@ -235,7 +189,7 @@ public class MainController{
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String email = auth.getName();
 		User user = userService.findByEmail(email);
-		return user.getFirstName() + " " + user.getLastName();
+		return user!=null?user.getFirstName() + " " + user.getLastName():null;
 	}
 	
 	private Function<Field, FieldDto> getConverter(){

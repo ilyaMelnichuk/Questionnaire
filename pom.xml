@@ -72,7 +72,6 @@
 			<scope>provided</scope>
 		</dependency>
 		
-		<!-- WEBSOCKET WEBSOCKET WEB-SOCKET WEBSOCKET WEBSOCKET  -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
@@ -141,6 +140,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<finalName>${artifactId}</finalName>
 	</build>
 
 

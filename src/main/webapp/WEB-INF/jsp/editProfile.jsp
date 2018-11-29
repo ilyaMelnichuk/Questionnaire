@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>    
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,19 +15,19 @@
     <nav class="navbar navbar-collapsible" style="background-color:white; border-bottom-color:#dddddd; border-radius:0px;">
     <div class="container-fluid">
     <div class="navbar-header" style="margin-left:150px">
-      <a class="navbar-brand" href="/"><span style="color:black;"><strong>LOGO</strong></span><span style="color:blue;">TYPE</span></a>
+      <a class="navbar-brand" href="${contextPath}/"><span style="color:black;"><strong>LOGO</strong></span><span style="color:blue;">TYPE</span></a>
     </div>
     <div style="margin-right:150px">
     <ul class="nav navbar-nav navbar-right">
-      <li><a href="/fields">Fields</a></li>
-      <li><a href="/responses">Responses</a></li>
+      <li><a href="${contextPath}/fields">Fields</a></li>
+      <li><a href="${contextPath}/responses">Responses</a></li>
       <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">${name}
         <span class="caret"></span></a>
         <ul class="dropdown-menu">
-          <li ><a href="/edit-profile">Edit Profile</a></li>
-          <li><a href="/change-password">Change Password</a></li>
-          <li><a href="/logout">Log Out</a></li>
+          <li ><a href="${contextPath}/edit-profile">Edit Profile</a></li>
+          <li><a href="${contextPath}/change-password">Change Password</a></li>
+          <li><a href="${contextPath}/logout">Log Out</a></li>
         </ul>
       </li>
     </ul>
@@ -45,7 +46,7 @@
                         <span id='message'></span>
                    </div>
                    <div class="panel-body" style="margin-left:15px; margin-right:15px;">
-                   <form id="form"  action="/check-changes" method="post">
+                   <form id="form"  action="${contextPath}/check-changes" method="post">
                        <div class="form-group" align="left">
                            <label><span style="color:grey;">First Name</span></label> <br>
                            <input type="text" id = "firstName" class="form-control">

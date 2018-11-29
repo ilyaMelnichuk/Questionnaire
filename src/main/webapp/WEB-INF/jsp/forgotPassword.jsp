@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,10 +15,10 @@
     <nav class="navbar navbar-collapsible" style="background-color:white; border-bottom-color:#dddddd; border-radius:0px;">
     <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="/"><span style="color:black;"><strong>LOGO</strong></span><span style="color:blue;">TYPE</span></a>
+      <a class="navbar-brand" href="${contextPath}/"><span style="color:black;"><strong>LOGO</strong></span><span style="color:blue;">TYPE</span></a>
     </div>
     <ul class="nav navbar-nav navbar-right">
-      <li><a href="/login">Log In</a></li>
+      <li><a href="${contextPath}/login">Log In</a></li>
     </ul>
     </div>
     </nav>
@@ -32,7 +33,7 @@
                         <span id='message'></span>
                    </div>
                    <div class="panel-body" style="margin-left:15px; margin-right:15px;">
-                   <form id="form"  action="/forgot-password" method="post">
+                   <form id="form"  action="${contextPath}/forgot-password" method="post">
                        <div class="form-group" align="left">
                            <label><span style="color:grey;">Email</span></label> <br>
                            <input type="email" id = "email" class="form-control">

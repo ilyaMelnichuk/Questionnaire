@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
-
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html>
@@ -43,7 +42,7 @@
                            <label>
                                <input type="checkbox" name="remember_me">
                                Remember me
-                               <a href="/forgot-password" >Forgot your password?</a>
+                               <a href="${contextPath}/forgot-password" >Forgot your password?</a>
                            </label>
                        </div> 
                        <br>
@@ -52,7 +51,7 @@
                        <div class="form-group" align="center">
                            <label>
                                Don't have account?
-                               <a href="<c:url value="/signup" />">Sign up</a>
+                               <a href="${contextPath}/signup">Sign up</a>
                            </label>
                        </div>
                 </form>

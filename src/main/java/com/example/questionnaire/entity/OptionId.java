@@ -2,8 +2,6 @@ package com.example.questionnaire.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.Embeddable;
-
 public class OptionId implements Serializable{
     private long id;
     private String field;
@@ -59,10 +57,4 @@ public class OptionId implements Serializable{
 			return false;
 		return true;
 	}
-	
-	
-    
-    /*@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "field_id")
-    private Field field;*/
 }
