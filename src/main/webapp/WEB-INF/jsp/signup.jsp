@@ -15,11 +15,11 @@
     <nav class="navbar navbar-collapsible" style="background-color:white; border-bottom-color:#dddddd; border-radius:0px;">
     <div class="container-fluid">
     <div class="navbar-header" style="margin-left:150px;">
-      <a class="navbar-brand" href="/"><span style="color:black;"><strong>LOGO</strong></span><span style="color:blue;">TYPE</span></a>
+      <a class="navbar-brand" href="${contextPath}/"><span style="color:black;"><strong>LOGO</strong></span><span style="color:blue;">TYPE</span></a>
     </div>
     <div style="margin-right:150px;">
     <ul class="nav navbar-nav navbar-right">
-      <li><a href="/login">Log In</a></li>
+      <li><a href="${contextPath}/login">Log In</a></li>
     </ul>
     </div>
     </div>
@@ -35,7 +35,7 @@
                         <span id='message'></span>
                    </div>
                    <div class="panel-body" style="margin-left:15px; margin-right:15px;">
-                   <form id="form"  action="/signup" method="post">
+                   <form id="form"  action="${contextPath}/signup" method="post">
                        <div class="form-group" align="left">
                            <input type="email" id = "email" class="form-control" placeholder="Email*">
                            <span id='current-message' style="color:red;"></span>

@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -85,8 +86,8 @@ public class LoginController {
 		return fieldsToDraw;
 	}
     
-    @MessageMapping("/responses")
-	@SendTo("/topic/responses")
+    @MessageMapping("/resps")
+	@SendTo("/topic/resps")
 	public List<ResponseDto> getResponse(List<ResponseDto> responses) {
 		if(!responses.isEmpty()) {
 		    ModelMapper mapper = new ModelMapper();
@@ -149,11 +150,12 @@ public class LoginController {
 	}
 	
 	@PostMapping(value = "/reset-password", consumes = "application/json")
-	public String resetPassword(@RequestBody MessageDto messageDto){
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	public @ResponseBody MessageDto resetPassword(@RequestBody MessageDto messageDto){
+		String email = ((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
 		System.out.println(messageDto.getMessage());
-		userService.changeUserPassword(user, messageDto.getMessage());
-		return "redirect:/login";
+		userService.changeUserPassword(userService.findByEmail(email), messageDto.getMessage());
+		messageDto.setMessage("password has been changed");
+		return messageDto;
 	}
     
     @GetMapping(value="/login")

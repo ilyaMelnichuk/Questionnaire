@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -108,13 +110,15 @@
         			}
         			object.list.push(resp);
         		});
-        		var socket = new SockJS('/responses');
+        		s = $("#form").data("s");
+        		sub = $("#form").data("sub");
+        		var socket = new SockJS(s);
         	    var stompClient = Stomp.over(socket);
         	    stompClient.connect({}, function(frame){
-        	    	stompClient.send("/app/responses", {}, JSON.stringify(object.list));
+        	    	stompClient.send(sub, {}, JSON.stringify(object.list));
         	    });
         	    setTimeout(function(){
-        	    	window.location.href = "/success";
+        	    	window.location.href = $("#form").data("success");;
 	        	    }, 1000);
         	});
         	$(document).on("click", "#reset", function(e){$.each($(this).closest("form").children("div.form-group.input"), function(){
@@ -149,11 +153,12 @@
     <nav class="navbar navbar-collapsible" style="background-color:white; border-bottom-color:#dddddd; border-radius:0px;">
     <div class="container-fluid">
     <div class="navbar-header" style="margin-left:150px;">
-      <a class="navbar-brand" href="/"><span style="color:black;"><strong>LOGO</strong></span><span style="color:blue;">TYPE</span></a>
+      <a class="navbar-brand" href="${contextPath}/"><span style="color:black;"><strong>LOGO</strong></span><span style="color:blue;">TYPE</span></a>
     </div>
     <div style="margin-right:150px">
     <ul class="nav navbar-nav navbar-right">
-      <li><a href="/login">Log In</a></li>
+      <li><a href="${contextPath}/fields">Fields</a></li>
+      <li><a href="${contextPath}/responses">Responses</a></li>
     </ul>
     </div>
     </div>
@@ -161,10 +166,10 @@
     
     <div class="container" align="center">
            <div class = "jumbotron p-2" style="max-width:400px; background-color:white; padding-bottom:5px; padding-left:30px; padding-top:15px">
-               <form id="form" action="send-response" method="post">
+               <form id="form" action="${contextPath}/send-response" method="post" data-s="${contextPath}/resps" data-sub="/app/resps" data-success="${contextPath}/success">
                    <div align="left" id="last" class="form-group" style="min-height:35px;">
                         <input class="btn-primary form-control" id="button" style="max-width:100px; float:left;" type="submit" value="SUBMIT">
-                        <input class="btn-primary form-control" id="reset" style="max-width:100px; float:right;" type="button" value="RESET">
+                        <input class="btn-primary form-control" id="reset" style="max-width:100px; float:right;" type="button" value="RESET" >
                    </div>
                </form>
            </div>

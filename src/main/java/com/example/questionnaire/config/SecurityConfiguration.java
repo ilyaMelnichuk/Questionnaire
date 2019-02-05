@@ -2,6 +2,7 @@ package com.example.questionnaire.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -27,10 +28,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception{
     	 http.authorizeRequests()
                 .antMatchers("/login/**").permitAll()
-                .antMatchers("/").hasRole("USER")
+                .antMatchers("/").permitAll()
                 .antMatchers("/forgot-password/**").permitAll()
+                .antMatchers("/get-fields-to-draw/**").permitAll()
                 .antMatchers("/validate-token/**").permitAll()
                 .antMatchers("/signup/**").permitAll()
+                .antMatchers("/app/**").permitAll()
+                .antMatchers("/topic/**").permitAll()
+                .antMatchers("/resps/**").permitAll()
+                .antMatchers("/app/resps/**").permitAll()
                 .antMatchers("/signup/create-user/**").permitAll()
                 .antMatchers("/success/**").permitAll()
                 .antMatchers("/login-error/**").permitAll()
@@ -42,7 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                 .antMatchers("/change-password/**").hasRole("USER")
                 .antMatchers("/reset-password/**").hasRole("CHANGE_PASSWORD")
                 .anyRequest()
-                .authenticated().and().csrf().disable().formLogin()
+                .authenticated().and().csrf().ignoringAntMatchers("/app/**").and().csrf().disable().formLogin()
                 .loginPage("/login").permitAll().defaultSuccessUrl("/responses").failureUrl("/login").successForwardUrl("/responses")
                 .usernameParameter("email")
                 .passwordParameter("password")
