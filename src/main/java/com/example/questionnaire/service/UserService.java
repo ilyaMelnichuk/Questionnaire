@@ -49,7 +49,6 @@ public class UserService {
 	
 	public boolean checkPassword(String password, String email) {
 		User user = userRepository.findByEmail(email);
-		System.out.println(bCryptPasswordEncoder.encode(password) + "\n" + user.getPassword());
 		return bCryptPasswordEncoder.matches(password, user.getPassword());
 	}
 	

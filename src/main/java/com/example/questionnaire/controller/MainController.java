@@ -1,5 +1,6 @@
 package com.example.questionnaire.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -81,6 +82,22 @@ public class MainController{
 	@GetMapping(value = "/get-all-responses", produces = "application/json")
 	public @ResponseBody List<ResponseDto> getAllResponses(){
 		List<Response> entities = responseService.findAllResponses();
+		List<ResponseDto> dtos = new ArrayList<ResponseDto>();
+		for(Response r: entities) {
+			ResponseDto dto = new ResponseDto();
+		    dto.setId(r.getId());
+		    dto.setLabel(r.getField().getLabel());
+		    dto.setValue(r.getValue());
+		    dto.setUser(r.getUser().getFirstName() + " " + r.getUser().getLastName());
+		    dto.toString();
+		    dtos.add(dto);
+		}
+		return dtos;
+	}
+	
+	@GetMapping(value = "/get-personal-responses", produces = "application/json")
+	public @ResponseBody List<ResponseDto> getPersonalResponses(Principal principal){
+		List<Response> entities = responseService.findByEmail(principal.getName());
 		List<ResponseDto> dtos = new ArrayList<ResponseDto>();
 		for(Response r: entities) {
 			ResponseDto dto = new ResponseDto();
@@ -190,7 +207,7 @@ public class MainController{
 
 	@MessageMapping("/responses")
 	@SendTo("/topic/responses")
-	public List<ResponseDto> getResponse(List<ResponseDto> responses) {
+	public List<ResponseDto> getResponse(List<ResponseDto> responses, Principal principal) {
 		if(!responses.isEmpty()) {
 		    ModelMapper mapper = new ModelMapper();
 		    Response entity;
@@ -202,6 +219,7 @@ public class MainController{
 			        entity.setField(fieldService.findByLabel(dto.getLabel()));
 			        entity.setId(id);
 			        entity.setValue(dto.getValue().replace("\n", "\\n"));
+			        entity.setUser(userService.findByEmail(principal.getName()));
 			        responseService.saveResponse(entity);
 			    } else {
 			    	elementsToRemove.add(dto);
@@ -217,6 +235,11 @@ public class MainController{
 	@RequestMapping("/responses")
 	public ModelAndView responses(){
 		ModelAndView model = new ModelAndView("responses");
+		return model;
+	}
+	@RequestMapping("/my-responses")
+	public ModelAndView myResponses(){
+		ModelAndView model = new ModelAndView("myResponses");
 		return model;
 	}
 	

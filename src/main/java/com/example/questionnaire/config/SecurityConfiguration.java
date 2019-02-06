@@ -10,16 +10,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.example.questionnaire.service.UserDetailsServiceImpl;
 
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private UserDetailsServiceImpl userDetailsServiceImpl;
 	@Override
     protected void configure(AuthenticationManagerBuilder auth)
             throws Exception {
-        auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(new BCryptPasswordEncoder());
+        auth
+        .userDetailsService(userDetailsServiceImpl).passwordEncoder(new BCryptPasswordEncoder());
     }
 	
 	
@@ -27,28 +30,29 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception{
     	 http.authorizeRequests()
                 .antMatchers("/login/**").permitAll()
+                .antMatchers("/login-error/**").permitAll()
                 .antMatchers("/forgot-password/**").permitAll()
                 .antMatchers("/validate-token/**").permitAll()
                 .antMatchers("/signup/**").permitAll()
-                .antMatchers("/signup/create-user/**").permitAll()
-                .antMatchers("/success/**").permitAll()
-                .antMatchers("/login-error/**").permitAll()
                 .antMatchers("/").hasRole("USER")
-                .antMatchers("/fields/**").hasRole("USER")
-                .antMatchers("/responses/**").hasRole("USER")
+                .antMatchers("/success/**").hasRole("USER")
+                .antMatchers("/my-responses/**").hasRole("USER")
                 .antMatchers("/load-user-data/**").hasRole("USER")
                 .antMatchers("/check-changes/**").hasRole("USER")
                 .antMatchers("/edit-profile/**").hasRole("USER")
                 .antMatchers("/change-password/**").hasRole("USER")
+                .antMatchers("/fields").hasRole("ADMIN")
+                .antMatchers("/responses").hasRole("ADMIN")
                 .antMatchers("/reset-password/**").hasRole("CHANGE_PASSWORD")
                 .anyRequest()
                 .authenticated().and().csrf().disable().formLogin()
-                .loginPage("/login").permitAll().defaultSuccessUrl("/responses").failureUrl("/login").successForwardUrl("/responses")
+				.loginPage("/login").successHandler(new CustomAuthenticationSuccessHandler()) //permitAll().defaultSuccessUrl("/responses").failureUrl("/login-error").successForwardUrl("/responses")
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .and().logout()
                 .logoutSuccessUrl("/login").and()
-                .rememberMe().key("uniqueAndSecret").rememberMeParameter("remember_me");
+                .rememberMe().key("uniqueAndSecret").rememberMeParameter("remember_me")
+                .and().exceptionHandling().accessDeniedPage("/access-denied");
     }
    
     @Override

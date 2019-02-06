@@ -8,12 +8,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.example.questionnaire.dao.ResponseRepository;
+import com.example.questionnaire.dao.UserRepository;
 import com.example.questionnaire.entity.Response;
 
 @Service
 public class ResponseService {
     @Autowired 
     ResponseRepository responseRepository;
+    @Autowired 
+    UserRepository userRepository;
     
     public long getMaximalId() {
     	return responseRepository.getMaximalId();
@@ -26,5 +29,8 @@ public class ResponseService {
 	}
 	public List<Response> findAllResponses() {
 		return responseRepository.findAll();
+	}
+	public List<Response> findByEmail(String email) {
+		return responseRepository.findByUser(userRepository.findByEmail(email));
 	}
 }

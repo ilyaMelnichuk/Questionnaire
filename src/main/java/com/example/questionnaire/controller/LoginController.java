@@ -1,12 +1,16 @@
 package com.example.questionnaire.controller;
 
+import java.security.Principal;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,6 +38,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 @SessionAttributes("name")
 @Controller
 public class LoginController {
+	@Autowired 
+	private BCryptPasswordEncoder crypto = new BCryptPasswordEncoder();
     @Autowired
     private UserService userService;
     
@@ -73,6 +79,8 @@ public class LoginController {
 	    }
 		return "redirect:/reset-password";
 	}
+	
+	@PreAuthorize("hasRole('ROLE_CHANGE_PASSWORD')")
 	@GetMapping(value = "/reset-password")
 	public ModelAndView openResetPasswordPage(){
 		ModelAndView model = new ModelAndView("resetPassword");
@@ -82,12 +90,20 @@ public class LoginController {
 	@PostMapping(value = "/reset-password", consumes = "application/json")
 	public String resetPassword(@RequestBody MessageDto messageDto){
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		System.out.println(messageDto.getMessage());
 		userService.changeUserPassword(user, messageDto.getMessage());
 		return "redirect:/login";
 	}
     
-    @GetMapping(value="/login")
+	@GetMapping(value="/login")
+    public String login(Principal principal) {
+    	if(principal == null) {
+    		return "login";
+    	}else {
+    		return "redirect:/";
+    	}
+    }
+	
+    @GetMapping(value="/login-error")
     public String login(Model model, String error, String logout) {
     	if(error != null) {
     		model.addAttribute("message", error);
@@ -95,9 +111,8 @@ public class LoginController {
     	if(logout != null) {
     		model.addAttribute("message", "You have been logged out successfuly!");
     	}
-    	return "login";
+    	return "login"; 	
     }
-    
     
     @GetMapping(value= "/signup")
     public ModelAndView signup() {
@@ -114,12 +129,8 @@ public class LoginController {
     		User newUser = userService.findByEmail(userDto.getEmail());
         	
         	if(newUser==null) {
-        		User user = new User();
-        		user.setEmail(userDto.getEmail());
-        		user.setFirstName(userDto.getFirstName());
-        		user.setLastName(userDto.getLastName());
-        		user.setPassword(userDto.getPassword());
-        		user.setPhoneNumber(userDto.getPhoneNumber());
+        		ModelMapper modelMapper = new ModelMapper();
+        		User user = modelMapper.map(userDto, User.class);
         		
         		userService.registerUser(user);
                 emailService.sendMessage(userDto.getEmail(), "Registration in Questionnaire Portal",
@@ -140,6 +151,11 @@ public class LoginController {
     		result.put("message", errors.toString());
     	}
     	return result.toString();
+    }
+    
+    @GetMapping("/access-denied")
+    public String accessDenied() {
+    	return "accessDenied";
     }
     
 }

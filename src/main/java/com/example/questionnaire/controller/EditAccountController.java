@@ -1,6 +1,7 @@
 package com.example.questionnaire.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -33,7 +34,7 @@ public class EditAccountController {
 	@Autowired 
 	EmailService emailService;
 	
-	
+	@PreAuthorize("hasRole('USER')")
 	@GetMapping(value = "/edit-profile")
 	public ModelAndView editProfile(){
 		ModelAndView model = new ModelAndView("editProfile");

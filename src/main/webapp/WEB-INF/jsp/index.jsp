@@ -1,17 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>LOGOTYPE</title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.3.0/sockjs.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-  <script>
+<title>LOGOTYPE</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.3.0/sockjs.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script>
         $(document).ready(function(){
         	$.ajax({
         		url: "get-fields-to-draw",
@@ -145,29 +150,43 @@
   </script>
 </head>
 
-<body style="background-color:#f1f1f1;">
-    <nav class="navbar navbar-collapsible" style="background-color:white; border-bottom-color:#dddddd; border-radius:0px;">
-    <div class="container-fluid">
-    <div class="navbar-header" style="margin-left:150px;">
-      <a class="navbar-brand" href="/"><span style="color:black;"><strong>LOGO</strong></span><span style="color:blue;">TYPE</span></a>
-    </div>
-    <div style="margin-right:150px">
-    <ul class="nav navbar-nav navbar-right">
-      <li><a href="/login">Log In</a></li>
-    </ul>
-    </div>
-    </div>
-    </nav>
-    
-    <div class="container" align="center">
-           <div class = "jumbotron p-2" style="max-width:400px; background-color:white; padding-bottom:5px; padding-left:30px; padding-top:15px">
-               <form id="form" action="send-response" method="post">
-                   <div align="left" id="last" class="form-group" style="min-height:35px;">
-                        <input class="btn-primary form-control" id="button" style="max-width:100px; float:left;" type="submit" value="SUBMIT">
-                        <input class="btn-primary form-control" id="reset" style="max-width:100px; float:right;" type="button" value="RESET">
-                   </div>
-               </form>
-           </div>
-    </div>
+<body style="background-color: #f1f1f1;">
+	<nav class="navbar navbar-collapsible"
+		style="background-color: white; border-bottom-color: #dddddd; border-radius: 0px;">
+		<div class="container-fluid">
+			<div class="navbar-header" style="margin-left: 150px">
+				<a class="navbar-brand" href="/"><span style="color: black;"><strong>LOGO</strong></span><span
+					style="color: blue;">TYPE</span></a>
+			</div>
+			<div style="margin-right: 150px">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="/my-responses">My Responses</a></li>
+					<li class="dropdown"><a class="dropdown-toggle"
+						data-toggle="dropdown" href="#">${name} <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/edit-profile">Edit Profile</a></li>
+							<li><a href="/change-password">Change Password</a></li>
+							<li><a href="/logout">Log Out</a></li>
+						</ul></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container" align="center">
+		<div class="jumbotron p-2"
+			style="max-width: 400px; background-color: white; padding-bottom: 5px; padding-left: 30px; padding-top: 15px">
+			<form id="form" action="send-response" method="post">
+				<div align="left" id="last" class="form-group"
+					style="min-height: 35px;">
+					<input class="btn-primary form-control" id="button"
+						style="max-width: 100px; float: left;" type="submit"
+						value="SUBMIT"> <input class="btn-primary form-control"
+						id="reset" style="max-width: 100px; float: right;" type="button"
+						value="RESET">
+				</div>
+			</form>
+		</div>
+	</div>
 </body>
 </html>
