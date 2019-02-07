@@ -9,7 +9,7 @@ public class ResponseDto {
 
 	private long id;
 	
-	private String label;
+	private Long fieldId;
 	
 	private String value;
 	
@@ -28,10 +28,10 @@ public class ResponseDto {
 	}
 	
 	@JsonCreator
-	public ResponseDto(@JsonProperty("id") long id, @JsonProperty("label") String label, @JsonProperty("value") String value) {
+	public ResponseDto(@JsonProperty("id") long id, @JsonProperty("fieldId") Long fieldId, @JsonProperty("value") String value) {
 		super();
 		this.id = id;
-		this.label = label;
+		this.fieldId = fieldId;
 		this.value = value;
 	}
 
@@ -43,12 +43,12 @@ public class ResponseDto {
 		this.id = id;
 	}
 
-	public String getLabel() {
-		return label;
+	public Long getFieldId() {
+		return fieldId;
 	}
 
-	public void setLabel(String label) {
-		this.label = label;
+	public void setFieldId(Long fieldId) {
+		this.fieldId = fieldId;
 	}
 
 	public String getValue() {

@@ -24,7 +24,7 @@
         		dataType: "json",
         		success: function(data){
         			$.each(data, function(key, value){
-        				    $group = $("<div name=\"fsd\" class=\"form-group input\" align=\"left\">"+
+        				    $group = $("<div name=\"fsd\" class=\"form-group input\" align=\"left\" data-id=\"" + value["id"] + "\">"+
             					  	"<label>"+
             						"<span style=\"color:grey;\">"+
             						value["label"]+
@@ -80,22 +80,19 @@
         		$.each($(this).children("div.form-group.input"), function(){
         			resp = {};
         			resp["id"] = null;
+        			resp["fieldId"] = $(this).data("id");
         			resp["value"] = "";
         			switch($(this).attr("id")){
         			    case "Single line text":
-        			    	resp["label"] = $(this).children("label").eq(0).children("span").eq(0).html();
         			    	resp["value"] = $(this).children("input").eq(0).val();
         			    	break;
         			    case "Multiline text":
-        			    	resp["label"] = $(this).children("label").eq(0).children("span").eq(0).html();
         			    	resp["value"] = $(this).children("textarea").eq(0).val();
         			    	break;
         			    case "Radio button":
-        			    	resp["label"] = $(this).children("label").eq(0).children("span").eq(0).html();
         			    	resp["value"]= ($(this).children("input[name=\"" + $(this).children("label").eq(0).children("span").eq(0).html() + "\"]:checked").val()==undefined?"":$(this).children("input[name=\"" + $(this).children("label").eq(0).children("span").eq(0).html() + "\"]:checked").val()); 
         			    	break;
         			    case "Checkbox":
-        			    	resp["label"] = $(this).children("label").eq(0).children("span").eq(0).html();
         			    	var value = "";
         			    	$(this).children("input:checked").each(function(){
         			    		value = value.concat($(this).attr("name")).concat(", ");
@@ -104,12 +101,10 @@
         			    	resp["value"] = value;
         			    	break;
         			    case "Combobox":
-        			    	resp["label"] = $(this).children("label").eq(0).children("span").eq(0).html();
         			    	resp["value"] = $(this).children("select").eq(0).val();
         			    	break;
         			    case "Date":
-        			        resp["label"] = $(this).children("label").eq(0).children("span").eq(0).html();
-    			    	    resp["value"] = $(this).children("input").eq(0).val();
+        			        resp["value"] = $(this).children("input").eq(0).val();
         			}
         			object.list.push(resp);
         		});

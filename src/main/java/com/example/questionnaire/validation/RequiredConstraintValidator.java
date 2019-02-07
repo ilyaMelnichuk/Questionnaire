@@ -20,7 +20,7 @@ public class RequiredConstraintValidator  implements ConstraintValidator<Require
 
 	 @Override
 	 public boolean isValid(ResponseDto responseDto, ConstraintValidatorContext context){
-		 if(fieldService.findByLabel(responseDto.getLabel()).isRequired() && responseDto.getValue() == "") {
+		 if(fieldService.findById(responseDto.getFieldId()).isRequired() && responseDto.getValue() == "") {
 			 return false;
 		 }
 	    return true;

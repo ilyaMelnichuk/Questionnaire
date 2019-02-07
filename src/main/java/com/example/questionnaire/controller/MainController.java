@@ -86,7 +86,7 @@ public class MainController{
 		for(Response r: entities) {
 			ResponseDto dto = new ResponseDto();
 		    dto.setId(r.getId());
-		    dto.setLabel(r.getField().getLabel());
+		    dto.setFieldId(r.getField().getId());
 		    dto.setValue(r.getValue());
 		    dto.setUser(r.getUser().getFirstName() + " " + r.getUser().getLastName());
 		    dto.toString();
@@ -102,7 +102,8 @@ public class MainController{
 		for(Response r: entities) {
 			ResponseDto dto = new ResponseDto();
 		    dto.setId(r.getId());
-		    dto.setLabel(r.getField().getLabel());
+		    dto.setUser(r.getUser().getFirstName() + " " + r.getUser().getLastName());;
+		    dto.setFieldId(r.getField().getId());
 		    dto.setValue(r.getValue());
 		    dto.toString();
 		    dtos.add(dto);
@@ -151,18 +152,19 @@ public class MainController{
 						option = new Option( i/*optionId*/, options[i].trim(), field);
 						field.addOption(option);
 					}
-				}
+				}/*
 				if(!fieldDto.getOldLabel().equals("")){
 					fieldService.updateField(fieldDto.getOldLabel(), field);
+					//fieldService.saveField(field);
 					message.setMessage("field has been updated");
 				}else {
 					if(fieldService.exists(field)) {
 						message.setMessage("field with this name already exists");
-					}else {
+					}else {*/
 						fieldService.createField(field);
-						message.setMessage("field has been created");
-					}
-				}
+						//message.setMessage("field has been created");
+						message.setMessage(String.valueOf((field.getId())));
+		             
 			}else {
 				message.setMessage("field type is not correct");
 			}
@@ -182,7 +184,7 @@ public class MainController{
 	@PostMapping(value = "/delete-field", consumes = "application/json")
 	public @ResponseBody MessageDto deleteField(@RequestBody MessageDto label){
 		MessageDto message = new MessageDto();
-		fieldService.deleteField(label.getMessage());
+		fieldService.deleteField(Long.parseLong(label.getMessage()));
 		message.setMessage("field \"" + label + "\" has been deleted");
 		return message;
 	}
@@ -216,7 +218,7 @@ public class MainController{
 		    for(ResponseDto dto : responses) {
 			    if(!dto.getValue().equals("")) {
 				    entity = mapper.map(dto, Response.class);
-			        entity.setField(fieldService.findByLabel(dto.getLabel()));
+			        entity.setField(fieldService.findById(dto.getFieldId()));
 			        entity.setId(id);
 			        entity.setValue(dto.getValue().replace("\n", "\\n"));
 			        entity.setUser(userService.findByEmail(principal.getName()));

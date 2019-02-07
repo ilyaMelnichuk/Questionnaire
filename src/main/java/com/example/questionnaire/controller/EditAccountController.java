@@ -34,7 +34,6 @@ public class EditAccountController {
 	@Autowired 
 	EmailService emailService;
 	
-	@PreAuthorize("hasRole('USER')")
 	@GetMapping(value = "/edit-profile")
 	public ModelAndView editProfile(){
 		ModelAndView model = new ModelAndView("editProfile");

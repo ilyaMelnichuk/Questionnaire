@@ -32,8 +32,7 @@
 			</div>
 			<div style="margin-right: 150px;">
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="/fields">Fields</a></li>
-					<li class="active"><a href="/responses">Responses</a></li>
+					<li class="active"><a href="/my-responses">My Responses</a></li>
 					<li class="dropdown"><a class="dropdown-toggle"
 						data-toggle="dropdown" href="#">${name} <span class="caret"></span></a>
 						<ul class="dropdown-menu">

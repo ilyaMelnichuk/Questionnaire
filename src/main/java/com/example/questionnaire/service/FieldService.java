@@ -36,36 +36,64 @@ public class FieldService {
 		return result;
 	}
 	
-	public void updateField(String oldLabel, Field field) {
-		fieldRepository.updateByLabel(oldLabel, field.getLabel(), field.getType(), field.isRequired(), field.isisActive());
+	public void updateField(Field field) {
+		fieldRepository.updateById(field.getId(),field.getLabel(), field.getType(), field.isRequired(), field.isisActive());
 		List<Option> options = field.getOptions();
 		if((field.getType().name() ==  "COMBOBOX" || field.getType().name() ==  "RADIO_BUTTON" || field.getType().name() ==  "CHECKBOX")&& options != null) {
-			int counter = 0;
+			long counter = 0;
 			for(Option option : options) {
 			    optionRepository.save(option);
 			    counter++;
 		    }
-			if(optionRepository.existsById(new OptionId(counter, field.getLabel()))) {
+			if(optionRepository.existsById(new OptionId(counter, field.getId()))) {
 				optionRepository.deleteWhereIdMoreThan(counter - 1, field);
 			}
 		}else {
-			if(optionRepository.existsByFieldLabel(field.getLabel())) {
-				optionRepository.deleteByFieldLabel(field);	
+			if(optionRepository.existsByFieldId(field.getId())) {
+				optionRepository.deleteByFieldId(field);	
 			}
 		}
 	}
 	
+	/*
+	 * public void updateField(Field field) {
+	 * fieldRepository.saveField(field); 
+	 * if((field.getType().name() == "COMBOBOX" ||
+	 * field.getType().name() == "RADIO_BUTTON" || field.getType().name() ==
+	 * "CHECKBOX")&& options != null) { int counter = 0; for(Option option :
+	 * options) { optionRepository.save(option); counter++; }
+	 * if(optionRepository.existsById(new OptionId(counter, field.getId()))) {
+	 * optionRepository.deleteWhereIdMoreThan(counter - 1, field); } }else {
+	 * if(optionRepository.existsByFieldId(field.getId())) {
+	 * optionRepository.deleteByFieldId(field); } } }
+	 */
+	
 	public boolean exists(Field field) {
-		return fieldRepository.existsByLabel(field.getLabel());
+		return fieldRepository.existsById(field.getLabel());
 	}
+	
+	/*
+	 * public boolean exists(Field field) { return
+	 * fieldRepository.existsById(field.getId()); }
+	 */
 	
 	public void createField(Field field) {
 		fieldRepository.save(field);
 	}
-	public void deleteField(String label) {
-		fieldRepository.deleteById(label);
+
+	/*
+	 * public void saveField(Field field) { fieldRepository.save(field); }
+	 */
+	public void deleteField(Long id) {
+		fieldRepository.deleteById(id);
 	}
-	public Field findByLabel(String label) {
-		return fieldRepository.findByLabel(label);
+	public Field findById(Long id) {
+		return fieldRepository.findById(id);
 	}
+	
+	/*
+	 * public void deleteField(long Id) { fieldRepository.deleteById(id); }
+	 * public Field findById(long id) { return
+	 * fieldRepository.findById(id); }
+	 */
 }

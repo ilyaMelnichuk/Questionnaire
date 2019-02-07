@@ -4,15 +4,13 @@ import java.io.Serializable;
 
 public class ResponseId implements Serializable{
     private long id;
-    private String field;
-    
+    private Long field;
     public ResponseId() {
 	}
     
-	public ResponseId(long id, String field) {
+	public ResponseId(long id, Long field) {
 		super();
 		this.id = id;
-		this.field = field;
 	}
 	
 	public long getId() {
@@ -21,10 +19,10 @@ public class ResponseId implements Serializable{
 	public void setId(long id) {
 		this.id = id;
 	}
-	public String getField() {
+	public Long getField() {
 		return field;
 	}
-	public void setField(String field) {
+	public void setField(Long field) {
 		this.field = field;
 	}
 }

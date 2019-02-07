@@ -14,7 +14,7 @@ $('document').ready(function(){
 	        				$delete = "<button data-delete-id=\"" + fields[key].label + "\" class=\"delete\" style=\"background:transparent; border:none;\"> <span class=\"glyphicon glyphicon-trash\"> </span> </button>";
 	        				$edit = "<button id=\"" + fields[key].label + "\" class=\"edit\" style=\"background:transparent; border:none;\" data-toggle=\"modal\" data-target=\"#editModal\"> <span class=\"glyphicon glyphicon-edit\"> </span> </button>";
 	        				$row = $('<tr>'+
-	        				      '<td class=\"field-label\">'+fields[key].label+'</td>'+
+	        				      '<td class=\"field-label\" data-id=\"' + fields[key].id + '\">'+fields[key].label+'</td>'+
 	        				      '<td class=\"field-type\" data-options=\"'+fields[key].options+'\">'+fields[key].type+'</td>'+
 	        				      '<td class=\"field-required\">'+fields[key].required+'</td>'+
 	        				      '<td class=\"field-isActive\">'+fields[key].isActive+'</td>'+
@@ -36,7 +36,8 @@ $('document').ready(function(){
 			    $(document).on("click", ".delete", function(){
 				    if(confirm("Are you sure you want to delete field \"" + $(this).closest("tr").children("td").eq(0).html() + "\"?")){
 				    	var label = {};
-				    	label["message"] = $(this).closest("tr").children("td").eq(0).html();
+				    	//label["message"] = $(this).closest("tr").children("td").eq(0).html();
+				    	label["message"] = $(this).closest("tr").children("td").eq(0).data("id");
 				    	$.ajax({
 			  	    		  url:"delete-field",
 			  	    		  type:"POST",
@@ -64,6 +65,7 @@ $('document').ready(function(){
 	        			$activeField = "new";
 	        		}else{
 	        		    $activeField = $(e.relatedTarget).closest("tr").children("td"); 
+	        		    $("#label-input").val($activeField.eq(0).data("id"));
 	        		    $("#label-input").val($activeField.eq(0).html());
 	        		    $("#type-input").val($activeField.eq(1).html());
 	        		    if($activeField.eq(1).html() == "Combobox" || $activeField.eq(1).html() == "Radio button" || $activeField.eq(1).html() == "Checkbox"){
@@ -93,8 +95,9 @@ $('document').ready(function(){
 		        	      $("#options-div").hide();
 	        		  }
 	        	});
-	        	//saving field
+	        	//saving a field
 	        	$(document).on("click", '#save', function(){
+	        		var $row;
 	        		if($("#label-input").val() != ""){
 	        		    var object = {};
 	        		    object["label"]=$("#label-input").val();
@@ -108,7 +111,8 @@ $('document').ready(function(){
         		        	object["options"]="";
         		        }
 	        		    if($activeField != "new"){
-	        			    object["oldLabel"]=$activeField.eq(0).html();
+	        		    	object["id"]=$("#label-input").data("id");
+	        			    //object["oldLabel"]=$activeField.eq(0).html();
 	        		        $activeField.eq(0).html($("#label-input").val());
 	        		        $activeField.eq(1).html($("#type-input").val());
 	        		        if($("#type-input").val() == "Combobox" || $("#type-input").val() == "Radio button" || $("#type-input").val() == "Checkbox"){
@@ -131,7 +135,6 @@ $('document').ready(function(){
 		        				      '</tr>');
 		        			$row.attr("id", $("#label-input").val());
 		        			$("#tbody").append($row);
-	        			    object["oldLabel"]="";
 	        		    }
 	        		}else{
 	        			$("#message").html("label shouldn't be empty");
@@ -143,8 +146,11 @@ $('document').ready(function(){
 	  	    		  datatype:"json",
 	  	    		  contentType:"application/json",
 	  	    		  success:function(data){
-	  	    			  $("#message").html(data["message"]);
-	  	    			  if($activeField != "new" && data["message"] == "field has been updated"){
+	  	    			  if($activeField == "new" && $.isNumeric(data["message"])){
+	  	    				  $("#message").html("field has been created");
+	  	    				  $row.children("td").eq(0).data("id", parseInt(data["message"]))
+	  	    			  }else if(data["message"] == "field has been updated"){
+	  	    				  $("#message").html(data["message"]);
 	        			      object["oldLabel"]=$activeField.eq(0).html();
 	        		          $activeField.eq(0).html($("#label-input").val());
 	        		          $activeField.eq(1).html($("#type-input").val());
@@ -153,6 +159,8 @@ $('document').ready(function(){
 	        		          }
 	        		          $activeField.eq(2).html($("#required-input").is(":checked")?"true":"false");
 	        		          $activeField.eq(3).html($("#isActive-input").is(":checked")?"true":"false");
+	        		      } else {
+	        		    	  $("#message").html(data["message"]);
 	        		      }
 	  	    		  }
 	  	    	   });
@@ -161,7 +169,8 @@ $('document').ready(function(){
 	        	//when modal closes we clear all its inputs
 	        	$(document).on("hidden.bs.modal", "#editModal", function(e){
 	        		$("#message").html("");
-        			$("#label-input").val("");
+        			//$("#label-input").val("");
+        			$("#label-input").data("id");
         		    $("#type-input").val("Single line text");
         		    $("#options-input").html("");
         			$("#options-div").hide();
@@ -169,7 +178,7 @@ $('document').ready(function(){
         			$("#isActive-input").prop("checked", false);
 	        	});
 	       });
-	       function saveField(field){
+	       /*function saveField(field){
 	    	   $.ajax({
 	    		  url:"save-field",
 	    		  type:"POST",
@@ -179,4 +188,4 @@ $('document').ready(function(){
 	    			  $("#message").html(data["message"]);
 	    		  }
 	    	   });
-	       } 
+	       }*/ 

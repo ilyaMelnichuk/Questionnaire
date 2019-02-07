@@ -35,13 +35,7 @@
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="/fields">Fields</a></li>
 					<li class="active"><a href="/responses">Responses</a></li>
-					<li class="dropdown"><a class="dropdown-toggle"
-						data-toggle="dropdown" href="#">${name} <span class="caret"></span></a>
-						<ul class="dropdown-menu">
-							<li><a href="/edit-profile">Edit Profile</a></li>
-							<li><a href="/change-password">Change Password</a></li>
-							<li><a href="/logout">Log Out</a></li>
-						</ul></li>
+					<li><a href="/logout">Log Out</a></li>
 				</ul>
 			</div>
 		</div>

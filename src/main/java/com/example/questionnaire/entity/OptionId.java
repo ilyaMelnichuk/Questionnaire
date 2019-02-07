@@ -6,12 +6,12 @@ import javax.persistence.Embeddable;
 
 public class OptionId implements Serializable{
     private long id;
-    private String field;
+    private Long field;
     
     public OptionId() {
 	}
     
-	public OptionId(long id, String field) {
+	public OptionId(long id, Long field) {
 		this.id = id;
 		this.field = field;
 	}
@@ -24,11 +24,11 @@ public class OptionId implements Serializable{
 		this.id = id;
 	}
 
-	public String getField() {
+	public Long getField() {
 		return field;
 	}
 
-	public void setField(String field) {
+	public void setField(Long field) {
 		this.field = field;
 	}
 
@@ -36,8 +36,7 @@ public class OptionId implements Serializable{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((field == null) ? 0 : field.hashCode());
-		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + (int) (field ^ (field >>> 32));
 		return result;
 	}
 
@@ -50,15 +49,21 @@ public class OptionId implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		OptionId other = (OptionId) obj;
-		if (field == null) {
-			if (other.field != null)
-				return false;
-		} else if (!field.equals(other.field))
-			return false;
-		if (id != other.id)
+		if (field != other.field)
 			return false;
 		return true;
 	}
+
+	/*
+	 * @Override public int hashCode() { final int prime = 31; int result = 1;
+	 * result = prime * result + ((field == null) ? 0 : field.hashCode()); result =
+	 * prime * result + (int) (id ^ (id >>> 32)); return result; }
+	 * 
+	 * @Override public boolean equals(Object obj) { if (this == obj) return true;
+	 * if (obj == null) return false; if (getClass() != obj.getClass()) return
+	 * false; OptionId other = (OptionId) obj; if (field == other.field) return
+	 * false; if (id != other.id) return false; return true; }
+	 */
 	
 	
     

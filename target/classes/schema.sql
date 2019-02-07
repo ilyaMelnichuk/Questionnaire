@@ -83,14 +83,16 @@ CREATE INDEX IF NOT EXISTS fki_email_foreign_key
     (email COLLATE pg_catalog."default")
     TABLESPACE pg_default;
 CREATE SCHEMA IF NOT EXISTS data AUTHORIZATION postgres;
- 
+
+CREATE SEQUENCE IF NOT EXISTS data.id_seq;
 CREATE TABLE IF NOT EXISTS data.field
 (
+    id  bigint NOT NULL default nextval('id_seq'),
     label character varying(255) COLLATE pg_catalog."default" NOT NULL,
     isactive boolean,
     required boolean,
     type character varying(255) COLLATE pg_catalog."default",
-    CONSTRAINT field_pkey PRIMARY KEY (label)
+    CONSTRAINT field_pkey PRIMARY KEY (id)
 )
 WITH (
     OIDS = FALSE
@@ -99,15 +101,17 @@ TABLESPACE pg_default;
  
 ALTER TABLE data.field
     OWNER to postgres;
+ALTER SEQUENCE data.id_seq
+    OWNED BY data.field.id;	
    
 CREATE TABLE IF NOT EXISTS data.option
 (
     id bigint NOT NULL,
     value character varying(255) COLLATE pg_catalog."default",
-    field_label character varying(255) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT option_pkey PRIMARY KEY (field_label, id),
-    CONSTRAINT field_foreign_key FOREIGN KEY (field_label)
-        REFERENCES data.field (label) MATCH SIMPLE
+    field_id serial,
+    CONSTRAINT option_pkey PRIMARY KEY (field_id, id),
+    CONSTRAINT field_foreign_key FOREIGN KEY (field_id)
+        REFERENCES data.field (id) MATCH SIMPLE
         ON UPDATE CASCADE
         ON DELETE CASCADE
 )
@@ -125,21 +129,21 @@ ALTER TABLE data.option
  
 CREATE INDEX IF NOT EXISTS fki_field_foreign_key
     ON data.option USING btree
-    (field_label COLLATE pg_catalog."default")
+    (field_id)
     TABLESPACE pg_default;
 CREATE TABLE IF NOT EXISTS data.response
 (
   id bigint NOT NULL,
   value character varying(255),
-  field_label character varying(255) NOT NULL,
+  field_id serial,
   user_email character varying(255),
-  CONSTRAINT response_pkey PRIMARY KEY (field_label, id),
-  CONSTRAINT field_label_foreign_key FOREIGN KEY (field_label)
-      REFERENCES data.field (label) MATCH SIMPLE
+  CONSTRAINT response_pkey PRIMARY KEY (field_id, id),
+  CONSTRAINT field_id_foreign_key FOREIGN KEY (field_id)
+      REFERENCES data.field (id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT fkpwabpp9okrxrbi3hb2t9o6fim FOREIGN KEY (user_email)
       REFERENCES security."user" (email) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+      ON UPDATE CASCADE ON DELETE CASCADE
 )
 WITH (
   OIDS=FALSE
@@ -151,8 +155,8 @@ ALTER TABLE data.response
 
 -- DROP INDEX data.fki_field_label_foreign_key;
 
-CREATE INDEX IF NOT EXISTS fki_field_label_foreign_key
+CREATE INDEX IF NOT EXISTS fki_field_id_foreign_key
   ON data.response
   USING btree
-  (field_label COLLATE pg_catalog."default");
+  (field_id);
 

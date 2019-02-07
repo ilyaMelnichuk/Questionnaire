@@ -10,9 +10,18 @@ import com.example.questionnaire.entity.Option;
 import com.example.questionnaire.entity.OptionId;
 public class FieldDto {
 	public interface Save{}
+	private Long id;
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	@NotBlank(groups = {Save.class}, message = "label shouldn't be empty")
     private String label;
-    private String oldLabel;
+    //private String oldLabel;
+    //@NotBlank(groups = {Save.class}, message = "please choose a type")
     private String type;
     private boolean required;
     private boolean isActive;
@@ -21,7 +30,7 @@ public class FieldDto {
     
 	@Override
 	public String toString() {
-		return "FieldDto [label=" + label + ", oldLabel=" + oldLabel + ", type=" + type + ", required=" + required
+		return "FieldDto [label=" + label + /* ", oldLabel=" + oldLabel + */", type=" + type + ", required=" + required
 				+ ", isActive=" + isActive + ", options=" + options + "]";
 	}
 	public String getOptions() {
@@ -36,12 +45,11 @@ public class FieldDto {
 	public void setLabel(String label) {
 		this.label = label;
 	}
-	public String getOldLabel() {
-		return oldLabel;
-	}
-	public void setOldLabel(String oldLabel) {
-		this.oldLabel = oldLabel;
-	}
+
+	/*
+	 * public String getOldLabel() { return oldLabel; } public void
+	 * setOldLabel(String oldLabel) { this.oldLabel = oldLabel; }
+	 */
 	public String getType() {
 		return type;
 	}

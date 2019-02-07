@@ -80,7 +80,7 @@
 						<div class="form-group">
 							<label style="justify-content: center"><span
 								style="color: grey">Label</span>*</label> <input type="text"
-								class="form-control" id="label-input"
+								class="form-control" id="label-input" data-id=""
 								style="justify-content: center">
 						</div>
 						<div class="form-group">
