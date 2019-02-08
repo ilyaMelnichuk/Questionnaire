@@ -57,8 +57,7 @@
 					<tbody id="tbody" class="table table-striped">
 
 					</tbody>
-					<tfoot id="tfooter" align="center">
-
+					<tfoot id="tfooter" align="center" style="min-height:10px;">
 					</tfoot>
 				</table>
 			</div>

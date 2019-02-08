@@ -5,7 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Embeddable;
 
 public class OptionId implements Serializable{
-    private long id;
+    private Long id;
     private Long field;
     
     public OptionId() {
@@ -16,11 +16,11 @@ public class OptionId implements Serializable{
 		this.field = field;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

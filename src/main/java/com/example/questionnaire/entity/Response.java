@@ -1,7 +1,5 @@
 package com.example.questionnaire.entity;
 
-import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -27,9 +24,17 @@ public class Response {
 	
 	
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_email")
-	private User user;
+    @JoinColumn(name = "poll_id")
+	private Poll poll;
 	
+	public Poll getPoll() {
+		return poll;
+	}
+
+	public void setPoll(Poll poll) {
+		this.poll = poll;
+	}
+
 	@Column(name="value")
 	private String value;
 	
@@ -41,11 +46,11 @@ public class Response {
 	public Response() {
 	}
 	
-	public Response(long id, String value, Field field, User user) {
+	public Response(long id, String value, Field field, Poll poll) {
 		this.id = id;
 		this.value = value;
 		this.field = field;
-		this.user = user;
+		this.poll = poll;
 	}
 	
 	public long getId() {
@@ -66,14 +71,4 @@ public class Response {
 	public void setValue(String value) {
 		this.value = value;
 	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	
 }

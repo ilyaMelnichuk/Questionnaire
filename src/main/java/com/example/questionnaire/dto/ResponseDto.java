@@ -12,16 +12,6 @@ public class ResponseDto {
 	private Long fieldId;
 	
 	private String value;
-	
-	private String user;
-	
-	public String getUser() {
-		return user;
-	}
-
-	public void setUser(String user) {
-		this.user = user;
-	}
 
 	public ResponseDto() {
 		

@@ -43,9 +43,7 @@ public class User implements UserDetails{
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_role", schema = "security", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "email"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_name"))
-    private Set<Role> roles;
-    
-    
+    private Set<Role> roles;  
     
 	public String getEmail() {
 		return email;

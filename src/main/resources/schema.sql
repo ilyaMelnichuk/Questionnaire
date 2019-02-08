@@ -131,18 +131,43 @@ CREATE INDEX IF NOT EXISTS fki_field_foreign_key
     ON data.option USING btree
     (field_id)
     TABLESPACE pg_default;
+    
+CREATE TABLE IF NOT EXISTS data.poll
+(
+  id bigint NOT NULL,
+  email character varying(255),
+  CONSTRAINT poll_pkey PRIMARY KEY (id),
+  CONSTRAINT user_foreign_key FOREIGN KEY (email)
+      REFERENCES security."user" (email) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE data.poll
+  OWNER TO postgres;
+
+-- Index: data.fki_email_foreign_key
+
+-- DROP INDEX data.fki_email_foreign_key;
+
+CREATE INDEX IF NOT EXISTS fki_user_foreign_key
+  ON data.poll
+  USING btree
+  (email COLLATE pg_catalog."default");    
+    
 CREATE TABLE IF NOT EXISTS data.response
 (
   id bigint NOT NULL,
   value character varying(255),
-  field_id serial,
-  user_email character varying(255),
+  field_id serial NOT NULL,
+  poll_id bigint,
   CONSTRAINT response_pkey PRIMARY KEY (field_id, id),
   CONSTRAINT field_id_foreign_key FOREIGN KEY (field_id)
       REFERENCES data.field (id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT fkpwabpp9okrxrbi3hb2t9o6fim FOREIGN KEY (user_email)
-      REFERENCES security."user" (email) MATCH SIMPLE
+  CONSTRAINT poll_id_foreign_key FOREIGN KEY (poll_id)
+      REFERENCES data.poll (id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE
 )
 WITH (
@@ -151,12 +176,22 @@ WITH (
 ALTER TABLE data.response
   OWNER TO postgres;
 
--- Index: data.fki_field_label_foreign_key
+-- Index: data.fki_field_id_foreign_key
 
--- DROP INDEX data.fki_field_label_foreign_key;
+-- DROP INDEX data.fki_field_id_foreign_key;
 
 CREATE INDEX IF NOT EXISTS fki_field_id_foreign_key
   ON data.response
   USING btree
   (field_id);
+
+-- Index: data.fki_poll_id_foreign_key
+
+-- DROP INDEX data.fki_poll_id_foreign_key;
+
+CREATE INDEX IF NOT EXISTS fki_poll_id_foreign_key
+  ON data.response
+  USING btree
+  (poll_id);
+
 

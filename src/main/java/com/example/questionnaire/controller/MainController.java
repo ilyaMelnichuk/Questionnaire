@@ -12,6 +12,7 @@ import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -26,19 +27,23 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.questionnaire.dto.FieldDto;
 import com.example.questionnaire.dto.MessageDto;
+import com.example.questionnaire.dto.PollDto;
 import com.example.questionnaire.dto.ResponseDto;
 import com.example.questionnaire.entity.Field;
 import com.example.questionnaire.entity.Option;
+import com.example.questionnaire.entity.Poll;
 import com.example.questionnaire.entity.Response;
 import com.example.questionnaire.entity.Type;
 import com.example.questionnaire.entity.User;
 import com.example.questionnaire.service.FieldService;
+import com.example.questionnaire.service.PollService;
 import com.example.questionnaire.service.ResponseService;
 import com.example.questionnaire.service.UserService;
 
@@ -51,7 +56,7 @@ public class MainController{
 	@Autowired
 	private UserService userService;
 	@Autowired
-	private ResponseService responseService;
+	PollService pollService;
 	@Autowired
 	private SimpMessagingTemplate template;
     @RequestMapping(value = "/")
@@ -64,6 +69,15 @@ public class MainController{
 		ModelAndView model = new ModelAndView("fields");
 		return model;
 	}
+	
+	/*
+	 * @GetMapping(value = "/get-responses-page", produces = "application/json")
+	 * public @ResponseBody Pageable getResponsesPage(@RequestParam("page") int
+	 * page, @RequestParam("size") int size) { if(page >
+	 * responseService.getTotalPages(size)) { //EXCEPTION; } return
+	 * response.getPage(page , size); }
+	 */
+	
 	
 	@GetMapping(value = "/load-fields", produces = "application/json")
 	public @ResponseBody FieldDto getAllActiveFields(HttpServletRequest request){
@@ -78,24 +92,25 @@ public class MainController{
 		Page<FieldDto> dtos = entities.map(getConverter());
 		return dtos;
 	}
-	
 	@GetMapping(value = "/get-all-responses", produces = "application/json")
-	public @ResponseBody List<ResponseDto> getAllResponses(){
-		List<Response> entities = responseService.findAllResponses();
-		List<ResponseDto> dtos = new ArrayList<ResponseDto>();
-		for(Response r: entities) {
-			ResponseDto dto = new ResponseDto();
+	public @ResponseBody List<PollDto> getAllResponses(){
+		List<Poll> entities = pollService.findAllPolls();
+		List<PollDto> dtos = new ArrayList<PollDto>();
+		for(Poll r: entities) {
+			PollDto dto = new PollDto();
 		    dto.setId(r.getId());
-		    dto.setFieldId(r.getField().getId());
-		    dto.setValue(r.getValue());
-		    dto.setUser(r.getUser().getFirstName() + " " + r.getUser().getLastName());
+		    dto.setUserName(r.getUser().getFirstName() + " " + r.getUser().getLastName());
 		    dto.toString();
+		    for(Response response : r.getResponses()) {
+		    	ResponseDto responseDto = new ResponseDto(response.getId(), response.getField().getId(), response.getValue());
+                dto.getResponses().add(responseDto);
+		    }
 		    dtos.add(dto);
 		}
 		return dtos;
 	}
 	
-	@GetMapping(value = "/get-personal-responses", produces = "application/json")
+	/*@GetMapping(value = "/get-personal-responses", produces = "application/json")
 	public @ResponseBody List<ResponseDto> getPersonalResponses(Principal principal){
 		List<Response> entities = responseService.findByEmail(principal.getName());
 		List<ResponseDto> dtos = new ArrayList<ResponseDto>();
@@ -152,19 +167,9 @@ public class MainController{
 						option = new Option( i/*optionId*/, options[i].trim(), field);
 						field.addOption(option);
 					}
-				}/*
-				if(!fieldDto.getOldLabel().equals("")){
-					fieldService.updateField(fieldDto.getOldLabel(), field);
-					//fieldService.saveField(field);
-					message.setMessage("field has been updated");
-				}else {
-					if(fieldService.exists(field)) {
-						message.setMessage("field with this name already exists");
-					}else {*/
-						fieldService.createField(field);
-						//message.setMessage("field has been created");
-						message.setMessage(String.valueOf((field.getId())));
-		             
+				}
+				fieldService.createField(field);
+				message.setMessage(String.valueOf((field.getId())));		             
 			}else {
 				message.setMessage("field type is not correct");
 			}
@@ -207,7 +212,7 @@ public class MainController{
 		return fieldsToDraw;
 	}
 
-	@MessageMapping("/responses")
+	/*@MessageMapping("/responses")
 	@SendTo("/topic/responses")
 	public List<ResponseDto> getResponse(List<ResponseDto> responses, Principal principal) {
 		if(!responses.isEmpty()) {
@@ -231,7 +236,7 @@ public class MainController{
 		    
 		}
 		return responses;
-	}
+	}*/
 	
 	
 	@RequestMapping("/responses")
