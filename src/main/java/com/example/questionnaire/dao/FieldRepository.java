@@ -1,8 +1,5 @@
 package com.example.questionnaire.dao;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -36,6 +33,9 @@ public interface FieldRepository extends PagingAndSortingRepository<Field, Strin
 	Iterable<Field> findByIsActive(boolean isActive);
 	//Field findByLabel(String label);
 	Field findById(Long id);
-	Field deleteById(Long id);;
+	
+	@Transactional
+	@Modifying
+	void deleteById(Long id);
 	boolean existsById(String id);
 }

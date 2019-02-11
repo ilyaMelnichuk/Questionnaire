@@ -84,10 +84,10 @@ CREATE INDEX IF NOT EXISTS fki_email_foreign_key
     TABLESPACE pg_default;
 CREATE SCHEMA IF NOT EXISTS data AUTHORIZATION postgres;
 
-CREATE SEQUENCE IF NOT EXISTS data.id_seq;
+CREATE SEQUENCE IF NOT EXISTS data.field_id_seq;
 CREATE TABLE IF NOT EXISTS data.field
 (
-    id  bigint NOT NULL default nextval('id_seq'),
+    id  bigint NOT NULL default nextval('"data".field_id_seq'),
     label character varying(255) COLLATE pg_catalog."default" NOT NULL,
     isactive boolean,
     required boolean,
@@ -101,7 +101,7 @@ TABLESPACE pg_default;
  
 ALTER TABLE data.field
     OWNER to postgres;
-ALTER SEQUENCE data.id_seq
+ALTER SEQUENCE data.field_id_seq
     OWNED BY data.field.id;	
    
 CREATE TABLE IF NOT EXISTS data.option
@@ -131,10 +131,10 @@ CREATE INDEX IF NOT EXISTS fki_field_foreign_key
     ON data.option USING btree
     (field_id)
     TABLESPACE pg_default;
-    
+CREATE SEQUENCE IF NOT EXISTS data.poll_id_seq; 
 CREATE TABLE IF NOT EXISTS data.poll
 (
-  id bigint NOT NULL,
+  id  bigint NOT NULL default nextval('"data".poll_id_seq'),
   email character varying(255),
   CONSTRAINT poll_pkey PRIMARY KEY (id),
   CONSTRAINT user_foreign_key FOREIGN KEY (email)
@@ -146,7 +146,8 @@ WITH (
 );
 ALTER TABLE data.poll
   OWNER TO postgres;
-
+ALTER SEQUENCE data.poll_id_seq
+  OWNED BY data.poll.id;	
 -- Index: data.fki_email_foreign_key
 
 -- DROP INDEX data.fki_email_foreign_key;
@@ -155,10 +156,10 @@ CREATE INDEX IF NOT EXISTS fki_user_foreign_key
   ON data.poll
   USING btree
   (email COLLATE pg_catalog."default");    
-    
+CREATE SEQUENCE IF NOT EXISTS data.response_id_seq;
 CREATE TABLE IF NOT EXISTS data.response
 (
-  id bigint NOT NULL,
+  id  bigint NOT NULL default nextval('"data".response_id_seq'),
   value character varying(255),
   field_id serial NOT NULL,
   poll_id bigint,
@@ -175,6 +176,8 @@ WITH (
 );
 ALTER TABLE data.response
   OWNER TO postgres;
+ALTER SEQUENCE data.response_id_seq
+OWNED BY data.response.id;	  
 
 -- Index: data.fki_field_id_foreign_key
 

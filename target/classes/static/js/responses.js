@@ -20,7 +20,6 @@ $('document').ready(function(){
     	    		type:"GET",
     	    		datatype:"json",
     	    		success: function(polls){
-    		            var index = -1;
     		            //loop through the list of responses
     	    			for(var key in polls){
     	    				//create new row 
@@ -33,7 +32,6 @@ $('document').ready(function(){
     	    				for(var k in polls[key].responses){
     	    					$row.children("td[id=\"" + polls[key].responses[k].fieldId + "\"]").eq(0).html(polls[key].responses[k].value);
     	    				}
-    		                $row.children("td[id=\"" + responses[key].fieldId + "\"]").eq(0).html(responses[key].value);
     	    		    }	
     		            
     	    			var socket = new SockJS('/responses');

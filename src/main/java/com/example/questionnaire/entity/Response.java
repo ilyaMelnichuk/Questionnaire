@@ -3,28 +3,31 @@ package com.example.questionnaire.entity;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "response", schema = "data")
-@IdClass(ResponseId.class)
+//@IdClass(ResponseId.class)
 public class Response {
 	
 	@Id
 	@Column(name="id")
+	@SequenceGenerator(name = "response_id_seq", schema = "data", sequenceName = "response_id_seq", allocationSize = 1)
+	@GeneratedValue(generator = "response_id_seq", strategy = GenerationType.SEQUENCE)
     private long id;
 	
 	@ManyToOne
-	@Id
 	private Field field;
 	
 	
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "poll_id")
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE})
+    @JoinColumn(name = "poll_id", insertable = true, updatable = true)
 	private Poll poll;
 	
 	public Poll getPoll() {
@@ -53,10 +56,10 @@ public class Response {
 		this.poll = poll;
 	}
 	
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public Field getField() {

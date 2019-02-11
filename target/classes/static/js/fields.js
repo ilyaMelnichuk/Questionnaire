@@ -1,36 +1,68 @@
 /**
  * 
  */
+function load(url){
+	$.ajax({
+		url:url,
+		type:"GET",
+		datatype:"json",
+		success: function(data){
+			var fields = data["content"];
+			
+			$("#tbody").append("<tr></tr>")
+			for(var key in fields){ 
+				$delete = "<button data-delete-id=\"" + fields[key].label + "\" class=\"delete\" style=\"background:transparent; border:none;\"> <span class=\"glyphicon glyphicon-trash\"> </span> </button>";
+				$edit = "<button id=\"" + fields[key].label + "\" class=\"edit\" style=\"background:transparent; border:none;\" data-toggle=\"modal\" data-target=\"#editModal\"> <span class=\"glyphicon glyphicon-edit\"> </span> </button>";
+				$row = $('<tr>'+
+				      '<td class=\"field-label\" data-id=\"' + fields[key].id + '\">'+fields[key].label+'</td>'+
+				      '<td class=\"field-type\" data-options=\"'+fields[key].options+'\">'+fields[key].type+'</td>'+
+				      '<td class=\"field-required\">'+fields[key].required+'</td>'+
+				      '<td class=\"field-isActive\">'+fields[key].isActive+'</td>'+
+				      '<td>'+
+				      '<div align=\"right\">'+
+				      $edit+ 
+				      $delete+
+				      '</div>'+
+			          '</td>'+
+				      '</tr>');
+				$row.attr("id", fields[key].label);
+				$("#tbody").append($row);
+			}
+			//pagination widgets
+			
+			$("div.paging#1").append("<label>" + (parseInt(data["size"])*parseInt(data["number"]) + 1).toString() + "-" + (parseInt(data["size"])*parseInt(data["number"]) + parseInt(data["numberOfElements"])).toString() +  " of " + data["totalElements"] + "</label>");
+			var pages;
+			var startPage = 0;
+			var totalPages = parseInt(data["totalPages"]);
+			var number = parseInt(data["number"]);
+			if(totalPages < 5){
+				pages = totalPages;
+			}else{
+				pages = 5;
+			}
+			
+			if(number < 2){
+				startPages = 0;
+			}else if(totalPages - number < 3){ 
+				if(totalPages - number == 1){
+					startPage = number - 4;
+				}else{
+					startPage = number - 3;
+				}
+			} else {
+				startPage = number - 2;
+			}
+			var i = 0;
+			var size = $(".paging#3").children("input[name=size]:checked").val()==undefined?"5":$(this).children("input[name=size]:checked").val();
+			while(i < pages && i < totalPages){
+				$("#raquo").before("<li class=\"page-item page\"><a class=\"page-link\" href=\"/get-fields-page?page=" + (startPage + i).toString() + "?size=" + size + "\">" + (startPage + i + 1).toString() + "</a></li>")
+			    i++;
+			}
+		}
+	});
+} 
 $('document').ready(function(){
-	        	$.ajax({
-	        		url:"get-default-page",
-	        		type:"GET",
-	        		datatype:"json",
-	        		success: function(data){		
-	        			var fields = data["content"];
-	        			
-	        			$("#tbody").append("<tr></tr>")
-	        			for(var key in fields){ 
-	        				$delete = "<button data-delete-id=\"" + fields[key].label + "\" class=\"delete\" style=\"background:transparent; border:none;\"> <span class=\"glyphicon glyphicon-trash\"> </span> </button>";
-	        				$edit = "<button id=\"" + fields[key].label + "\" class=\"edit\" style=\"background:transparent; border:none;\" data-toggle=\"modal\" data-target=\"#editModal\"> <span class=\"glyphicon glyphicon-edit\"> </span> </button>";
-	        				$row = $('<tr>'+
-	        				      '<td class=\"field-label\" data-id=\"' + fields[key].id + '\">'+fields[key].label+'</td>'+
-	        				      '<td class=\"field-type\" data-options=\"'+fields[key].options+'\">'+fields[key].type+'</td>'+
-	        				      '<td class=\"field-required\">'+fields[key].required+'</td>'+
-	        				      '<td class=\"field-isActive\">'+fields[key].isActive+'</td>'+
-	        				      '<td>'+
-	        				      '<div align=\"right\">'+
-	        				      $edit+ 
-	        				      $delete+
-	        				      '</div>'+
-	        			          '</td>'+
-	        				      '</tr>');
-	        				$row.attr("id", fields[key].label);
-	        				$("#tbody").append($row);
-	        			}
-	        		    }
-	        	});
-	        	
+	            load("/get-fields-page?page=0?size=5");
 	        	var $activeField;
 	        	
 			    $(document).on("click", ".delete", function(){
@@ -65,7 +97,7 @@ $('document').ready(function(){
 	        			$activeField = "new";
 	        		}else{
 	        		    $activeField = $(e.relatedTarget).closest("tr").children("td"); 
-	        		    $("#label-input").val($activeField.eq(0).data("id"));
+	        		    $("#label-input").data("id", $activeField.eq(0).data("id"));
 	        		    $("#label-input").val($activeField.eq(0).html());
 	        		    $("#type-input").val($activeField.eq(1).html());
 	        		    if($activeField.eq(1).html() == "Combobox" || $activeField.eq(1).html() == "Radio button" || $activeField.eq(1).html() == "Checkbox"){
@@ -165,7 +197,6 @@ $('document').ready(function(){
 	  	    		  }
 	  	    	   });
 	        	})
-	        	
 	        	//when modal closes we clear all its inputs
 	        	$(document).on("hidden.bs.modal", "#editModal", function(e){
 	        		$("#message").html("");
@@ -177,15 +208,12 @@ $('document').ready(function(){
         			$("#required-input").prop("checked", false);
         			$("#isActive-input").prop("checked", false);
 	        	});
+	        	
+	        	
+	        	$(document).on("click", ".page", function(e){
+	        		e.preventDefault();
+	        		$("#tbody").empty();
+	        		$(".paging").empty();
+	        		load($("this").val("href"));
+	        	});
 	       });
-	       /*function saveField(field){
-	    	   $.ajax({
-	    		  url:"save-field",
-	    		  type:"POST",
-	    		  datatype:"json",
-	    		  contentType:"application/json",
-	    		  success:function(data){
-	    			  $("#message").html(data["message"]);
-	    		  }
-	    	   });
-	       }*/ 

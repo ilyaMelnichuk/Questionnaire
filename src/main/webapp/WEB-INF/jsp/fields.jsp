@@ -6,7 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-
+<link rel="stylesheet"
+	href="css/style.css" />
 
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -57,9 +58,17 @@
 					</thead>
 					<tbody id="tbody" class="table table-striped">
 					</tbody>
-					<tfoot id="tfooter" align="center">
-					</tfoot>
 				</table>
+			</div>
+			<div class="paging" id="1">
+			</div>
+			<div class="paging" id="2">
+			    <ul class="pagination"><li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">&lt;&lt;</a> </li><li class="page-item" id="raquo"><a class="page-link"  href="#">&gt;&gt;</a></li></ul>
+			</div>
+			<div class="paging" id="3">
+			    <input type="radio" name="size" value="value" required/> <span>" 5 "</span>
+			    <input type="radio" name="size" value="value" required/> <span>" 10 "</span>
+			    <input type="radio" name="size" value="value" required/> <span>" 15 "</span>
 			</div>
 		</div>
 	</div>

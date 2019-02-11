@@ -12,7 +12,6 @@ import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -44,7 +43,6 @@ import com.example.questionnaire.entity.Type;
 import com.example.questionnaire.entity.User;
 import com.example.questionnaire.service.FieldService;
 import com.example.questionnaire.service.PollService;
-import com.example.questionnaire.service.ResponseService;
 import com.example.questionnaire.service.UserService;
 
 
@@ -89,9 +87,19 @@ public class MainController{
 	@GetMapping(value = "/get-default-page", produces = "application/json")
 	public @ResponseBody Page<FieldDto> getDefaultPage(){
 		Page<Field> entities = fieldService.findAll(PageRequest.of(0, Integer.MAX_VALUE));
+		
 		Page<FieldDto> dtos = entities.map(getConverter());
 		return dtos;
 	}
+	
+	@GetMapping(value = "get-fields-page", params = {"page", "size"})
+	public @ResponseBody Page<FieldDto> getPage(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "5") int size){
+		Page<Field> entities = fieldService.findAll(PageRequest.of(page, size));
+		Page<FieldDto> dtos = entities.map(getConverter());
+		return dtos;
+	}
+	
+	
 	@GetMapping(value = "/get-all-responses", produces = "application/json")
 	public @ResponseBody List<PollDto> getAllResponses(){
 		List<Poll> entities = pollService.findAllPolls();
@@ -101,26 +109,32 @@ public class MainController{
 		    dto.setId(r.getId());
 		    dto.setUserName(r.getUser().getFirstName() + " " + r.getUser().getLastName());
 		    dto.toString();
+		    List<ResponseDto> responses = new ArrayList<ResponseDto>();
 		    for(Response response : r.getResponses()) {
 		    	ResponseDto responseDto = new ResponseDto(response.getId(), response.getField().getId(), response.getValue());
-                dto.getResponses().add(responseDto);
+                responses.add(responseDto);
 		    }
+		    dto.setResponses(responses);
 		    dtos.add(dto);
 		}
 		return dtos;
 	}
 	
-	/*@GetMapping(value = "/get-personal-responses", produces = "application/json")
-	public @ResponseBody List<ResponseDto> getPersonalResponses(Principal principal){
-		List<Response> entities = responseService.findByEmail(principal.getName());
-		List<ResponseDto> dtos = new ArrayList<ResponseDto>();
-		for(Response r: entities) {
-			ResponseDto dto = new ResponseDto();
+	@GetMapping(value = "/get-personal-responses", produces = "application/json")
+	public @ResponseBody List<PollDto> getPersonalResponses(Principal principal){
+		List<Poll> entities = pollService.findPollsByEmail(principal.getName());
+		List<PollDto> dtos = new ArrayList<PollDto>();
+		for(Poll r: entities) {
+			PollDto dto = new PollDto();
 		    dto.setId(r.getId());
-		    dto.setUser(r.getUser().getFirstName() + " " + r.getUser().getLastName());;
-		    dto.setFieldId(r.getField().getId());
-		    dto.setValue(r.getValue());
+		    dto.setUserName(r.getUser().getFirstName() + " " + r.getUser().getLastName());
 		    dto.toString();
+		    List<ResponseDto> responses = new ArrayList<ResponseDto>();
+		    for(Response response : r.getResponses()) {
+		    	ResponseDto responseDto = new ResponseDto(response.getId(), response.getField().getId(), response.getValue());
+                responses.add(responseDto);
+		    }
+		    dto.setResponses(responses);
 		    dtos.add(dto);
 		}
 		return dtos;
@@ -212,31 +226,33 @@ public class MainController{
 		return fieldsToDraw;
 	}
 
-	/*@MessageMapping("/responses")
+	@MessageMapping("/responses")
 	@SendTo("/topic/responses")
 	public List<ResponseDto> getResponse(List<ResponseDto> responses, Principal principal) {
 		if(!responses.isEmpty()) {
 		    ModelMapper mapper = new ModelMapper();
+		    Poll poll = new Poll();
 		    Response entity;
-		    long id = responseService.getMaximalId();
 		    List<ResponseDto> elementsToRemove = new ArrayList<ResponseDto>();
+		    List<Response> elementsToSave = new ArrayList<Response>();
 		    for(ResponseDto dto : responses) {
 			    if(!dto.getValue().equals("")) {
 				    entity = mapper.map(dto, Response.class);
 			        entity.setField(fieldService.findById(dto.getFieldId()));
-			        entity.setId(id);
+			        entity.setPoll(poll);
 			        entity.setValue(dto.getValue().replace("\n", "\\n"));
-			        entity.setUser(userService.findByEmail(principal.getName()));
-			        responseService.saveResponse(entity);
+			        elementsToSave.add(entity);
 			    } else {
 			    	elementsToRemove.add(dto);
 			    }
 		    }
+		    poll.setUser(userService.findByEmail(principal.getName()));
+		    poll.setResponses(elementsToSave);
+		    pollService.savePoll(poll);
 		    responses.removeAll(elementsToRemove);
-		    
 		}
 		return responses;
-	}*/
+	}
 	
 	
 	@RequestMapping("/responses")

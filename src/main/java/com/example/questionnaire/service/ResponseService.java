@@ -23,9 +23,5 @@ public class ResponseService {
     }
     public void saveResponse(Response response) {
     	responseRepository.save(response);
-	}/*
-		 * public Page<Response> findAll(PageRequest pageRequest) { return
-		 * responseRepository.findAll(pageRequest); } public List<Response>
-		 * findAllResponses() { return responseRepository.findAll(); }
-		 */
+	}
 }

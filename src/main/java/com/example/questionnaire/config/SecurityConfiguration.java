@@ -42,6 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                 .antMatchers("/edit-profile/**").hasRole("USER")
                 .antMatchers("/change-password/**").hasRole("USER")
                 .antMatchers("/fields").hasRole("ADMIN")
+                .antMatchers("/get-fields-page").hasRole("ADMIN")
                 .antMatchers("/responses").hasRole("ADMIN")
                 .antMatchers("/reset-password/**").hasRole("CHANGE_PASSWORD")
                 .anyRequest()

@@ -21,8 +21,8 @@ public class Field {
 
 	@Id 
 	@Column(name = "id") 
-	@SequenceGenerator(name="field_id_seq",
-    sequenceName="id_seq",
+	@SequenceGenerator(name="field_id_seq", schema = "data",
+    sequenceName="field_id_seq",
     allocationSize=1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
     generator="field_id_seq")

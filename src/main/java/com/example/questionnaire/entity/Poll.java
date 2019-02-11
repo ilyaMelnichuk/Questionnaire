@@ -4,10 +4,14 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -15,19 +19,21 @@ import javax.persistence.Table;
 public class Poll {
 	@Id
 	@Column(name = "id")
+	@SequenceGenerator(name = "poll_id_seq", schema = "data", sequenceName = "poll_id_seq", allocationSize = 1)
+	@GeneratedValue(generator = "poll_id_seq", strategy = GenerationType.SEQUENCE)
 	private Long id;	
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE}, fetch = FetchType.EAGER)
 	@JoinColumn(name = "email")
 	private User user;
 	
-	@OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "poll", cascade = CascadeType.ALL)
 	private List<Response> responses;
     
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public User getUser() {
