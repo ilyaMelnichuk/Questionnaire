@@ -25,8 +25,8 @@ public class Response {
 	@ManyToOne
 	private Field field;
 	
-	
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE})
+	//edit
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "poll_id", insertable = true, updatable = true)
 	private Poll poll;
 	

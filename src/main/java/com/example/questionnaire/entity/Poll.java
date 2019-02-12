@@ -1,5 +1,6 @@
 package com.example.questionnaire.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import com.example.questionnaire.dto.ResponseDto;
 
 @Entity
 @Table(name="poll", schema = "data")
@@ -47,5 +50,17 @@ public class Poll {
 	}
 	public void setResponses(List<Response> responses) {
 		this.responses = responses;
+	}
+	
+	public String convertUserToUserName() {
+		return user.getFirstName() + " " + user.getLastName();
+	}
+	public List<ResponseDto> convertResponsesToResponsesDto() {
+		List<ResponseDto> responsesDto = new ArrayList<ResponseDto>();
+	    for(Response response : getResponses()) {
+	    	ResponseDto responseDto = new ResponseDto(response.getId(), response.getField().getId(), response.getValue());
+            responsesDto.add(responseDto);
+	    }
+	    return responsesDto;
 	}
 }

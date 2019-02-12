@@ -1,14 +1,14 @@
 /**
  * 
  */
-function load(url){
+function load(pageAddress, size){
+	var url = pageAddress + size;
 	$.ajax({
 		url:url,
 		type:"GET",
 		datatype:"json",
 		success: function(data){
 			var fields = data["content"];
-			
 			$("#tbody").append("<tr></tr>")
 			for(var key in fields){ 
 				$delete = "<button data-delete-id=\"" + fields[key].label + "\" class=\"delete\" style=\"background:transparent; border:none;\"> <span class=\"glyphicon glyphicon-trash\"> </span> </button>";
@@ -44,25 +44,45 @@ function load(url){
 			if(number < 2){
 				startPages = 0;
 			}else if(totalPages - number < 3){ 
+			  //fix
 				if(totalPages - number == 1){
-					startPage = number - 4;
+					if(totalPages < 5){
+						startPage = 0;
+					}else{
+					    startPage = number - 4;	
+					}
 				}else{
-					startPage = number - 3;
+					if(totalPages < 5){
+						startPage = 0;
+					}else{
+					    startPage = number - 3;	
+					}
 				}
-			} else {
+			}else{
 				startPage = number - 2;
 			}
 			var i = 0;
-			var size = $(".paging#3").children("input[name=size]:checked").val()==undefined?"5":$(this).children("input[name=size]:checked").val();
+			$(".paging#2").append("<table id=\"pages\"></table>");
+			$pageList = $("<tr></tr>");
+			if(number != 0){
+				$pageList.append("<td><form class=\"js-page page-link\" id=\"" + (0).toString() + "\" action=\"/get-fields-page?page=" + (number - 1).toString() + "&size=\"><input type=\"submit\" value=\"<<\" /></form></td>");
+				$pageList.append("<td><form class=\"js-page page-link\" id=\"" + (number - 1).toString() + "\" action=\"/get-fields-page?page=" + (number - 1).toString() + "&size=\"><input type=\"submit\" value=\"<\" /></form></td>");
+			}
 			while(i < pages && i < totalPages){
-				$("#raquo").before("<li class=\"page-item page\"><a class=\"page-link\" href=\"/get-fields-page?page=" + (startPage + i).toString() + "?size=" + size + "\">" + (startPage + i + 1).toString() + "</a></li>")
+				$pageList.append("<td><form class=\"js-page page-link\" id=\"" + (startPage + i + 1).toString() + "\" action=\"/get-fields-page?page=" + (startPage + i).toString() + "&size=\"><input type=\"submit\" value=" + (startPage + i + 1).toString() + " /></form></td>");
 			    i++;
 			}
+			if(number != totalPages - 1 && totalPages != 0){
+				$pageList.append("<td><form class=\"js-page page-link\" id=\"" + (number + 1).toString() + "\" action=\"/get-fields-page?page=" + (number + 1).toString() + "&size=\"><input type=\"submit\" value=\">\" /></form></td>");
+				$pageList.append("<td><form class=\"js-page page-item disabled\" id=\"" + (totalPages - 1).toString() + "\" action=\"/get-fields-page?page=" + (totalPages - 1).toString() + "&size=\"><input type=\"submit\" value=\">>\" /></form></td>");
+			}
+			$pageList.appendTo("#pages");
+			$(".js-size").attr("id", pageAddress);
 		}
 	});
 } 
 $('document').ready(function(){
-	            load("/get-fields-page?page=0?size=5");
+	            load("/get-fields-page?page=0", "&size=5");
 	        	var $activeField;
 	        	
 			    $(document).on("click", ".delete", function(){
@@ -210,10 +230,25 @@ $('document').ready(function(){
 	        	});
 	        	
 	        	
-	        	$(document).on("click", ".page", function(e){
+	        	$(document).on("submit", ".js-page", function(e) {
 	        		e.preventDefault();
+	        		var s = $(".js-size").first().val()==""?"5":$(".js-size").first().val();
+	        		var url = $(e.target).attr("action").toString();
 	        		$("#tbody").empty();
-	        		$(".paging").empty();
-	        		load($("this").val("href"));
+	        		$(".paging#1").empty();
+	        		$(".paging#2").empty();
+	        		load(url, s);
+	        	});
+	        	$(document).on("keyup", ".js-size", function(e) {
+	        		if(e.keyCode == 13){
+	        		    e.preventDefault();
+	        		    var s = $(e.target).val();
+	        		    s = "&size=" + s;
+	        		    var url = $(e.target).attr("id");
+	        		    $("#tbody").empty();
+	        		    $(".paging#1").empty();
+	        		    $(".paging#2").empty();
+	        		    load(url, s);
+	        	    }
 	        	});
 	       });

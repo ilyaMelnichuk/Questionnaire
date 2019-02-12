@@ -61,6 +61,16 @@
 					</tfoot>
 				</table>
 			</div>
+			<div style="border-bottom: 2px solid #dddddd; min-height: 45px; padding-left: 10px; padding-right: 10px;">
+			<div style="float:left;width:33%;" class="paging" id="1">
+			</div>
+			<div  style="float:left;width:33%;" class="paging" id="2">
+			</div>
+			<div  style="float:left;width:33%;" class="paging" id="3">
+			    <label for="size">size of page</label>
+			    <input type="text" class="js-size" name="size"/>
+			</div>
+			</div>
 		</div>
 	</div>
 </body>

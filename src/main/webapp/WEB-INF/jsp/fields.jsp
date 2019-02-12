@@ -37,8 +37,7 @@
 	<div class="container" align="center">
 		<div class="jumbotron"
 			style="background-color: white; padding-top: 10px; padding-bottom: 0px; padding-left: 0px; padding-right: 0px;">
-			<div
-				style="border-bottom: 2px solid #dddddd; min-height: 45px; padding-left: 10px; padding-right: 10px;">
+			<div style="border-bottom: 2px solid #dddddd; min-height: 45px; padding-left: 10px; padding-right: 10px;">
 				<h4 style="float: left;">Fields</h4>
 				<input type="button" data-button="add" data-edit-id="add"
 					data-toggle="modal" data-target="#editModal" id="addButton"
@@ -60,15 +59,15 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="paging" id="1">
+			<div style="border-bottom: 2px solid #dddddd; min-height: 45px; padding-left: 10px; padding-right: 10px;">
+			<div style="float:left;width:33%;" class="paging" id="1">
 			</div>
-			<div class="paging" id="2">
-			    <ul class="pagination"><li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">&lt;&lt;</a> </li><li class="page-item" id="raquo"><a class="page-link"  href="#">&gt;&gt;</a></li></ul>
+			<div  style="float:left;width:33%;" class="paging" id="2">
 			</div>
-			<div class="paging" id="3">
-			    <input type="radio" name="size" value="value" required/> <span>" 5 "</span>
-			    <input type="radio" name="size" value="value" required/> <span>" 10 "</span>
-			    <input type="radio" name="size" value="value" required/> <span>" 15 "</span>
+			<div  style="float:left;width:33%;" class="paging" id="3">
+			    <label for="size">size of page</label>
+			    <input type="text" class="js-size" name="size"/>
+			</div>
 			</div>
 		</div>
 	</div>

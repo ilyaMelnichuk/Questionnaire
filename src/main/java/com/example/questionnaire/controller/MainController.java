@@ -54,7 +54,7 @@ public class MainController{
 	@Autowired
 	private UserService userService;
 	@Autowired
-	PollService pollService;
+	private PollService pollService;
 	@Autowired
 	private SimpMessagingTemplate template;
     @RequestMapping(value = "/")
@@ -88,57 +88,62 @@ public class MainController{
 	public @ResponseBody Page<FieldDto> getDefaultPage(){
 		Page<Field> entities = fieldService.findAll(PageRequest.of(0, Integer.MAX_VALUE));
 		
-		Page<FieldDto> dtos = entities.map(getConverter());
+		Page<FieldDto> dtos = entities.map(getFieldConverter());
 		return dtos;
 	}
 	
-	@GetMapping(value = "get-fields-page", params = {"page", "size"})
-	public @ResponseBody Page<FieldDto> getPage(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "5") int size){
+	@GetMapping(value = "get-fields-page")
+	public @ResponseBody Page<FieldDto> getFieldsPage(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "5") int size){
 		Page<Field> entities = fieldService.findAll(PageRequest.of(page, size));
-		Page<FieldDto> dtos = entities.map(getConverter());
+		Page<FieldDto> dtos = entities.map(getFieldConverter());
 		return dtos;
 	}
 	
-	
-	@GetMapping(value = "/get-all-responses", produces = "application/json")
-	public @ResponseBody List<PollDto> getAllResponses(){
-		List<Poll> entities = pollService.findAllPolls();
-		List<PollDto> dtos = new ArrayList<PollDto>();
-		for(Poll r: entities) {
-			PollDto dto = new PollDto();
-		    dto.setId(r.getId());
-		    dto.setUserName(r.getUser().getFirstName() + " " + r.getUser().getLastName());
-		    dto.toString();
-		    List<ResponseDto> responses = new ArrayList<ResponseDto>();
-		    for(Response response : r.getResponses()) {
-		    	ResponseDto responseDto = new ResponseDto(response.getId(), response.getField().getId(), response.getValue());
-                responses.add(responseDto);
-		    }
-		    dto.setResponses(responses);
-		    dtos.add(dto);
-		}
+	@GetMapping(value = "get-polls-page")
+	public @ResponseBody Page<PollDto> getPollsPage(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "5") int size){
+		Page<Poll> entities = pollService.findAll(PageRequest.of(page, size));
+		Page<PollDto> dtos = entities.map(getPollConverter());
 		return dtos;
 	}
 	
-	@GetMapping(value = "/get-personal-responses", produces = "application/json")
-	public @ResponseBody List<PollDto> getPersonalResponses(Principal principal){
-		List<Poll> entities = pollService.findPollsByEmail(principal.getName());
-		List<PollDto> dtos = new ArrayList<PollDto>();
-		for(Poll r: entities) {
-			PollDto dto = new PollDto();
-		    dto.setId(r.getId());
-		    dto.setUserName(r.getUser().getFirstName() + " " + r.getUser().getLastName());
-		    dto.toString();
-		    List<ResponseDto> responses = new ArrayList<ResponseDto>();
-		    for(Response response : r.getResponses()) {
-		    	ResponseDto responseDto = new ResponseDto(response.getId(), response.getField().getId(), response.getValue());
-                responses.add(responseDto);
-		    }
-		    dto.setResponses(responses);
-		    dtos.add(dto);
-		}
-		return dtos;
-	}
+	/*
+	 * @GetMapping(value = "get-personal-polls-page") public @ResponseBody
+	 * Page<PollDto> getPersonalPollsPage(@RequestParam(value = "page", defaultValue
+	 * = "0") int page, @RequestParam(value = "size", defaultValue = "5") int size,
+	 * Principal principal){ String email = principal.getName(); Page<Poll> entities
+	 * = PollService.findByEmail(email, PageRequest.of(page, size)); Page<PollDto>
+	 * dtos = entities.map(getPollConverter()); return dtos; }
+	 */
+	
+	
+	/*
+	 * @GetMapping(value = "/get-all-responses", produces = "application/json")
+	 * public @ResponseBody List<PollDto> getAllResponses(){ List<Poll> entities =
+	 * pollService.findAllPolls(); List<PollDto> dtos = new ArrayList<PollDto>();
+	 * for(Poll r: entities) { PollDto dto = new PollDto(); dto.setId(r.getId());
+	 * dto.setUserName(r.getUser().getFirstName() + " " +
+	 * r.getUser().getLastName()); dto.toString(); List<ResponseDto> responses = new
+	 * ArrayList<ResponseDto>(); for(Response response : r.getResponses()) {
+	 * ResponseDto responseDto = new ResponseDto(response.getId(),
+	 * response.getField().getId(), response.getValue());
+	 * responses.add(responseDto); } dto.setResponses(responses); dtos.add(dto); }
+	 * return dtos; }
+	 */
+	
+	/*
+	 * @GetMapping(value = "/get-personal-responses", produces = "application/json")
+	 * public @ResponseBody List<PollDto> getPersonalResponses(Principal principal){
+	 * List<Poll> entities = pollService.findPollsByEmail(principal.getName());
+	 * List<PollDto> dtos = new ArrayList<PollDto>(); for(Poll r: entities) {
+	 * PollDto dto = new PollDto(); dto.setId(r.getId());
+	 * dto.setUserName(r.getUser().getFirstName() + " " +
+	 * r.getUser().getLastName()); dto.toString(); List<ResponseDto> responses = new
+	 * ArrayList<ResponseDto>(); for(Response response : r.getResponses()) {
+	 * ResponseDto responseDto = new ResponseDto(response.getId(),
+	 * response.getField().getId(), response.getValue());
+	 * responses.add(responseDto); } dto.setResponses(responses); dtos.add(dto); }
+	 * return dtos; }
+	 */
 	
 	/*@PostMapping(value = "/get-page", consumes = "application/json" ,produces = "application/json")
 	public @ResponseBody Page<Field> getDefaultPage(@RequestBody MessageDto message){
@@ -284,7 +289,7 @@ public class MainController{
 		return user.getFirstName() + " " + user.getLastName();
 	}
 	
-	private Function<Field, FieldDto> getConverter(){
+	private Function<Field, FieldDto> getFieldConverter(){
 		return new Function<Field, FieldDto>() {
 
 			@Override
@@ -296,6 +301,18 @@ public class MainController{
 			}
 		};
 	}
+	private Function<Poll, PollDto> getPollConverter(){
+		return new Function<Poll, PollDto>() {
+
+			@Override
+			public PollDto apply(Poll entity) {
+				PollDto dto = new PollDto();
+				ModelMapper mapper = getPollToPollDtoMapper();
+				dto = mapper.map(entity, PollDto.class);
+				return dto;
+			}
+		};
+	}
 	private ModelMapper getFieldToFieldDtoMapper() {
 		ModelMapper mapper = new ModelMapper();
 		mapper.addMappings(new PropertyMap<Field, FieldDto>() {
@@ -303,6 +320,17 @@ public class MainController{
 			  protected void configure() {
 			    map().setOptions(source.convertOptionsToStringNL());
 			    map().setType(source.convertEnumToString());
+			  }
+	    });
+		return mapper;
+	}
+	private ModelMapper getPollToPollDtoMapper() {
+		ModelMapper mapper = new ModelMapper();
+		mapper.addMappings(new PropertyMap<Poll, PollDto>() {
+			  @Override
+			  protected void configure() {
+			    map().setUserName(source.convertUserToUserName());
+			    map().setResponses(source.convertResponsesToResponsesDto());
 			  }
 	    });
 		return mapper;
