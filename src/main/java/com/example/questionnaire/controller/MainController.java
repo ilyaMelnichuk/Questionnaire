@@ -106,14 +106,13 @@ public class MainController{
 		return dtos;
 	}
 	
-	/*
-	 * @GetMapping(value = "get-personal-polls-page") public @ResponseBody
-	 * Page<PollDto> getPersonalPollsPage(@RequestParam(value = "page", defaultValue
-	 * = "0") int page, @RequestParam(value = "size", defaultValue = "5") int size,
-	 * Principal principal){ String email = principal.getName(); Page<Poll> entities
-	 * = PollService.findByEmail(email, PageRequest.of(page, size)); Page<PollDto>
-	 * dtos = entities.map(getPollConverter()); return dtos; }
-	 */
+     @GetMapping(value = "get-personal-polls-page") 
+     public @ResponseBody Page<PollDto> getPersonalPollsPage(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "5") int size, Principal principal){ 
+    	 String email = principal.getName(); 
+    	 Page<Poll> entities = pollService.findByEmail(email, PageRequest.of(page, size)); 
+    	 Page<PollDto> dtos = entities.map(getPollConverter());
+    	 return dtos; 
+     }
 	
 	
 	/*
@@ -233,30 +232,32 @@ public class MainController{
 
 	@MessageMapping("/responses")
 	@SendTo("/topic/responses")
-	public List<ResponseDto> getResponse(List<ResponseDto> responses, Principal principal) {
+	public PollDto getResponse(List<ResponseDto> responses, Principal principal) {
+		Poll poll = new Poll();
 		if(!responses.isEmpty()) {
-		    ModelMapper mapper = new ModelMapper();
-		    Poll poll = new Poll();
+		    ModelMapper mapper = getPollToPollDtoMapper();
 		    Response entity;
 		    List<ResponseDto> elementsToRemove = new ArrayList<ResponseDto>();
-		    List<Response> elementsToSave = new ArrayList<Response>();
+		    poll.setUser(userService.findByEmail(principal.getName()));
+		    poll = pollService.savePoll(poll);
 		    for(ResponseDto dto : responses) {
 			    if(!dto.getValue().equals("")) {
 				    entity = mapper.map(dto, Response.class);
 			        entity.setField(fieldService.findById(dto.getFieldId()));
-			        entity.setPoll(poll);
 			        entity.setValue(dto.getValue().replace("\n", "\\n"));
-			        elementsToSave.add(entity);
+			        poll.addResponse(entity);
 			    } else {
 			    	elementsToRemove.add(dto);
 			    }
 		    }
-		    poll.setUser(userService.findByEmail(principal.getName()));
-		    poll.setResponses(elementsToSave);
-		    pollService.savePoll(poll);
+		    poll = pollService.savePoll(poll);
 		    responses.removeAll(elementsToRemove);
+		    PollDto pollDto = mapper.map(poll, PollDto.class);
+		    return pollDto;
+		}else {
+			PollDto pollDto = new PollDto(-1, "", new ArrayList<ResponseDto>());
+		    return pollDto;	
 		}
-		return responses;
 	}
 	
 	

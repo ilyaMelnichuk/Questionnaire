@@ -3,6 +3,7 @@ package com.example.questionnaire.entity;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,8 +26,7 @@ public class Response {
 	@ManyToOne
 	private Field field;
 	
-	//edit
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "poll_id", insertable = true, updatable = true)
 	private Poll poll;
 	

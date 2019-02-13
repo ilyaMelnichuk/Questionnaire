@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +20,7 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.3.0/sockjs.min.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-<script src="js/my-responses.js"></script>
+<script src="js/responses.js"></script>
 
 </head>
 <body style="background-color: #f1f1f1;">
@@ -61,19 +62,22 @@
 					<tbody id="tbody" class="table table-striped">
 
 					</tbody>
-					<tfoot id="tfooter" align="center">
-
+					<tfoot id="tfooter" align="center" style="min-height:10px;">
 					</tfoot>
 				</table>
 			</div>
 			<div style="border-bottom: 2px solid #dddddd; min-height: 45px; padding-left: 10px; padding-right: 10px;">
-			<div style="float:left;width:33%;" class="paging" id="1">
+			<div  style="float:left;width:33%;" id="div">
+			</div>
+			<div style="float:left;width:33%;" id="1">
+			</div>
+			<div  style="float:left;width:33%;" id="div2">
 			</div>
 			<div  style="float:left;width:33%;" class="paging" id="2">
 			</div>
 			<div  style="float:left;width:33%;" class="paging" id="3">
 			    <label for="size">size of page</label>
-			    <input type="text" class="js-size" name="size"/>
+			    <input type="number" class="js-size" name="size"/>
 			</div>
 			</div>
 		</div>

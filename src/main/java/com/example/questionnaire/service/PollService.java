@@ -21,8 +21,8 @@ public class PollService {
 	 * public List<Poll> findPollsByEmail(String email){ return
 	 * pollRepository.findAllByUser_Email(email); }
 	 */
-    public void savePoll(Poll poll) {
-    	pollRepository.save(poll);
+    public Poll savePoll(Poll poll) {
+    	 return pollRepository.save(poll);
     }
     public Page<Poll> findAll(PageRequest pageRequest){
 		return pollRepository.findAll(pageRequest);

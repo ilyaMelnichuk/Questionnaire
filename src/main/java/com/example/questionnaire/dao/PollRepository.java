@@ -15,5 +15,5 @@ import com.example.questionnaire.entity.User;
 
 public interface PollRepository extends PagingAndSortingRepository<Poll, Long> {
 
-	Page<Poll> findByUser_Email(String email, PageRequest pageRequest);	
+	Page<Poll> findByUser_Email(String email, Pageable pageable);	
 }

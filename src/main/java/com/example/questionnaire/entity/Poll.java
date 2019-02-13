@@ -30,8 +30,18 @@ public class Poll {
 	@JoinColumn(name = "email")
 	private User user;
 	
-	@OneToMany(mappedBy = "poll", cascade = CascadeType.ALL)
-	private List<Response> responses;
+	@OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	private List<Response> responses = new ArrayList<Response>();
+	
+	public void addResponse(Response response) {
+		responses.add(response);
+		response.setPoll(this);
+	}
+	
+	public void removeResponse(Response response) {
+		responses.remove(response);
+		response.setPoll(null);
+	}
     
 	public Long getId() {
 		return id;

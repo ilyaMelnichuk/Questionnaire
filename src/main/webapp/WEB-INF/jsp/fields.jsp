@@ -66,7 +66,7 @@
 			</div>
 			<div  style="float:left;width:33%;" class="paging" id="3">
 			    <label for="size">size of page</label>
-			    <input type="text" class="js-size" name="size"/>
+			    <input type="number" class="js-size" name="size"/>
 			</div>
 			</div>
 		</div>

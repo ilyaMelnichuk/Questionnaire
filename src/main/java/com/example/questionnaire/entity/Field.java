@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
@@ -50,7 +51,7 @@ public class Field {
 	private Type type;
 
 	@MapsId("OptionId")
-	@OneToMany(mappedBy = "field", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "field", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private List<Option> options;
 
 	public List<Option> getOptions() {
