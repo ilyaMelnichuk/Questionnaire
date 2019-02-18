@@ -13,24 +13,14 @@ import com.example.questionnaire.entity.OptionId;
 
 @Repository
 public interface OptionRepository extends JpaRepository<Option, OptionId>{
-	//boolean existsByFieldLabel(String Label);
 
 	boolean existsByFieldId(Long id); 
-	/*
-	 * @Modifying
-	 * 
-	 * @Transactional
-	 * 
-	 * @Query("delete from Option o where o.field = ?1") void
-	 * deleteByFieldLabel(Field field);
-	 */
 
-	
-	  @Query("delete from Option o where o.field = ?1") void
-	 deleteByFieldId(Field field);
-	 
+	@Query("delete from Option o where o.field = ?1") void
+	deleteByFieldId(Field field);
+
 	@Modifying
-    @Transactional
-    @Query("delete from Option o where o.id > ?1 and o.field = ?2")
-    void deleteWhereIdMoreThan(Long id, Field field);
+	@Transactional
+	@Query("delete from Option o where o.id > ?1 and o.field = ?2")
+	void deleteWhereIdMoreThan(Long id, Field field);
 }

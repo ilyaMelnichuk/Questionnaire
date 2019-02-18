@@ -1,7 +1,9 @@
 package com.example.questionnaire.controller;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -59,36 +61,23 @@ public class EditAccountController {
     		String email = auth.getName();
         	if(userService.existsByEmail(userDto.getEmail())) {
         		if(userDto.getEmail().equals(email)){
-        			User user = new User();
-        			user.setEmail(email);
-        			user.setFirstName(userDto.getFirstName());
-        			user.setLastName(userDto.getLastName());
-        			user.setPhoneNumber(userDto.getPhoneNumber());
+        			User user = new User(email, userDto.getFirstName(), userDto.getLastName(), userDto.getPhoneNumber());
         			userService.updateUser(email, user);
         			result.put("message", "changes have been submitted successfully");
         		}else {
         			result.put("message", "user with this email has been already registered");
         		}
         	}else {
-        		User user = new User();
-        		user.setEmail(userDto.getEmail());
-        		user.setFirstName(userDto.getFirstName());
-        		user.setLastName(userDto.getLastName());
-        		user.setPhoneNumber(userDto.getPhoneNumber());
+        		User user = new User(userDto.getEmail(), userDto.getFirstName(), userDto.getLastName(), userDto.getPhoneNumber());
         		userService.updateUser(email, user);
-        	    SecurityContextHolder.getContext().setAuthentication(auth);
+        		Authentication newAuth = new UsernamePasswordAuthenticationToken(user, null,auth.getAuthorities());
+        	    SecurityContextHolder.getContext().setAuthentication(newAuth);
+        	    emailService.sendMessage(user.getEmail(), "Changing password in Questionnaire Portal",
+                user.getFirstName() + " " + user.getLastName() + (userDto.getFirstName().equals("") && userDto.getLastName().equals("")? "": ",\n") + " You have successfully changed your email in Questionnaire Portal!");
         	    result.put("message", "your email address has been changed");
         	}
     	}else {
-    		StringBuilder errors = new StringBuilder();
-    		for (Object object : bindingResult.getAllErrors()) {
-    		    if(object instanceof FieldError) {
-    		        FieldError error = (FieldError) object;
-                    
-    		        errors.append((error.getDefaultMessage()));
-    		    }
-    		}
-    		result.put("message", errors.toString());
+    		result.put("message", getErrors(bindingResult));
     	}
     	return  result.toString();
     }
@@ -110,24 +99,40 @@ public class EditAccountController {
 		    	User user = userService.findByEmail(email);
 		    	userService.changeUserPassword(user, userDto.getNewPassword());
 		        emailService.sendMessage(user.getEmail(), "Changing password in Questionnaire Portal",
-                user.getFirstName() + " " + user.getLastName() + ",\n" + " You have successfully changed your password in Questionnaire Portal!");
+                user.getFirstName() + " " + user.getLastName() + (userDto.getFirstName().equals("") && userDto.getLastName().equals("")? "": ",\n") + " You have successfully changed your password in Questionnaire Portal!");
 		        result.put("message", "you have successfully changed your password");
 		    }else {
 		    	result.put("message", "current password is not correct");
 		    }
 		}else {
-			StringBuilder errors = new StringBuilder();
-    		for (Object object : bindingResult.getAllErrors()) {
-    		    if(object instanceof FieldError) {
-    		        FieldError error = (FieldError) object;
-                    
-    		        errors.append((error.getDefaultMessage()));
-    		    }
-    		}
-    		result.put("message", errors.toString());
+    		result.put("message", getErrors(bindingResult));
 		}
 		return result.toString();
 	}
+	
+    @PostMapping(value="/signup", consumes = "application/json", produces = "application/json")
+    public @ResponseBody String registerNewUser(@Validated(UserDto.New.class) @RequestBody UserDto userDto, BindingResult bindingResult) {
+    	ObjectMapper objectMapper = new ObjectMapper();
+    	ObjectNode result = objectMapper.createObjectNode();
+    	if(!bindingResult.hasErrors()) {
+    		User newUser = userService.findByEmail(userDto.getEmail());
+        	
+        	if(newUser==null) {
+        		ModelMapper modelMapper = new ModelMapper();
+        		User user = modelMapper.map(userDto, User.class);
+        		
+        		userService.registerUser(user);
+                emailService.sendMessage(userDto.getEmail(), "Registration in Questionnaire Portal",
+               	    userDto.getFirstName() + " " + userDto.getLastName() + (userDto.getFirstName().equals("") && userDto.getLastName().equals("")? "": ",\n") + "You have been successfully registered in Questionnaire Portal!");
+                result.put("message", "you have been successfully signed up");
+        	}else {
+        		result.put("message", "user with this email has been already registered");
+        	}
+    	}else {
+    		result.put("message", getErrors(bindingResult));
+    	}
+    	return result.toString();
+    }
 	
 	@ModelAttribute("name")
 	public String setUpUserName() {
@@ -135,5 +140,17 @@ public class EditAccountController {
 		String email = auth.getName();
 		User user = userService.findByEmail(email);
 		return user.getFirstName() + " " + user.getLastName();
+	}
+	
+	public String getErrors(BindingResult bindingResult) {
+		StringBuilder errors = new StringBuilder();
+		for (Object object : bindingResult.getAllErrors()) {
+		    if(object instanceof FieldError) {
+		        FieldError error = (FieldError) object;
+                
+		        errors.append((error.getDefaultMessage()));
+		    }
+		}
+		return errors.toString();
 	}
 }

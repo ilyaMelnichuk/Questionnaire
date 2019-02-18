@@ -20,31 +20,11 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.3.0/sockjs.min.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-<script src="js/responses.js"></script>
+<script src="js/my-responses.js"></script>
 
 </head>
 <body style="background-color: #f1f1f1;">
-	<nav class="navbar navbar-collapsible"
-		style="background-color: white; border-bottom-color: #dddddd; border-radius: 0px;">
-		<div class="container-fluid">
-			<div class="navbar-header" style="margin-left: 150px;">
-				<a class="navbar-brand" href="/"><span style="color: black;"><strong>LOGO</strong></span><span
-					style="color: blue;">TYPE</span></a>
-			</div>
-			<div style="margin-right: 150px;">
-				<ul class="nav navbar-nav navbar-right">
-					<li class="active"><a href="/my-responses">My Responses</a></li>
-					<li class="dropdown"><a class="dropdown-toggle"
-						data-toggle="dropdown" href="#">${name} <span class="caret"></span></a>
-						<ul class="dropdown-menu">
-							<li><a href="/edit-profile">Edit Profile</a></li>
-							<li><a href="/change-password">Change Password</a></li>
-							<li><a href="/logout">Log Out</a></li>
-						</ul></li>
-				</ul>
-			</div>
-		</div>
-	</nav>
+	<%@ include file = "userNavbar.jsp"%>
 	<div class="container" align="center">
 		<div class="jumbotron"
 			style="background-color: white; padding-top: 5px; padding-bottom: 0px; padding-left: 0px; padding-right: 0px;">
@@ -62,23 +42,20 @@
 					<tbody id="tbody" class="table table-striped">
 
 					</tbody>
-					<tfoot id="tfooter" align="center" style="min-height:10px;">
+					<tfoot id="tfooter" align="center" style="min-height: 10px;">
 					</tfoot>
 				</table>
 			</div>
-			<div style="border-bottom: 2px solid #dddddd; min-height: 45px; padding-left: 10px; padding-right: 10px;">
-			<div  style="float:left;width:33%;" id="div">
-			</div>
-			<div style="float:left;width:33%;" id="1">
-			</div>
-			<div  style="float:left;width:33%;" id="div2">
-			</div>
-			<div  style="float:left;width:33%;" class="paging" id="2">
-			</div>
-			<div  style="float:left;width:33%;" class="paging" id="3">
-			    <label for="size">size of page</label>
-			    <input type="number" class="js-size" name="size"/>
-			</div>
+			<div
+				style="border-bottom: 2px solid #dddddd; min-height: 45px; padding-left: 10px; padding-right: 10px;">
+				<div style="float: left; width: 33%;" id="div"></div>
+				<div style="float: left; width: 33%;" id="1"></div>
+				<div style="float: left; width: 33%;" id="div2"></div>
+				<div style="float: left; width: 33%;" class="paging" id="2"></div>
+				<div style="float: left; width: 33%;" class="paging" id="3">
+					<label for="size">size of page</label> <input type="number"
+						class="js-size" name="size" />
+				</div>
 			</div>
 		</div>
 	</div>

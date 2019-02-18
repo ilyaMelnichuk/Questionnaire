@@ -11,16 +11,7 @@
 </head>
 
 <body style="background-color: #f1f1f1;">
-	<nav class="navbar navbar-collapsible"
-		style="background-color: white; border-bottom-color: #dddddd; border-radius: 0px;">
-		<div class="container-fluid">
-			<div style="margin-right: 150px;">
-				<ul class="nav navbar-nav navbar-right">
-					<li><a href="/login">Log In</a></li>
-				</ul>
-			</div>
-		</div>
-	</nav>
+	<%@ include file = "anonymousNavbar.jsp"%>
 	<div class="container" align="center">
 		<div class="col-lg-4"></div>
 		<div class="col-lg-4">

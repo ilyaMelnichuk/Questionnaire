@@ -1,13 +1,7 @@
-/**
-
- * 
- */
 function paginate(size, numberOfElements, totalElements, totalPages, number, pageAddress){
-	//$("#head").empty();
-    //$("#tbody").empty();
     $("#div").empty();
     $("#div2").empty();
-    $("#div").append("<label>" + (size*number + 1).toString() + "-" + (size*number + numberOfElements).toString() +  " of " + (totalElements).toString() + "</label>");
+    $("#div").append("<label>" + (size*number + (numberOfElements == 0?0:1)).toString() + "-" + (size*number + numberOfElements).toString() +  " of " + (totalElements).toString() + "</label>");
 	var pages;
 	var startPage = 0;
 	if(totalPages < 5){
@@ -40,21 +34,31 @@ function paginate(size, numberOfElements, totalElements, totalPages, number, pag
 	$("#div2").append("<table id=\"pages\"></table>");
 	$pageList = $("<tr></tr>");
 	if(number != 0){
-		$pageList.append("<td><form class=\"js-page page-link\" id=\"" + (0).toString() + "\" action=\"/get-personal-polls-page?page=" + (number - 1).toString() + "&size=\"><input type=\"submit\" value=\"<<\" /></form></td>");
-		$pageList.append("<td><form class=\"js-page page-link\" id=\"" + (number - 1).toString() + "\" action=\"/get-personal-polls-page?page=" + (number - 1).toString() + "&size=\"><input type=\"submit\" value=\"<\" /></form></td>");
+		$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (0).toString() + "\" action=\"/get-personal-polls-page?page=" + (0).toString() + "&size=\"><input class=\"page-link\" type=\"submit\" value=\"<<\" /></form></td>");
+		$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (number - 1).toString() + "\" action=\"/get-personal-polls-page?page=" + (number - 1).toString() + "&size=\"><input class=\"page-link\" type=\"submit\" value=\"<\" /></form></td>");
+	}else{
+		$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (0).toString() + "\" action=\"/get-personal-polls-page?page=" + (0).toString() + "&size=\"><input type=\"submit\" value=\"<<\" disabled/></form></td>");
+		$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (number - 1).toString() + "\" action=\"/get-personal-polls-page?page=" + (number - 1).toString() + "&size=\"><input class=\"page-link\" type=\"submit\" value=\"<\" disabled/></form></td>");
 	}
 	while(i < pages && i < totalPages){
-		$pageList.append("<td><form class=\"js-page page-link\" id=\"" + (startPage + i + 1).toString() + "\" action=\"/get-personal-polls-page?page=" + (startPage + i).toString() + "&size=\"><input type=\"submit\" value=" + (startPage + i + 1).toString() + " /></form></td>");
-	    i++;
+		if(number != startPage + i){
+		    $pageList.append("<td><form class=\"js-page page-item\" id=\"" + (startPage + i + 1).toString() + "\" action=\"/get-personal-polls-page?page=" + (startPage + i).toString() + "&size=\"><input type=\"submit\" value=" + (startPage + i + 1).toString() + " /></form></td>");
+		}else{
+			$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (startPage + i + 1).toString() + "\" action=\"/get-personal-polls-page?page=" + (startPage + i).toString() + "&size=\"><input class=\"page-link\" style=\"color:blue;\"type=\"submit\" value=" + (startPage + i + 1).toString() + " disabled/></form></td>");
+		}
+		i++;
 	}
 	if(number != totalPages - 1 && totalPages != 0){
-		$pageList.append("<td><form class=\"js-page page-link\" id=\"" + (number + 1).toString() + "\" action=\"/get-personal-polls-page?page=" + (number + 1).toString() + "&size=\"><input type=\"submit\" value=\">\" /></form></td>");
-		$pageList.append("<td><form class=\"js-page page-item disabled\" id=\"" + (totalPages - 1).toString() + "\" action=\"/get-personal-polls-page?page=" + (totalPages - 1).toString() + "&size=\"><input type=\"submit\" value=\">>\" /></form></td>");
+		$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (number + 1).toString() + "\" action=\"/get-personal-polls-page?page=" + (number + 1).toString() + "&size=\"><input class=\"page-link\" type=\"submit\" value=\">\" /></form></td>");
+		$pageList.append("<td><form class=\"js-page page-item disabled\" id=\"" + (totalPages - 1).toString() + "\" action=\"/get-personal-polls-page?page=" + (totalPages - 1).toString() + "&size=\"><input class=\"page-link\" type=\"submit\" value=\">>\" /></form></td>");
+	}else{
+		$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (number + 1).toString() + "\" action=\"/get-personal-polls-page?page=" + (number + 1).toString() + "&size=\"><input class=\"page-link\" type=\"submit\" value=\">\" disabled/></form></td>");
+		$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (totalPages - 1).toString() + "\" action=\"/get-personal-polls-page?page=" + (totalPages - 1).toString() + "&size=\"><input class=\"page-link\" type=\"submit\" value=\">>\" disabled/></form></td>");
 	}
 	$pageList.appendTo("#pages");
 	$(".js-size").attr("id", pageAddress);
 }
-function load(pageAddress, size){
+function load(pageAddress, size, stompClient){
 	$.ajax({
 		url:"get-default-page",
 		type:"GET",
@@ -62,7 +66,6 @@ function load(pageAddress, size){
 		success: function(fieldsData){
 			var fields = fieldsData["content"];
 			var labels = [];
-			$("#head").append( $("<th style=\"background-color:#32CD32;\">" + "Name" + "</th>"));
 			for(var key in fields){
 				$("#head").append( $("<th>" + fields[key].label + "</th>"));
 				//labels.push(fields[key].label);
@@ -88,7 +91,6 @@ function load(pageAddress, size){
 	    			for(var key in polls){
 	    				//create new row 
 	    				$row = $("<tr id=\"" + polls[key].id + "\"></tr>");
-	    				$("<td style=\"background-color:#32CD32;\">"+polls[key].userName+"</td>").appendTo($row);
 	    				$.each(labels, function(k, s){
     		            	$("<td id=\"" + s + "\">N/A</td>").appendTo($row);
     		            });
@@ -99,25 +101,18 @@ function load(pageAddress, size){
 	    		    }
 	    			
 	    			paginate(size, numberOfElements, totalElements, totalPages, number, pageAddress);
-	    			
-	    			
-	    			var socket = new SockJS('/responses');
-	    		    var stompClient = Stomp.over(socket);
-	    		    stompClient.connect({}, function(frame){
-	    		    });
+
 	    		    
 	    		    setTimeout(function(){
-	    		    stompClient.subscribe("/topic/responses", function (message){
-      	    		    if(numberOfElements < size){
-      	    		    	++numberOfElements;
-      	    		    	++totalElements;
-      	    		    	++size
+	    		    stompClient.subscribe("/user/topic/my-responses", function (message){
+	    				if(numberOfElements < size){
+	    				    ++numberOfElements;
+	    				   	++totalElements;
 	    				    var wpoll = JSON.parse(message.body);
 	    				    $row = $("<tr id=\"" + wpoll.id + "\"></tr>");
-	    				    $("<td style=\"background-color:#32CD32;\">"+wpoll.userName+"</td>").appendTo($row);
 	    				    $.each(labels, function(k, s){
-    		            	    $("<td id=\"" + s + "\">N/A</td>").appendTo($row);
-    		                });
+	    		        	    $("<td id=\"" + s + "\">N/A</td>").appendTo($row);
+	    		            });
 	    				    $row.appendTo("#tbody");
 	    				    for(var k in wpoll.responses){
 	    					    $row.children("td[id=\"" + wpoll.responses[k].fieldId + "\"]").eq(0).html(wpoll.responses[k].value);
@@ -126,9 +121,9 @@ function load(pageAddress, size){
 	    		        	++totalElements;
 	    		        	if(totalElements%(totalPages*size) == 0){
 	    		        		++totalPages;
-	    		        		paginate(size, numberOfElements, totalElements, totalPages, number, pageAddress);
 	    		        	}
 	    		        }
+	    				paginate(size, numberOfElements, totalElements, totalPages, number, pageAddress);
 	    			});
 	    		    }, 500);
 	    		}	
@@ -144,29 +139,46 @@ function load(pageAddress, size){
 }
 
 $('document').ready(function(){
-   	load("/get-personal-polls-page?page=0", "&size=5");
+	var socket = new SockJS('/my-responses');
+    var stompClient = Stomp.over(socket);
+    stompClient.connect({}, function(frame){
+    });
+   	load("/get-personal-polls-page?page=0&size=", "5", stompClient);
    	
    	$(document).on("submit", ".js-page", function(e) {
 		e.preventDefault();
 		var s = $(".js-size").first().val()==""?"5":$(".js-size").first().val();
-		var url = $(e.target).attr("action").toString();
-		$("#head").empty();
-		$("#tbody").empty();
-		$("#div").empty();
-		$("#div2").empty();
-		load(url, s);
+		if(parseInt(s) >= 0){
+			var url = $(e.target).attr("action").toString();
+			$("#head").empty();
+			$("#tbody").empty();
+			$("#div").empty();
+			$("#div2").empty();
+			stompClient.unsubscribe("/user/topic/my-responses");
+			load(url, s, stompClient);	
+		}else{
+			alert("Page size can't be a negative number! Please, provide correct page size.");
+		}
+		
 	});
+   	
 	$(document).on("keyup", ".js-size", function(e) {
 		if(e.keyCode == 13){
 		    e.preventDefault();
 		    var s = $(e.target).val();
-		    //s = "&size=" + s;
-		    var url = $(e.target).attr("id");
-		    $("#head").empty();
-		    $("#tbody").empty();
-		    $("#div").empty();
-		    $("#div2").empty();
-		    load(url, s);
+		    if(parseInt(s) >= 0){
+		    	var url = $(e.target).attr("id");
+			    $("#head").empty();
+			    $("#tbody").empty();
+			    $("#div").empty();
+			    $("#div2").empty();
+			    setTimeout(function(){
+			        stompClient.unsubscribe("/user/topic/my-responses");
+			    }, 500);
+			    load(url, s, stompClient);
+		    }else{
+		    	alert("Page size can't be a negative number! Please, provide correct page size.");
+		    }
 	    }
 	});
 });

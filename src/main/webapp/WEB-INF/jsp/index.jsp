@@ -81,31 +81,40 @@
         			resp = {};
         			resp["id"] = null;
         			resp["fieldId"] = $(this).data("id");
-        			resp["value"] = "";
+        			
+        			
+        			
+        			
+        			var value = "";
         			switch($(this).attr("id")){
         			    case "Single line text":
-        			    	resp["value"] = $(this).children("input").eq(0).val();
+        			    	value = $(this).children("input").eq(0).val();
         			    	break;
         			    case "Multiline text":
-        			    	resp["value"] = $(this).children("textarea").eq(0).val();
+        			    	value = $(this).children("textarea").eq(0).val();
         			    	break;
         			    case "Radio button":
-        			    	resp["value"]= ($(this).children("input[name=\"" + $(this).children("label").eq(0).children("span").eq(0).html() + "\"]:checked").val()==undefined?"":$(this).children("input[name=\"" + $(this).children("label").eq(0).children("span").eq(0).html() + "\"]:checked").val()); 
+        			    	value = ($(this).children("input[name=\"" + $(this).children("label").eq(0).children("span").eq(0).html() + "\"]:checked").val()==undefined?"":$(this).children("input[name=\"" + $(this).children("label").eq(0).children("span").eq(0).html() + "\"]:checked").val()); 
         			    	break;
         			    case "Checkbox":
-        			    	var value = "";
         			    	$(this).children("input:checked").each(function(){
         			    		value = value.concat($(this).attr("name")).concat(", ");
         			    	});
         			    	value = value.substring(0, value.length - 2);
-        			    	resp["value"] = value;
         			    	break;
         			    case "Combobox":
-        			    	resp["value"] = $(this).children("select").eq(0).val();
+        			    	value = $(this).children("select").eq(0).val();
         			    	break;
         			    case "Date":
-        			        resp["value"] = $(this).children("input").eq(0).val();
+        			        value = $(this).children("input").eq(0).val();
         			}
+        		    value = value.replace(new RegExp("&", "g"), "&amp");
+        		    value = value.replace(new RegExp('"', "g"), '\"');
+        		    value = value.replace(new RegExp("'", "g"), "\'");
+        		    value = value.replace(new RegExp("<", "g"), "&lt");
+        		    value = value.replace(new RegExp(">", "g"), "&gt");
+        			resp["value"] = value;
+        			
         			object.list.push(resp);
         		});
         		var socket = new SockJS('/responses');
@@ -146,27 +155,7 @@
 </head>
 
 <body style="background-color: #f1f1f1;">
-	<nav class="navbar navbar-collapsible"
-		style="background-color: white; border-bottom-color: #dddddd; border-radius: 0px;">
-		<div class="container-fluid">
-			<div class="navbar-header" style="margin-left: 150px">
-				<a class="navbar-brand" href="/"><span style="color: black;"><strong>LOGO</strong></span><span
-					style="color: blue;">TYPE</span></a>
-			</div>
-			<div style="margin-right: 150px">
-				<ul class="nav navbar-nav navbar-right">
-					<li><a href="/my-responses">My Responses</a></li>
-					<li class="dropdown"><a class="dropdown-toggle"
-						data-toggle="dropdown" href="#">${name} <span class="caret"></span></a>
-						<ul class="dropdown-menu">
-							<li><a href="/edit-profile">Edit Profile</a></li>
-							<li><a href="/change-password">Change Password</a></li>
-							<li><a href="/logout">Log Out</a></li>
-						</ul></li>
-				</ul>
-			</div>
-		</div>
-	</nav>
+	<%@ include file = "userNavbar.jsp"%>
 
 	<div class="container" align="center">
 		<div class="jumbotron p-2"

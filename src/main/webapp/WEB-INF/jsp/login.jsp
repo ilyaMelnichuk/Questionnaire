@@ -14,6 +14,7 @@
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body style="background-color: #f1f1f1;">
+    <%@ include file = "/WEB-INF/jsp/anonymousNavbar.jsp"%>
 	<div class="container" align="center">
 		<div class="col-lg-4"></div>
 		<div class="col-lg-4">

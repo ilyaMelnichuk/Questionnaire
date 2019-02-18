@@ -19,47 +19,47 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private UserDetailsServiceImpl userDetailsServiceImpl;
 	@Override
-    protected void configure(AuthenticationManagerBuilder auth)
-            throws Exception {
-        auth
-        .userDetailsService(userDetailsServiceImpl).passwordEncoder(new BCryptPasswordEncoder());
-    }
-	
-	
-    @Override
-    protected void configure(HttpSecurity http) throws Exception{
-    	 http.authorizeRequests()
-                .antMatchers("/login/**").permitAll()
-                .antMatchers("/login-error/**").permitAll()
-                .antMatchers("/forgot-password/**").permitAll()
-                .antMatchers("/validate-token/**").permitAll()
-                .antMatchers("/signup/**").permitAll()
-                .antMatchers("/").hasRole("USER")
-                .antMatchers("/success/**").hasRole("USER")
-                .antMatchers("/my-responses/**").hasRole("USER")
-                .antMatchers("/load-user-data/**").hasRole("USER")
-                .antMatchers("/get-personal-responses-page").hasRole("USER")
-                .antMatchers("/check-changes/**").hasRole("USER")
-                .antMatchers("/edit-profile/**").hasRole("USER")
-                .antMatchers("/change-password/**").hasRole("USER")
-                .antMatchers("/fields").hasRole("ADMIN")
-                .antMatchers("/get-fields-page").hasRole("ADMIN")
-                .antMatchers("/get-responses-page").hasRole("ADMIN")
-                .antMatchers("/responses").hasRole("ADMIN")
-                .antMatchers("/reset-password/**").hasRole("CHANGE_PASSWORD")
-                .anyRequest()
-                .authenticated().and().csrf().disable().formLogin()
-				.loginPage("/login").successHandler(new CustomAuthenticationSuccessHandler()) //permitAll().defaultSuccessUrl("/responses").failureUrl("/login-error").successForwardUrl("/responses")
-                .usernameParameter("email")
-                .passwordParameter("password")
-                .and().logout()
-                .logoutSuccessUrl("/login").and()
-                .rememberMe().key("uniqueAndSecret").rememberMeParameter("remember_me")
-                .and().exceptionHandling().accessDeniedPage("/access-denied");
-    }
-   
-    @Override
-    public void configure(WebSecurity web) {
-    	web.ignoring().antMatchers("/resources/**", "/static/**");
-    }
+	protected void configure(AuthenticationManagerBuilder auth)
+			throws Exception {
+		auth
+		.userDetailsService(userDetailsServiceImpl).passwordEncoder(new BCryptPasswordEncoder());
+	}
+
+
+	@Override
+	protected void configure(HttpSecurity http) throws Exception{
+		http.authorizeRequests()
+		.antMatchers("/login/**").permitAll()
+		.antMatchers("/login-error/**").permitAll()
+		.antMatchers("/forgot-password/**").permitAll()
+		.antMatchers("/validate-token/**").permitAll()
+		.antMatchers("/signup/**").permitAll()
+		.antMatchers("/").hasRole("USER")
+		.antMatchers("/success/**").hasRole("USER")
+		.antMatchers("/my-responses/**").hasRole("USER")
+		.antMatchers("/load-user-data/**").hasRole("USER")
+		.antMatchers("/get-personal-responses-page").hasRole("USER")
+		.antMatchers("/check-changes/**").hasRole("USER")
+		.antMatchers("/edit-profile/**").hasRole("USER")
+		.antMatchers("/change-password/**").hasRole("USER")
+		.antMatchers("/fields").hasRole("ADMIN")
+		.antMatchers("/get-fields-page").hasRole("ADMIN")
+		.antMatchers("/get-responses-page").hasRole("ADMIN")
+		.antMatchers("/responses").hasRole("ADMIN")
+		.antMatchers("/reset-password/**").hasRole("CHANGE_PASSWORD")
+		.anyRequest()
+		.authenticated().and().csrf().disable().formLogin()
+		.loginPage("/login").successHandler(new CustomAuthenticationSuccessHandler()) //permitAll().defaultSuccessUrl("/responses").failureUrl("/login-error").successForwardUrl("/responses")
+		.usernameParameter("email")
+		.passwordParameter("password")
+		.and().logout()
+		.logoutSuccessUrl("/login").and()
+		.rememberMe().key("uniqueAndSecret").rememberMeParameter("remember_me")
+		.and().exceptionHandling().accessDeniedPage("/access-denied");
+	}
+
+	@Override
+	public void configure(WebSecurity web) {
+		web.ignoring().antMatchers("/resources/**", "/static/**");
+	}
 }

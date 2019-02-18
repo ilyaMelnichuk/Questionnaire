@@ -38,8 +38,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 @SessionAttributes("name")
 @Controller
 public class LoginController {
-	@Autowired 
-	private BCryptPasswordEncoder crypto = new BCryptPasswordEncoder();
     @Autowired
     private UserService userService;
     
@@ -121,37 +119,37 @@ public class LoginController {
         return model;
     }
     
-    @PostMapping(value="/signup", consumes = "application/json", produces = "application/json")
-    public @ResponseBody String registerNewUser(@Validated(UserDto.New.class) @RequestBody UserDto userDto, BindingResult bindingResult) {
-    	ObjectMapper objectMapper = new ObjectMapper();
-    	ObjectNode result = objectMapper.createObjectNode();
+
+    
+    /*@PostMapping(value = "signup", consumes = "application/json")
+    public ModelAndView tryToSignUp(@Validated(UserDto.New.class) @RequestBody UserDto userDto, BindingResult bindingResult) {
+    	ModelAndView model;
     	if(!bindingResult.hasErrors()) {
     		User newUser = userService.findByEmail(userDto.getEmail());
-        	
-        	if(newUser==null) {
-        		ModelMapper modelMapper = new ModelMapper();
-        		User user = modelMapper.map(userDto, User.class);
-        		
-        		userService.registerUser(user);
-                emailService.sendMessage(userDto.getEmail(), "Registration in Questionnaire Portal",
-               	    userDto.getFirstName() + " " + userDto.getLastName() + ",\n" + "You have been successfully registered in Questionnaire Portal!");
-                result.put("message", "you have been successfully signed up");
-        	}else {
-        		result.put("message", "user with this email has been already registered");
-        	}
+    		if(newUser==null) {
+    			ModelMapper modelMapper = new ModelMapper();
+    			User user = modelMapper.map(userDto, User.class);
+
+    			userService.registerUser(user);
+    			emailService.sendMessage(userDto.getEmail(), "Registration in Questionnaire Portal",
+    					userDto.getFirstName() + " " + userDto.getLastName() + (userDto.getFirstName().equals("") && userDto.getLastName().equals("")? "": ",\n")+ "You have been successfully registered in Questionnaire Portal!");
+    			model = new ModelAndView("/redirect:/login", "message", "you have been successfully signed up");
+    		}else {
+    			model = new ModelAndView("signup", "message", "user with this email has been already registered");
+    		}
     	}else {
     		StringBuilder errors = new StringBuilder();
     		for (Object object : bindingResult.getAllErrors()) {
-    		    if(object instanceof FieldError) {
-    		        FieldError error = (FieldError) object;
-                    
-    		        errors.append((error.getDefaultMessage()) + "\n");
-    		    }
+    			if(object instanceof FieldError) {
+    				FieldError error = (FieldError) object;
+
+    				errors.append((error.getDefaultMessage()) + "\n");
+    			}
     		}
     		result.put("message", errors.toString());
     	}
     	return result.toString();
-    }
+    }*/
     
     @GetMapping("/access-denied")
     public String accessDenied() {

@@ -5,36 +5,26 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.repository.query.Param;
 
 import com.example.questionnaire.entity.Field;
 import com.example.questionnaire.entity.Type;
 
 @Repository
 public interface FieldRepository extends PagingAndSortingRepository<Field, String>{
-	/*
-	 * @Transactional
-	 * 
-	 * @Modifying
-	 * 
-	 * @Query("update Field f set f.label = ?2, f.type = ?3, f.required = ?4, f.isActive = ?5 where f.label = ?1"
-	 * ) void updateByLabel(String oldLabel, String newLabel, Type newType, boolean
-	 * newRequired, boolean newActive);
-	 */
-
 	
 	
-	@Transactional
+	/*@Transactional
 	  
 	@Modifying
 	  
-    @Query("update Field f set f.label = ?2, f.type = ?3, f.required = ?4, f.isActive = ?5 where f.id = ?1") 
-	void updateByI(Long id, String Label, Type newType, boolean newRequired, boolean newActive);
-	 
+    @Query("update Field f set f.label = :newLabel, f.type = :newType, f.required = :newRequired, f.isActive = :newIsActive where f.id = :id") 
+	void updateById(@Param("id") Long id, @Param("newLabel") String label, @Param("newType") Type newType, @Param("newRequired") boolean newRequired, @Param("newIsActive") boolean newActive);
+	 */
 	Iterable<Field> findByIsActive(boolean isActive);
-	//Field findByLabel(String label);
+	
 	Field findById(Long id);
 	
-	@Transactional
 	@Modifying
 	void deleteById(Long id);
 	boolean existsById(String id);

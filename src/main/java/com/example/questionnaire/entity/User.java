@@ -1,6 +1,7 @@
 package com.example.questionnaire.entity;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -25,35 +26,52 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "user", schema="security")
 public class User implements UserDetails{
 	@Id
-    @Column(name = "email")
-    @Email(message = "Please provide a valid email")
-    @NotEmpty(message = "Please provide an email")
-    private String email;
-    @Column(name = "password")
-    @Length(min = 6, max = 255, message = "Password should have at least 6 and no more than 255 characters")
-    private String password;
+	@Column(name = "email")
+	@Email(message = "Please provide a valid email")
+	@NotEmpty(message = "Please provide an email")
+	private String email;
+	@Column(name = "password")
+	@Length(min = 6, max = 255, message = "Password should have at least 6 and no more than 255 characters")
+	private String password;
 	@Column(name = "first_name")
 	@Length(max = 255, message = "Your first name should have no more than 255 characters")
-    private String firstName;
-    @Column(name = "last_name")
-    @Length(max = 255, message = "Your last name should have no more than 255 characters")
-    private String lastName;
-    @Column(name = "phone_number")
-    private String phoneNumber;
+	private String firstName;
+	@Column(name = "last_name")
+	@Length(max = 255, message = "Your last name should have no more than 255 characters")
+	private String lastName;
+	@Column(name = "phone_number")
+	private String phoneNumber;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "user_role", schema = "security", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "email"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_name"))
-    private Set<Role> roles;  
-    
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "user_role", schema = "security", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "email"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_name"))
+	private Set<Role> roles;  
+	
+	@OneToMany(mappedBy = "user")
+	private List<Poll> polls;
+
 	public String getEmail() {
 		return email;
 	}
 	
 	@JsonIgnore
+	public User() {
+		
+	}
+
+	@JsonIgnore
+	public User(String email, String firstName, String lastName, String phoneNumber) {
+		this.email = email;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.phoneNumber = phoneNumber;
+	}
+
+
+	@JsonIgnore
 	public Set<Role> getRoles() {
 		return roles;
 	}
-	
+
 	@JsonIgnore
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
@@ -87,7 +105,7 @@ public class User implements UserDetails{
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-	
+
 	@JsonIgnore
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
