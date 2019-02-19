@@ -148,7 +148,7 @@ $('document').ready(function(){
    	$(document).on("submit", ".js-page", function(e) {
 		e.preventDefault();
 		var s = $(".js-size").first().val()==""?"5":$(".js-size").first().val();
-		if(parseInt(s) >= 0){
+		if(parseInt(s) > 0){
 			var url = $(e.target).attr("action").toString();
 			$("#head").empty();
 			$("#tbody").empty();
@@ -157,7 +157,7 @@ $('document').ready(function(){
 			stompClient.unsubscribe("/user/topic/my-responses");
 			load(url, s, stompClient);	
 		}else{
-			alert("Page size can't be a negative number! Please, provide correct page size.");
+			alert("Please, provide correct page size!");
 		}
 		
 	});
@@ -166,7 +166,7 @@ $('document').ready(function(){
 		if(e.keyCode == 13){
 		    e.preventDefault();
 		    var s = $(e.target).val();
-		    if(parseInt(s) >= 0){
+		    if(parseInt(s) > 0){
 		    	var url = $(e.target).attr("id");
 			    $("#head").empty();
 			    $("#tbody").empty();
@@ -177,7 +177,7 @@ $('document').ready(function(){
 			    }, 500);
 			    load(url, s, stompClient);
 		    }else{
-		    	alert("Page size can't be a negative number! Please, provide correct page size.");
+		    	alert("Please, provide correct page size!");
 		    }
 	    }
 	});

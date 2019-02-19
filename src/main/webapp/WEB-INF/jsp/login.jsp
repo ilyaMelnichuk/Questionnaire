@@ -14,13 +14,13 @@
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body style="background-color: #f1f1f1;">
-    <%@ include file = "/WEB-INF/jsp/anonymousNavbar.jsp"%>
+	<%@ include file="/WEB-INF/jsp/anonymousNavbar.jsp"%>
 	<div class="container" align="center">
 		<div class="col-lg-4"></div>
 		<div class="col-lg-4">
 			<div class="jumbotron"
 				style="margin-top: 150px; min-width: 450px; background-color: white;">
-				<form method="POST" action="${contextPath}/login">
+				<form id="form" method="POST" action="${contextPath}/login">
 					<div class="form-group" align="center">
 						<h2>
 							<strong>LOGO</strong><span style="color: blue;">TYPE</span>
@@ -30,17 +30,17 @@
 						<h4>Log In</h4>
 					</div>
 					<div class="form-group" align="center">
-						<h5>${message}</h5>
+						<label id="message">${message}</label>
 					</div>
 					<div class="form-group">
-						<input type="text" name="email" placeholder="Email"
+						<input id="email" type="text" name="email" placeholder="Email"
 							class="form-control">
 					</div>
 					<div class="form-group">
-						<input type="password" name="password" placeholder="Password"
-							class="form-control" />
+						<input id="password" type="password" name="password"
+							placeholder="Password" class="form-control" />
 					</div>
-					<div class="from-group" align="center">
+					<div class="from-group">
 						<label> <input type="checkbox" name="remember_me">
 							Remember me <a href="/forgot-password">Forgot your password?</a>
 						</label>
@@ -49,7 +49,7 @@
 					<button class="btn-primary form-control" type="submit">LOG
 						IN</button>
 					<br>
-					<div class="form-group" align="center">
+					<div class="form-group">
 						<label> Don't have account? <a
 							href="<c:url value="/signup" />">Sign up</a>
 						</label>
@@ -64,6 +64,6 @@
 		src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script
 		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+	<script src="js/login.js"></script>
 </body>
 </html>

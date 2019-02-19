@@ -109,31 +109,6 @@ public class EditAccountController {
 		}
 		return result.toString();
 	}
-	
-    @PostMapping(value="/signup", consumes = "application/json", produces = "application/json")
-    public @ResponseBody String registerNewUser(@Validated(UserDto.New.class) @RequestBody UserDto userDto, BindingResult bindingResult) {
-    	ObjectMapper objectMapper = new ObjectMapper();
-    	ObjectNode result = objectMapper.createObjectNode();
-    	if(!bindingResult.hasErrors()) {
-    		User newUser = userService.findByEmail(userDto.getEmail());
-        	
-        	if(newUser==null) {
-        		ModelMapper modelMapper = new ModelMapper();
-        		User user = modelMapper.map(userDto, User.class);
-        		
-        		userService.registerUser(user);
-                emailService.sendMessage(userDto.getEmail(), "Registration in Questionnaire Portal",
-               	    userDto.getFirstName() + " " + userDto.getLastName() + (userDto.getFirstName().equals("") && userDto.getLastName().equals("")? "": ",\n") + "You have been successfully registered in Questionnaire Portal!");
-                result.put("message", "you have been successfully signed up");
-        	}else {
-        		result.put("message", "user with this email has been already registered");
-        	}
-    	}else {
-    		result.put("message", getErrors(bindingResult));
-    	}
-    	return result.toString();
-    }
-	
 	@ModelAttribute("name")
 	public String setUpUserName() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();

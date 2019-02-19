@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -91,7 +92,7 @@ public class LoginController {
 		userService.changeUserPassword(user, messageDto.getMessage());
 		return "redirect:/login";
 	}
-    
+	
 	@GetMapping(value="/login")
     public String login(Principal principal) {
     	if(principal == null) {
@@ -102,14 +103,15 @@ public class LoginController {
     }
 	
     @GetMapping(value="/login-error")
-    public String login(Model model, String error, String logout) {
-    	if(error != null) {
-    		model.addAttribute("message", error);
-    	}
-    	if(logout != null) {
-    		model.addAttribute("message", "You have been logged out successfuly!");
-    	}
+    public String login(Model model) {
+    	model.addAttribute("message", "Login or password is incorrect!");
     	return "login"; 	
+    }
+    
+    @GetMapping(value="/signup-success")
+    public ModelAndView signupSuccess(ModelMap model) {
+    	model.addAttribute("message", "You've been successfully registered in Logotype!/nNow you can sign in.");
+    	return new ModelAndView("redirect:/login", model);	
     }
     
     @GetMapping(value= "/signup")
@@ -121,35 +123,41 @@ public class LoginController {
     
 
     
-    /*@PostMapping(value = "signup", consumes = "application/json")
-    public ModelAndView tryToSignUp(@Validated(UserDto.New.class) @RequestBody UserDto userDto, BindingResult bindingResult) {
-    	ModelAndView model;
+    @PostMapping(value="/signup", consumes = "application/json", produces = "application/json")
+    public @ResponseBody String registerNewUser(@Validated(UserDto.New.class) @RequestBody UserDto userDto, BindingResult bindingResult) {
+    	ObjectMapper objectMapper = new ObjectMapper();
+    	ObjectNode result = objectMapper.createObjectNode();
     	if(!bindingResult.hasErrors()) {
     		User newUser = userService.findByEmail(userDto.getEmail());
-    		if(newUser==null) {
-    			ModelMapper modelMapper = new ModelMapper();
-    			User user = modelMapper.map(userDto, User.class);
-
-    			userService.registerUser(user);
-    			emailService.sendMessage(userDto.getEmail(), "Registration in Questionnaire Portal",
-    					userDto.getFirstName() + " " + userDto.getLastName() + (userDto.getFirstName().equals("") && userDto.getLastName().equals("")? "": ",\n")+ "You have been successfully registered in Questionnaire Portal!");
-    			model = new ModelAndView("/redirect:/login", "message", "you have been successfully signed up");
-    		}else {
-    			model = new ModelAndView("signup", "message", "user with this email has been already registered");
-    		}
+        	
+        	if(newUser==null) {
+        		ModelMapper modelMapper = new ModelMapper();
+        		User user = modelMapper.map(userDto, User.class);
+        		
+        		userService.registerUser(user);
+                emailService.sendMessage(userDto.getEmail(), "Registration in Questionnaire Portal",
+               	    userDto.getFirstName() + " " + userDto.getLastName() + ",\n" + "You have been successfully registered in Questionnaire Portal!");
+                result.put("message", "/login");
+        	}else {
+        		result.put("message", "user with this email has been already registered");
+        	}
     	}else {
-    		StringBuilder errors = new StringBuilder();
-    		for (Object object : bindingResult.getAllErrors()) {
-    			if(object instanceof FieldError) {
-    				FieldError error = (FieldError) object;
-
-    				errors.append((error.getDefaultMessage()) + "\n");
-    			}
-    		}
-    		result.put("message", errors.toString());
+    		result.put("message", getErrors(bindingResult));
     	}
     	return result.toString();
-    }*/
+}
+	
+	public String getErrors(BindingResult bindingResult) {
+		StringBuilder errors = new StringBuilder();
+		for (Object object : bindingResult.getAllErrors()) {
+		    if(object instanceof FieldError) {
+		        FieldError error = (FieldError) object;
+                
+		        errors.append((error.getDefaultMessage()));
+		    }
+		}
+		return errors.toString();
+	}
     
     @GetMapping("/access-denied")
     public String accessDenied() {

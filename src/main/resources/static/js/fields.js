@@ -1,6 +1,10 @@
+var size;
+var numberOfElements;
+var totalElements;
+var totalPages;
+var number;
+
 function paginate(size, numberOfElements, totalElements, totalPages, number, pageAddress){
-	//$("#head").empty();
-	//$("#tbody").empty();
 	$(".paging#1").empty();
 	$(".paging#2").empty();
 	$(".paging#1").append("<label>" + (size*number + (numberOfElements == 0?0:1)).toString() + "-" + (size*number + numberOfElements).toString() +  " of " + (totalElements).toString() + "</label>");
@@ -15,7 +19,6 @@ function paginate(size, numberOfElements, totalElements, totalPages, number, pag
 	if(number < 2){
 		startPages = 0;
 	}else if(totalPages - number < 3){ 
-		//fix
 		if(totalPages - number == 1){
 			if(totalPages < 5){
 				startPage = 0;
@@ -61,8 +64,8 @@ function paginate(size, numberOfElements, totalElements, totalPages, number, pag
 	$(".js-size").attr("id", pageAddress);
 }
 
-function load(pageAddress, size){
-	var url = pageAddress + size;
+function load(pageAddress, pageSize){
+	var url = pageAddress + pageSize;
 	$.ajax({
 		url:url,
 		type:"GET",
@@ -75,7 +78,7 @@ function load(pageAddress, size){
 				$edit = "<button id=\"" + fields[key].label + "\" class=\"edit\" style=\"background:transparent; border:none;\" data-toggle=\"modal\" data-target=\"#editModal\"> <span class=\"glyphicon glyphicon-edit\"> </span> </button>";
 				$row = $('<tr>'+
 						'<td class=\"field-label\" data-id=\"' + fields[key].id + '\">'+fields[key].label+'</td>'+
-						'<td class=\"field-type\" data-options=\"'+ (fields[key].options).toString() +'\">'+fields[key].type+'</td>'+
+						'<td class=\"field-type\" data-options=\"'+ fields[key].options +'\">'+fields[key].type+'</td>'+
 						'<td class=\"field-required\">'+fields[key].required+'</td>'+
 						'<td class=\"field-isActive\">'+fields[key].isActive+'</td>'+
 						'<td>'+
@@ -88,21 +91,21 @@ function load(pageAddress, size){
 				$row.attr("id", fields[key].label);
 				$("#tbody").append($row);
 			}
-			//pagination widgets
-			var size = parseInt(data["size"]);
-			var numberOfElements = parseInt(data["numberOfElements"]);
-			var totalElements = parseInt(data["totalElements"]);
-			var totalPages = parseInt(data["totalPages"]);
-			var number = parseInt(data["number"]);
-			var polls = data["content"];
-			paginate(size, numberOfElements, totalElements, totalPages, number, pageAddress)
+			
+			size = parseInt(data["size"]);
+			numberOfElements = parseInt(data["numberOfElements"]);
+			totalElements = parseInt(data["totalElements"]);
+			totalPages = parseInt(data["totalPages"]);
+			number = parseInt(data["number"]);
+			//polls = data["content"];
+			paginate(size, numberOfElements, totalElements, totalPages, number, pageAddress);
 		}
 	});
 } 
 $('document').ready(function(){
 	load("/get-fields-page?page=0", "&size=5");
 	var $activeField;
-
+    //deleting field
 	$(document).on("click", ".delete", function(){
 		if(confirm("Are you sure you want to delete field \"" + $(this).closest("tr").children("td").eq(0).html() + "\"?")){
 			var label = {};
@@ -117,6 +120,38 @@ $('document').ready(function(){
 				}
 			});
 			$(this).closest("tr").remove();
+			setTimeout(function(){if(numberOfElements == 1){
+				if(number != 0){
+					var s = "&size=" + (size).toString();
+					var url = "/get-fields-page?page=" + (number - 1).toString();
+					$("#tbody").empty();
+					$(".paging#1").empty();
+					$(".paging#2").empty();
+					load(url, s);
+				}else{
+					--numberOfElements;
+					--totalElements;
+					--totalPages;
+					$(this).closest("tr").remove();
+					$(".paging#1").empty();
+					$(".paging#2").empty();
+					paginate(size, numberOfElements, totalElements, totalPages, number, "/get-fields-page?page=" + (number).toString());
+				}
+			}else if(numberOfElements < size || number + 1 == totalPages){
+				$(this).closest("tr").remove();
+				--numberOfElements;
+				--totalElements;
+				$(".paging#1").empty();
+				$(".paging#2").empty();
+				paginate(size, numberOfElements, totalElements, totalPages, number, "/get-fields-page?page=" + (number).toString());
+			}else{
+				var s = "&size=" + (size).toString();
+				var url = "/get-fields-page?page=" + (number).toString();
+				$("#tbody").empty();
+				$(".paging#1").empty();
+				$(".paging#2").empty();
+				load(url, s);
+			}}, 100);
 		}
 	});
 
@@ -168,53 +203,67 @@ $('document').ready(function(){
 	$(document).on("click", '#save', function(){
 		var $row;
 		if($("#label-input").val() != ""){
-			var object = {};
-			object["label"] = $("#label-input").val();
-			//js injection prevention
+			var fieldToSend = {};
+			fieldToSend["label"] = $("#label-input").val();
+			
 			var fieldLabel = $("#label-input").val().replace(new RegExp("&", "g"), "&amp");
 			fieldLabel = fieldLabel.replace(new RegExp('"', "g"), '\"');
 			fieldLabel = fieldLabel.replace(new RegExp("'", "g"), "\'");
 			fieldLabel = fieldLabel.replace(new RegExp("<", "g"), "&lt");
 			fieldLabel = fieldLabel.replace(new RegExp(">", "g"), "&gt");		
-			object["type"]= $("#type-input").val();
-			
-			var options = $("#options-input").val().replace(new RegExp("&", "g"), "&amp");
-			options = options.replace(new RegExp('"', "g"), '\"');
-			options = options.replace(new RegExp("'", "g"), "\'");
-			options = options.replace(new RegExp("<", "g"), "&lt");
-			options = options.replace(new RegExp(">", "g"), "&gt");
 
-			object["required"]=$("#required-input").is(":checked");
-			object["isActive"]=$("#isActive-input").is(":checked");
+			var fieldOptions = $("#options-input").val().replace(new RegExp("&", "g"), "&amp");
+			fieldOptions = fieldOptions.replace(new RegExp('"', "g"), '\"');
+			fieldOptions = fieldOptions.replace(new RegExp("'", "g"), "\'");
+			fieldOptions = fieldOptions.replace(new RegExp("<", "g"), "&lt");
+			fieldOptions = fieldOptions.replace(new RegExp(">", "g"), "&gt");
+
+			fieldToSend["required"]=$("#required-input").is(":checked");
+			
+			fieldToSend["isActive"]=$("#isActive-input").is(":checked");
+			
+			fieldToSend["type"]= $("#type-input").val();
+			
 			if($("#type-input").val() == "Combobox" || $("#type-input").val() == "Radio button" || $("#type-input").val() == "Checkbox"){
-				object["options"] = options;
+				fieldToSend["options"] = fieldOptions;
 			}else{
-				object["options"]="";
+				fieldToSend["options"]="";
 			}
 			if($activeField != "new"){
-				object["id"]=$("#label-input").data("id");
+				fieldToSend["id"]=$("#label-input").data("id");
 				$activeField.eq(0).html(fieldLabel);
 				$activeField.eq(1).html($("#type-input").val());
 				if($("#type-input").val() == "Combobox" || $("#type-input").val() == "Radio button" || $("#type-input").val() == "Checkbox"){
-					$activeField.eq(1).data("options", options);
+					$activeField.eq(1).data("options", fieldOptions);
 				}
 				$activeField.eq(2).html($("#required-input").is(":checked")?"true":"false");
 				$activeField.eq(3).html($("#isActive-input").is(":checked")?"true":"false");
 			}else{
-				$row = $('<tr>'+
-						'<td class=\"field-label\">'+fieldLabel+'</td>'+
-						'<td class=\"field-type\" data-options=\"'+options+'\">'+$("#type-input").val()+'</td>'+
-						'<td class=\"field-required\">'+$("#required-input").is(":checked")+'</td>'+
-						'<td class=\"field-isActive\">'+$("#isActive-input").is(":checked")+'</td>'+
-						'<td>'+
-						'<div align=\"right\">'+
-						"<button id=\"" + fieldLabel + "\" class=\"edit\" style=\"background:transparent; border:none;\" data-toggle=\"modal\" data-target=\"#editModal\"> <span class=\"glyphicon glyphicon-edit\"> </span> </button>"+
-						"<button data-delete-id=\"" + fieldLabel + "\" class=\"delete\" style=\"background:transparent; border:none;\"> <span class=\"glyphicon glyphicon-trash\"> </span> </button>"+
-						'</div>'+
-						'</td>'+
-				'</tr>');
-				$row.attr("id", fieldLabel);
-				$("#tbody").append($row);
+				
+				if(numberOfElements < size){
+					++numberOfElements;
+					$row = $('<tr>'+
+							'<td class=\"field-label\">'+fieldLabel+'</td>'+
+							'<td class=\"field-type\" data-options=\"'+fieldOptions+'\">'+$("#type-input").val()+'</td>'+
+							'<td class=\"field-required\">'+$("#required-input").is(":checked")+'</td>'+
+							'<td class=\"field-isActive\">'+$("#isActive-input").is(":checked")+'</td>'+
+							'<td>'+
+							'<div align=\"right\">'+
+							"<button id=\"" + fieldLabel + "\" class=\"edit\" style=\"background:transparent; border:none;\" data-toggle=\"modal\" data-target=\"#editModal\"> <span class=\"glyphicon glyphicon-edit\"> </span> </button>"+
+							"<button data-delete-id=\"" + fieldLabel + "\" class=\"delete\" style=\"background:transparent; border:none;\"> <span class=\"glyphicon glyphicon-trash\"> </span> </button>"+
+							'</div>'+
+							'</td>'+
+					'</tr>');
+					$row.attr("id", fieldLabel);
+					$("#tbody").append($row);
+				}
+				if(totalElements%(size*totalPages) == 0 || totalElements == 0){
+					++totalPages;
+				}
+				++totalElements;
+				$(".paging#1").empty();
+				$(".paging#2").empty();
+				paginate(size, numberOfElements, totalElements, totalPages, number, "/get-fields-page?page=" + (number).toString());
 			}
 		}else{
 			$("#message").html("label shouldn't be empty");
@@ -222,16 +271,18 @@ $('document').ready(function(){
 		$.ajax({
 			url:"save-field",
 			type:"POST",
-			data:JSON.stringify(object),
+			data:JSON.stringify(fieldToSend),
 			datatype:"json",
 			contentType:"application/json",
 			success:function(data){
 				if($activeField == "new" && $.isNumeric(data["message"])){
 					$("#message").html("field has been created");
-					$row.children("td").eq(0).data("id", parseInt(data["message"]))
+					if(numberOfElements - 1 < size){
+						$row.children("td").eq(0).data("id", parseInt(data["message"]));
+					}
 				}else if(data["message"] == "field has been updated"){
 					$("#message").html(data["message"]);
-					object["oldLabel"]=$activeField.eq(0).html();
+					fieldToSend["oldLabel"]=$activeField.eq(0).html();
 					$activeField.eq(0).html(fieldLabel);
 					$activeField.eq(1).html($("#type-input").val());
 					if($("#type-input").val() == "Combobox" || $("#type-input").val() == "Radio button" || $("#type-input").val() == "Checkbox"){
@@ -245,10 +296,9 @@ $('document').ready(function(){
 			}
 		});
 	})
-	//when modal closes we clear all its inputs
+	
 	$(document).on("hidden.bs.modal", "#editModal", function(e){
 		$("#message").html("");
-		//$("#label-input").val("");
 		$("#label-input").data("id");
 		$("#type-input").val("Single line text");
 		$("#options-input").html("");
@@ -261,21 +311,21 @@ $('document').ready(function(){
 	$(document).on("submit", ".js-page", function(e) {
 		e.preventDefault();
 		var s = $(".js-size").first().val()==""?"5":$(".js-size").first().val();
-		if(parseInt(s) >= 0){
+		if(parseInt(s) > 0){
 			var url = $(e.target).attr("action").toString();
 			$("#tbody").empty();
 			$(".paging#1").empty();
 			$(".paging#2").empty();
 			load(url, s);
 		}else{
-			alert("Page size can't be a negative number! Please, provide correct page size.");
+			alert("Please, provide correct page size!");
 		}
 	});
 	$(document).on("keyup", ".js-size", function(e) {
 		if(e.keyCode == 13){
 			e.preventDefault();
 			var s = $(e.target).val();
-			if(parseInt(s) >= 0){
+			if(parseInt(s) > 0){
 				s = "&size=" + s;
 				var url = $(e.target).attr("id");
 				$("#tbody").empty();
@@ -283,7 +333,7 @@ $('document').ready(function(){
 				$(".paging#2").empty();
 				load(url, s);
 			}else{
-				alert("Page size can't be a negative number! Please, provide correct page size.");
+				alert("Please, provide correct page size!");
 			}
 		}
 	});

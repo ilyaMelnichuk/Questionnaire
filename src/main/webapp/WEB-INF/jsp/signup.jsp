@@ -11,7 +11,7 @@
 </head>
 
 <body style="background-color: #f1f1f1;">
-	<%@ include file = "anonymousNavbar.jsp"%>
+	<%@ include file="anonymousNavbar.jsp"%>
 	<div class="container" align="center">
 		<div class="col-lg-4"></div>
 		<div class="col-lg-4">
@@ -20,7 +20,7 @@
 				<div class="panel-heading" align="left"
 					style="background-color: white;">
 					<h4>Sign Up</h4>
-					<span id='message'></span>
+					<span style="color: red;" id='message'></span>
 				</div>
 				<div class="panel-body"
 					style="margin-left: 15px; margin-right: 15px;">
@@ -106,7 +106,12 @@
         	           data: json,
         	           success: function(data)
         	           {
-                	       $("#message").html(data["message"]);
+        	        	   if(data["message"] == "/login"){
+        	           	    	window.location.href = "/signup-success";
+        	        		   
+        	        	   }else{
+                	           $("#message").html(data["message"]);
+        	        	   }
         	           },
         	           error: function(data){
         	        	   alert(JSON.stringify(data));

@@ -30,6 +30,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception{
 		http.authorizeRequests()
 		.antMatchers("/login/**").permitAll()
+		.antMatchers("/css/**", "/js/**", "/images/**").permitAll()
 		.antMatchers("/login-error/**").permitAll()
 		.antMatchers("/forgot-password/**").permitAll()
 		.antMatchers("/validate-token/**").permitAll()
@@ -49,7 +50,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		.antMatchers("/reset-password/**").hasRole("CHANGE_PASSWORD")
 		.anyRequest()
 		.authenticated().and().csrf().disable().formLogin()
-		.loginPage("/login").successHandler(new CustomAuthenticationSuccessHandler()) //permitAll().defaultSuccessUrl("/responses").failureUrl("/login-error").successForwardUrl("/responses")
+		.loginPage("/login").successHandler(new CustomAuthenticationSuccessHandler()).failureUrl("/login-error")
 		.usernameParameter("email")
 		.passwordParameter("password")
 		.and().logout()

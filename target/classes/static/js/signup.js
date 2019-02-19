@@ -34,18 +34,11 @@
         	    alert(json);
 
         	    $.ajax({
-        	           type: "POST",
+        	           type: "PUT",
         	           dataType: "json",
         	           contentType: "application/json",
         	           url: url,
-        	           data: json,
-        	           success: function(data)
-        	           {
-                	       $("#message").html(data["message"]);
-        	           },
-        	           error: function(data){
-        	        	   alert(JSON.stringify(data));
-        	           }
+        	           data: json
                 });
                 }
         	    
