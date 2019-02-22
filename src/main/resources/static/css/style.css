@@ -1,0 +1,38 @@
+@charset "UTF-8";
+
+.logotype-body {
+	background-color: #f1f1f1;
+}
+
+.logotype-alert {
+	min-width: 450px; 
+	height: 50px;
+}
+
+.logotype-panel {
+	margin-left: 15px;
+	margin-right: 15px;
+}
+
+.logotype-jumbotron1 {
+	max-width: 450px;
+	background-color: white;
+	padding-bottom: 5px;
+	padding-left: 30px;
+	padding-top: 15px;
+}
+
+.logotype-jumbotron2 {
+	width: fit-content;
+	background-color: white;
+	padding-bottom: 5px;
+	margin-left: 0px;
+	margin-right: 0px;
+	padding-top: 15px;
+}
+
+.logotype-jumbotron3 {
+	margin-top: 10px;
+	min-width: 450px;
+	background-color: white;
+}

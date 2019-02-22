@@ -6,7 +6,7 @@
 				style="color: blue;">TYPE</span></a>
 		</div>
 		<ul class="nav navbar-nav navbar-right">
-			<li><a href="/login">Log In</a></li>
+			<li><a href="${contextPath}/login">Log In</a></li>
 		</ul>
 	</div>
 </nav>

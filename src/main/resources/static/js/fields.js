@@ -3,6 +3,34 @@ var numberOfElements;
 var totalElements;
 var totalPages;
 var number;
+var $alert;
+
+function sendAlert(alertCode, fieldName, fieldType, errorMessage = ""){
+	var alertType;
+	var alertMessage = "Field '" + fieldName + "' of type '" + fieldType + "' ";
+	switch(alertCode){
+	    case 0: //created
+	    	alertType = "success";
+	    	alertMessage = alertMessage + " has been created";
+	    	break;
+	    case 1: //updated
+	    	alertType = "success";
+	    	alertMessage = alertMessage + " has been updated";
+	    	break;
+	    case 2: //deleted
+	    	alertType = "warning";
+	    	alertMessage = alertMessage + " has been deleted";
+	    	break;
+	    default://error
+	    	alertType = "danger";
+	        alertMessage = errorMessage;
+	}
+	$alert = $("<div id=\"alert\" class=\"alert alert-" + alertType + " logotype-alert\" role=\"alert\"><h4>" + alertMessage + "</h4></div>")
+	$("#container").prepend($alert);
+	$alert.fadeOut(5000, function(){
+		$("#container").remove("#alert");
+	});
+}
 
 function paginate(size, numberOfElements, totalElements, totalPages, number, pageAddress){
 	$(".paging#1").empty();
@@ -39,26 +67,26 @@ function paginate(size, numberOfElements, totalElements, totalPages, number, pag
 	$(".paging#2").append("<table id=\"pages\"></table>");
 	$pageList = $("<tr></tr>");
 	if(number != 0){
-		$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (0).toString() + "\" action=\"/get-fields-page?page=" + (0).toString() + "&size=\"><input class=\"page-link\" type=\"submit\" value=\"<<\" /></form></td>");
-		$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (number - 1).toString() + "\" action=\"/get-fields-page?page=" + (number - 1).toString() + "&size=\"><input class=\"page-link\" type=\"submit\" value=\"<\" /></form></td>");
+		$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (0).toString() + "\" action=\"/get-fields-page?page=" + (0).toString() + "\"><input class=\"page-link\" type=\"submit\" value=\"<<\" /></form></td>");
+		$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (number - 1).toString() + "\" action=\"/get-fields-page?page=" + (number - 1).toString() + "=\"><input class=\"page-link\" type=\"submit\" value=\"<\" /></form></td>");
 	}else{
-		$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (0).toString() + "\" action=\"/get-fields-page?page=" + (0).toString() + "&size=\"><input type=\"submit\" value=\"<<\" disabled/></form></td>");
-		$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (number - 1).toString() + "\" action=\"/get-fields-page?page=" + (number - 1).toString() + "&size=\"><input class=\"page-link\" type=\"submit\" value=\"<\" disabled/></form></td>");
+		$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (0).toString() + "\" action=\"/get-fields-page?page=" + (0).toString() + "\"><input type=\"submit\" value=\"<<\" disabled/></form></td>");
+		$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (number - 1).toString() + "\" action=\"/get-fields-page?page=" + (number - 1).toString() + "=\"><input class=\"page-link\" type=\"submit\" value=\"<\" disabled/></form></td>");
 	}
 	while(i < pages && i < totalPages){
 		if(number != startPage + i){
-			$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (startPage + i + 1).toString() + "\" action=\"/get-fields-page?page=" + (startPage + i).toString() + "&size=\"><input type=\"submit\" value=" + (startPage + i + 1).toString() + " /></form></td>");
+			$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (startPage + i + 1).toString() + "\" action=\"/get-fields-page?page=" + (startPage + i).toString() + "\"><input type=\"submit\" value=" + (startPage + i + 1).toString() + " /></form></td>");
 		}else{
-			$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (startPage + i + 1).toString() + "\" action=\"/get-fields-page?page=" + (startPage + i).toString() + "&size=\"><input class=\"page-link\" style=\"color:blue;\"type=\"submit\" value=" + (startPage + i + 1).toString() + " disabled/></form></td>");
+			$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (startPage + i + 1).toString() + "\" action=\"/get-fields-page?page=" + (startPage + i).toString() + "\"><input class=\"page-link\" style=\"color:blue;\"type=\"submit\" value=" + (startPage + i + 1).toString() + " disabled/></form></td>");
 		}
 		i++;
 	}
 	if(number != totalPages - 1 && totalPages != 0){
-		$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (number + 1).toString() + "\" action=\"/get-fields-page?page=" + (number + 1).toString() + "&size=\"><input class=\"page-link\" type=\"submit\" value=\">\" /></form></td>");
-		$pageList.append("<td><form class=\"js-page page-item disabled\" id=\"" + (totalPages - 1).toString() + "\" action=\"/get-fields-page?page=" + (totalPages - 1).toString() + "&size=\"><input class=\"page-link\" type=\"submit\" value=\">>\" /></form></td>");
+		$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (number + 1).toString() + "\" action=\"/get-fields-page?page=" + (number + 1).toString() + "\"><input class=\"page-link\" type=\"submit\" value=\">\" /></form></td>");
+		$pageList.append("<td><form class=\"js-page page-item disabled\" id=\"" + (totalPages - 1).toString() + "\" action=\"/get-fields-page?page=" + (totalPages - 1).toString() + "\"><input class=\"page-link\" type=\"submit\" value=\">>\" /></form></td>");
 	}else{
-		$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (number + 1).toString() + "\" action=\"/get-fields-page?page=" + (number + 1).toString() + "&size=\"><input class=\"page-link\" type=\"submit\" value=\">\" disabled/></form></td>");
-		$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (totalPages - 1).toString() + "\" action=\"/get-fields-page?page=" + (totalPages - 1).toString() + "&size=\"><input class=\"page-link\" type=\"submit\" value=\">>\" disabled/></form></td>");
+		$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (number + 1).toString() + "\" action=\"/get-fields-page?page=" + (number + 1).toString() + "\"><input class=\"page-link\" type=\"submit\" value=\">\" disabled/></form></td>");
+		$pageList.append("<td><form class=\"js-page page-item\" id=\"" + (totalPages - 1).toString() + "\" action=\"/get-fields-page?page=" + (totalPages - 1).toString() + "\"><input class=\"page-link\" type=\"submit\" value=\">>\" disabled/></form></td>");
 	}
 	$pageList.appendTo("#pages");
 	$(".js-size").attr("id", pageAddress);
@@ -105,9 +133,12 @@ function load(pageAddress, pageSize){
 $('document').ready(function(){
 	load("/get-fields-page?page=0", "&size=5");
 	var $activeField;
+	
     //deleting field
 	$(document).on("click", ".delete", function(){
-		if(confirm("Are you sure you want to delete field \"" + $(this).closest("tr").children("td").eq(0).html() + "\"?")){
+		var fieldName = $(this).closest("tr").children("td").eq(0).html();
+		var fieldType = $(this).closest("tr").children("td").eq(1).html();
+		if(confirm("Are you sure you want to delete field \"" + fieldName + "\"?")){
 			var label = {};
 			label["message"] = $(this).closest("tr").children("td").eq(0).data("id");
 			$.ajax({
@@ -153,6 +184,7 @@ $('document').ready(function(){
 				load(url, s);
 			}}, 100);
 		}
+		sendAlert(2, fieldName, fieldType);
 	});
 
 
@@ -266,7 +298,7 @@ $('document').ready(function(){
 				paginate(size, numberOfElements, totalElements, totalPages, number, "/get-fields-page?page=" + (number).toString());
 			}
 		}else{
-			$("#message").html("label shouldn't be empty");
+			sendAlert(3, "", "", errorMessage = "Label of field shouldn't be empty!")
 		}    
 		$.ajax({
 			url:"save-field",
@@ -276,12 +308,11 @@ $('document').ready(function(){
 			contentType:"application/json",
 			success:function(data){
 				if($activeField == "new" && $.isNumeric(data["message"])){
-					$("#message").html("field has been created");
-					if(numberOfElements - 1 < size){
+					if(numberOfElements < size){
 						$row.children("td").eq(0).data("id", parseInt(data["message"]));
 					}
-				}else if(data["message"] == "field has been updated"){
-					$("#message").html(data["message"]);
+					sendAlert(0, fieldLabel, $("#type-input").val());
+				}else if($.isNumeric(data["message"])){
 					fieldToSend["oldLabel"]=$activeField.eq(0).html();
 					$activeField.eq(0).html(fieldLabel);
 					$activeField.eq(1).html($("#type-input").val());
@@ -290,8 +321,9 @@ $('document').ready(function(){
 					}
 					$activeField.eq(2).html($("#required-input").is(":checked")?"true":"false");
 					$activeField.eq(3).html($("#isActive-input").is(":checked")?"true":"false");
+					sendAlert(1, fieldLabel, $("#type-input").val());
 				} else {
-					$("#message").html(data["message"]);
+					sendAlert(3, fieldLabel, $("#type-input").val(), $("#message").html(data["message"]));
 				}
 			}
 		});
@@ -312,13 +344,14 @@ $('document').ready(function(){
 		e.preventDefault();
 		var s = $(".js-size").first().val()==""?"5":$(".js-size").first().val();
 		if(parseInt(s) > 0){
+			s = "&size=" + s;
 			var url = $(e.target).attr("action").toString();
 			$("#tbody").empty();
 			$(".paging#1").empty();
 			$(".paging#2").empty();
 			load(url, s);
 		}else{
-			alert("Please, provide correct page size!");
+			sendAlert(3, "", "", "Please, provide correct page size!");
 		}
 	});
 	$(document).on("keyup", ".js-size", function(e) {
@@ -333,8 +366,15 @@ $('document').ready(function(){
 				$(".paging#2").empty();
 				load(url, s);
 			}else{
-				alert("Please, provide correct page size!");
+				sendAlert(3, "", "", "Please, provide correct page size!");
 			}
 		}
 	});
+	
+	$(document).on('keyup',  function (e) {
+		if(e.keyCode == 13 && $('#editModal').is(':visible') == true && $("#options-input").is(":focus") == false) {
+			e.preventDefault();
+			$("#save").click();
+		}
+    });
 });

@@ -50,7 +50,7 @@ public class LoginController {
     
     @GetMapping(value = "/forgot-password")
 	public ModelAndView forgotPassword(){
-		ModelAndView model = new ModelAndView("forgotPassword");
+		ModelAndView model = new ModelAndView("main");
 		return model;
 	}
 	
@@ -82,7 +82,7 @@ public class LoginController {
 	@PreAuthorize("hasRole('ROLE_CHANGE_PASSWORD')")
 	@GetMapping(value = "/reset-password")
 	public ModelAndView openResetPasswordPage(){
-		ModelAndView model = new ModelAndView("resetPassword");
+		ModelAndView model = new ModelAndView("main");
 		return model;
 	}
 	
@@ -96,7 +96,7 @@ public class LoginController {
 	@GetMapping(value="/login")
     public String login(Principal principal) {
     	if(principal == null) {
-    		return "login";
+    		return "main";
     	}else {
     		return "redirect:/";
     	}
@@ -105,18 +105,18 @@ public class LoginController {
     @GetMapping(value="/login-error")
     public String login(Model model) {
     	model.addAttribute("message", "Login or password is incorrect!");
-    	return "login"; 	
+    	return "main"; 	
     }
     
     @GetMapping(value="/signup-success")
-    public ModelAndView signupSuccess(ModelMap model) {
-    	model.addAttribute("message", "You've been successfully registered in Logotype!/nNow you can sign in.");
-    	return new ModelAndView("redirect:/login", model);	
+    public String signupSuccess(Model model) {
+    	model.addAttribute("message", "You've been registered successfully! Now you can log in.");
+    	return "main";	
     }
     
     @GetMapping(value= "/signup")
     public ModelAndView signup() {
-    	ModelAndView model = new ModelAndView("signup");
+    	ModelAndView model = new ModelAndView("main");
         model.addObject("userToRegister", new User());
         return model;
     }
@@ -161,7 +161,7 @@ public class LoginController {
     
     @GetMapping("/access-denied")
     public String accessDenied() {
-    	return "accessDenied";
+    	return "main";
     }
     
 }

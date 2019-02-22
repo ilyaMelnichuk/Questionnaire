@@ -51,7 +51,7 @@ public class Field {
 	private Type type;
 
 	@MapsId("OptionId")
-	@OneToMany(mappedBy = "field", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "field", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<Option> options;
 
 	public List<Option> getOptions() {

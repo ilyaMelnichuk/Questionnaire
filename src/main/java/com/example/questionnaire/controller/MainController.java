@@ -63,12 +63,12 @@ public class MainController{
 	private SimpMessagingTemplate template;
 	@RequestMapping(value = "/")
 	public ModelAndView home() {
-		return new ModelAndView("index");
+		return new ModelAndView("main");
 	}
 
 	@GetMapping("/fields")
 	public ModelAndView getAllFields(HttpServletRequest request){
-		ModelAndView model = new ModelAndView("fields");
+		ModelAndView model = new ModelAndView("main");
 		return model;
 	}
 
@@ -219,18 +219,18 @@ public class MainController{
 
 	@RequestMapping("/responses")
 	public ModelAndView responses(){
-		ModelAndView model = new ModelAndView("responses");
+		ModelAndView model = new ModelAndView("main");
 		return model;
 	}
 	@RequestMapping("/my-responses")
 	public ModelAndView myResponses(){
-		ModelAndView model = new ModelAndView("responses");
+		ModelAndView model = new ModelAndView("main");
 		return model;
 	}
 
 	@GetMapping("/success")
 	public ModelAndView success(){
-		ModelAndView model = new ModelAndView("success");
+		ModelAndView model = new ModelAndView("main");
 		return model;
 	}
 

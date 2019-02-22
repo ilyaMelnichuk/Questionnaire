@@ -1,12 +1,15 @@
 package com.example.questionnaire.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
+
 import com.example.questionnaire.service.UserDetailsServiceImpl;
 
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -18,6 +21,12 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private UserDetailsServiceImpl userDetailsServiceImpl;
+	
+	@Bean 
+    public AccessDeniedHandler accessDeniedHandler(){
+		return new CustomAccessDeniedHandler();
+	}
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth)
 			throws Exception {
@@ -30,11 +39,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception{
 		http.authorizeRequests()
 		.antMatchers("/login/**").permitAll()
+		.antMatchers("/access-denied/**").permitAll()
 		.antMatchers("/css/**", "/js/**", "/images/**").permitAll()
 		.antMatchers("/login-error/**").permitAll()
 		.antMatchers("/forgot-password/**").permitAll()
 		.antMatchers("/validate-token/**").permitAll()
 		.antMatchers("/signup/**").permitAll()
+		.antMatchers("/signup-success/**").permitAll()
 		.antMatchers("/").hasRole("USER")
 		.antMatchers("/success/**").hasRole("USER")
 		.antMatchers("/my-responses/**").hasRole("USER")
@@ -56,7 +67,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		.and().logout()
 		.logoutSuccessUrl("/login").and()
 		.rememberMe().key("uniqueAndSecret").rememberMeParameter("remember_me")
-		.and().exceptionHandling().accessDeniedPage("/access-denied");
+		.and().exceptionHandling().accessDeniedHandler(accessDeniedHandler());
 	}
 
 	@Override

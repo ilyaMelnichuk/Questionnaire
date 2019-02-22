@@ -38,7 +38,7 @@ public class EditAccountController {
 	
 	@GetMapping(value = "/edit-profile")
 	public ModelAndView editProfile(){
-		ModelAndView model = new ModelAndView("editProfile");
+		ModelAndView model = new ModelAndView("main");
         return model;
 	}
 	
@@ -73,7 +73,7 @@ public class EditAccountController {
         		Authentication newAuth = new UsernamePasswordAuthenticationToken(user, null,auth.getAuthorities());
         	    SecurityContextHolder.getContext().setAuthentication(newAuth);
         	    emailService.sendMessage(user.getEmail(), "Changing password in Questionnaire Portal",
-                user.getFirstName() + " " + user.getLastName() + (userDto.getFirstName().equals("") && userDto.getLastName().equals("")? "": ",\n") + " You have successfully changed your email in Questionnaire Portal!");
+                userDto.getFirstName() + " " + userDto.getLastName() + (userDto.getFirstName().equals("") && userDto.getLastName().equals("")? "": ",\n") + " You have successfully changed your email in Questionnaire Portal!");
         	    result.put("message", "your email address has been changed");
         	}
     	}else {
@@ -84,7 +84,7 @@ public class EditAccountController {
 	
 	@GetMapping(value = "/change-password")
 	public ModelAndView changePassword() {
-		ModelAndView model = new ModelAndView("changePassword");
+		ModelAndView model = new ModelAndView("main");
 		return model;
 	}
 	
@@ -99,7 +99,7 @@ public class EditAccountController {
 		    	User user = userService.findByEmail(email);
 		    	userService.changeUserPassword(user, userDto.getNewPassword());
 		        emailService.sendMessage(user.getEmail(), "Changing password in Questionnaire Portal",
-                user.getFirstName() + " " + user.getLastName() + (userDto.getFirstName().equals("") && userDto.getLastName().equals("")? "": ",\n") + " You have successfully changed your password in Questionnaire Portal!");
+                user.getFirstName() + " " + user.getLastName() + (user.getFirstName().equals("") && user.getLastName().equals("")? "": ",\n") + " You have successfully changed your password in Questionnaire Portal!");
 		        result.put("message", "you have successfully changed your password");
 		    }else {
 		    	result.put("message", "current password is not correct");

@@ -7,9 +7,9 @@
 		</div>
 		<div style="margin-right: 150px">
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="/fields">Fields</a></li>
-				<li><a href="/responses">Responses</a></li>
-				<li><a href="/logout">Log Out</a></li>
+				<li><a href="${contextPath}/fields">Fields</a></li>
+				<li><a href="${contextPath}/responses">Responses</a></li>
+				<li><a href="${contextPath}/logout">Log Out</a></li>
 			</ul>
 		</div>
 	</div>

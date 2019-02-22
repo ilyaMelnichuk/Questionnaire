@@ -1,6 +1,3 @@
-/**
- * 
- */
 
         $('#form').on("submit", function(e) {
         	    e.preventDefault(); 
@@ -31,16 +28,27 @@
         	    
         	    var json = JSON.stringify(object);
         	    
-        	    alert(json);
-
         	    $.ajax({
-        	           type: "PUT",
+        	           type: "POST",
         	           dataType: "json",
         	           contentType: "application/json",
         	           url: url,
-        	           data: json
+        	           data: json,
+        	           success: function(data)
+        	           {
+        	        	   if(data["message"] == "/login"){
+        	           	    	window.location.href = "/signup-success";
+        	        		   
+        	        	   }else{
+                	           $("#message").html(data["message"]);
+        	        	   }
+        	           },
+        	           error: function(data){
+        	        	   alert(JSON.stringify(data));
+        	           }
                 });
                 }
         	    
         }); 
         
+    
