@@ -8,7 +8,7 @@
 				class="btn-primary form-control edit" value="+ ADD FIELD"
 				style="max-width: 120px; text-align: center; float: right;">
 		</div>
-		<div id="content" style="padding-left: 20px; padding-right: 20px;">
+		<div id="content" >
 			<table id="table" class="table table-striped">
 				<thead>
 					<tr>
@@ -24,7 +24,7 @@
 			</table>
 		</div>
 		<div
-			style="border-bottom: 2px solid #dddddd; min-height: 45px; padding-left: 10px; padding-right: 10px;">
+			style="border-bottom: 2px solid #dddddd; min-height: 45px; min-width: 940px;">
 			<div style="float: left; width: 33%;" class="paging" id="1"></div>
 			<div style="float: left; width: 33%;" class="paging" id="2"></div>
 			<div style="float: left; width: 33%;" class="paging" id="3">
@@ -43,8 +43,6 @@
 				<button type="button" class="close" data-dismiss="modal">
 					<span aria-hidden="true">&times;</span> <span class="sr-only">Close</span>
 				</button>
-				<h4 class="modal-title" id="myModalLabel">Edit Field</h4>
-				<span id="message"></span>
 			</div>
 			<div class="modal-body">
 				<form role="form">

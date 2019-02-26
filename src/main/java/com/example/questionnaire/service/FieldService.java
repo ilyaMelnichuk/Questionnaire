@@ -2,10 +2,12 @@ package com.example.questionnaire.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +42,7 @@ public class FieldService {
 	@Transactional
 	public void updateField(Field field) {
 		fieldRepository.save(field);
-		List<Option> options = field.getOptions();
+		SortedSet<Option> options = field.getOptions();
 		if((field.getType().name() ==  "COMBOBOX" || field.getType().name() ==  "RADIO_BUTTON" || field.getType().name() ==  "CHECKBOX")&& options != null) {
 			long counter = 0;
 			for(Option option : options) {
@@ -76,9 +78,7 @@ public class FieldService {
 		return fieldRepository.findById(id);
 	}
 	
-	/*
-	 * public void deleteField(long Id) { fieldRepository.deleteById(id); }
-	 * public Field findById(long id) { return
-	 * fieldRepository.findById(id); }
-	 */
+	Sort getSortAsc() {
+		return new Sort(Sort.Direction.ASC, "id");
+	}
 }

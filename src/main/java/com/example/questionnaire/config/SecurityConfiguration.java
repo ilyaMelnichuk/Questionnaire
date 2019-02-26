@@ -58,6 +58,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		.antMatchers("/get-fields-page").hasRole("ADMIN")
 		.antMatchers("/get-responses-page").hasRole("ADMIN")
 		.antMatchers("/responses").hasRole("ADMIN")
+		.antMatchers("/templates").hasRole("ADMIN")
 		.antMatchers("/reset-password/**").hasRole("CHANGE_PASSWORD")
 		.anyRequest()
 		.authenticated().and().csrf().disable().formLogin()

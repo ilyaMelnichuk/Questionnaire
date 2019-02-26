@@ -104,13 +104,11 @@ public class LoginController {
 	
     @GetMapping(value="/login-error")
     public String login(Model model) {
-    	model.addAttribute("message", "Login or password is incorrect!");
     	return "main"; 	
     }
     
     @GetMapping(value="/signup-success")
     public String signupSuccess(Model model) {
-    	model.addAttribute("message", "You've been registered successfully! Now you can log in.");
     	return "main";	
     }
     

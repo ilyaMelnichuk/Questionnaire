@@ -1,6 +1,9 @@
 package com.example.questionnaire.entity;
 
 import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,8 +15,10 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 @Entity
@@ -52,13 +57,17 @@ public class Field {
 
 	@MapsId("OptionId")
 	@OneToMany(mappedBy = "field", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<Option> options;
+	@OrderBy("id ASC")
+	private SortedSet<Option> options = new TreeSet<Option>();
+	
+	@ManyToMany(mappedBy = "fields")
+	private Set<PollTemplate> pollTemplate;
 
-	public List<Option> getOptions() {
+	public SortedSet<Option> getOptions() {
 		return options;
 	}
 
-	public void setOptions(List<Option> options) {
+	public void setOptions(SortedSet<Option> options) {
 		this.options = options;
 	}
 

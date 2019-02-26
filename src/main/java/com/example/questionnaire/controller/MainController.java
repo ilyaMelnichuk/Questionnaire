@@ -3,6 +3,7 @@ package com.example.questionnaire.controller;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -14,6 +15,7 @@ import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -71,6 +73,12 @@ public class MainController{
 		ModelAndView model = new ModelAndView("main");
 		return model;
 	}
+	
+	@GetMapping("/templates")
+	public ModelAndView getAllTemplates(HttpServletRequest request){
+		ModelAndView model = new ModelAndView("main");
+		return model;
+	}
 
 
 	@GetMapping(value = "/load-fields", produces = "application/json")
@@ -90,7 +98,7 @@ public class MainController{
 
 	@GetMapping(value = "get-fields-page")
 	public @ResponseBody Page<FieldDto> getFieldsPage(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "5") int size){
-		Page<Field> entities = fieldService.findAll(PageRequest.of(page, size));
+		Page<Field> entities = fieldService.findAll(PageRequest.of(page, size, Sort.by("id").ascending()));
 		Page<FieldDto> dtos = entities.map(getFieldConverter());
 		return dtos;
 	}
@@ -133,13 +141,17 @@ public class MainController{
 					String opts = fieldDto.getOptions();
 					String[] options = opts.split("\n");
 					Option option;
-					field.setOptions(new ArrayList<Option>());
+					field.setOptions(new TreeSet<Option>());
 					for(int i = 0; i < options.length; i++) {
 						option = new Option( i, replaceSpecialCharacters(options[i].trim()), field);
 						field.addOption(option);
 					}
 				}
-				fieldService.createField(field);
+				if(field.getId() != null) {
+					fieldService.updateField(field);
+				}else {
+					fieldService.createField(field);	
+				}
 				message.setMessage(String.valueOf((field.getId())));		             
 			}else {
 				message.setMessage("field type is not correct");

@@ -33,6 +33,17 @@ public class Poll {
 	@OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private List<Response> responses = new ArrayList<Response>();
 	
+	@ManyToOne
+	private PollTemplate pollTemplate;
+	
+	public PollTemplate getPollTemplate() {
+		return pollTemplate;
+	}
+
+	public void setPollTemplate(PollTemplate pollTemplate) {
+		this.pollTemplate = pollTemplate;
+	}
+
 	public void addResponse(Response response) {
 		responses.add(response);
 		response.setPoll(this);

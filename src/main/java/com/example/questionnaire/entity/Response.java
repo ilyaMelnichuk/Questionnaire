@@ -37,7 +37,8 @@ public class Response {
 	public void setPoll(Poll poll) {
 		this.poll = poll;
 	}
-
+    
+	
 	@Column(name="value")
 	private String value;
 	

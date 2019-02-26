@@ -1,9 +1,6 @@
 <div class="container" align="center">
 	<div class="col-lg-4"></div>
-	<div class="col-lg-4">
-	    <div class="alert alert-success logotype-alert" role="alert">
-	         <h4>You've been registered successfully!</h4>
-	    </div>
+	<div class="col-lg-4"  id="div">
 		<div class="jumbotron logotype-jumbotron3">
 			<form id="form" method="POST" action="${contextPath}/login">
 				<div class="form-group" align="center">
@@ -11,11 +8,8 @@
 						<strong>LOGO</strong><span style="color: blue;">TYPE</span>
 					</h2>
 				</div>
-				<div class="form-group" align="center">
+				<div class="form-group">
 					<h4>Log In</h4>
-				</div>
-				<div class="form-group" align="center">
-					<label id="message">${message}</label>
 				</div>
 				<div class="form-group">
 					<input id="email" type="text" name="email" placeholder="Email"

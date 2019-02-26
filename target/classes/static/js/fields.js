@@ -3,34 +3,6 @@ var numberOfElements;
 var totalElements;
 var totalPages;
 var number;
-var $alert;
-
-function sendAlert(alertCode, fieldName, fieldType, errorMessage = ""){
-	var alertType;
-	var alertMessage = "Field '" + fieldName + "' of type '" + fieldType + "' ";
-	switch(alertCode){
-	    case 0: //created
-	    	alertType = "success";
-	    	alertMessage = alertMessage + " has been created";
-	    	break;
-	    case 1: //updated
-	    	alertType = "success";
-	    	alertMessage = alertMessage + " has been updated";
-	    	break;
-	    case 2: //deleted
-	    	alertType = "warning";
-	    	alertMessage = alertMessage + " has been deleted";
-	    	break;
-	    default://error
-	    	alertType = "danger";
-	        alertMessage = errorMessage;
-	}
-	$alert = $("<div id=\"alert\" class=\"alert alert-" + alertType + " logotype-alert\" role=\"alert\"><h4>" + alertMessage + "</h4></div>")
-	$("#container").prepend($alert);
-	$alert.fadeOut(5000, function(){
-		$("#container").remove("#alert");
-	});
-}
 
 function paginate(size, numberOfElements, totalElements, totalPages, number, pageAddress){
 	$(".paging#1").empty();
@@ -102,8 +74,8 @@ function load(pageAddress, pageSize){
 			var fields = data["content"];
 			$("#tbody").append("<tr></tr>")
 			for(var key in fields){ 
-				$delete = "<button data-delete-id=\"" + fields[key].label + "\" class=\"delete\" style=\"background:transparent; border:none;\"> <span class=\"glyphicon glyphicon-trash\"> </span> </button>";
-				$edit = "<button id=\"" + fields[key].label + "\" class=\"edit\" style=\"background:transparent; border:none;\" data-toggle=\"modal\" data-target=\"#editModal\"> <span class=\"glyphicon glyphicon-edit\"> </span> </button>";
+				$delete = "<button data-delete-id=\"" + fields[key].id + "\" class=\"delete\" style=\"background:transparent; border:none;\"> <span class=\"glyphicon glyphicon-trash\"> </span> </button>";
+				$edit = "<button data-id=\"" + fields[key].id + "\" class=\"edit\" style=\"background:transparent; border:none;\" data-toggle=\"modal\" data-target=\"#editModal\"> <span class=\"glyphicon glyphicon-edit\"> </span> </button>";
 				$row = $('<tr>'+
 						'<td class=\"field-label\" data-id=\"' + fields[key].id + '\">'+fields[key].label+'</td>'+
 						'<td class=\"field-type\" data-options=\"'+ fields[key].options +'\">'+fields[key].type+'</td>'+
@@ -116,7 +88,7 @@ function load(pageAddress, pageSize){
 						'</div>'+
 						'</td>'+
 				'</tr>');
-				$row.attr("id", fields[key].label);
+				//$row.attr("id", fields[key].id);
 				$("#tbody").append($row);
 			}
 			
@@ -184,7 +156,7 @@ $('document').ready(function(){
 				load(url, s);
 			}}, 100);
 		}
-		sendAlert(2, fieldName, fieldType);
+		sendAlert(1, "Field '" + fieldName + "' of type '" + fieldType + "' "  + " has been deleted", ".container");
 	});
 
 
@@ -196,6 +168,13 @@ $('document').ready(function(){
 
 	//filling in the inputs when modal opens 
 	$(document).on("shown.bs.modal", "#editModal", function(e){
+		$("#label-input").val("");
+	    $("#type-input").val("Single line text");
+	    $("#options-input").html("");
+		$("#options-div").hide();
+		$("#required-input").prop("checked", false);
+		$("#isActive-input").prop("checked", false);
+		
 		if($(e.relatedTarget).attr("id") == "addButton"){
 			$("#options-div").hide();
 			$activeField = "new";
@@ -206,9 +185,9 @@ $('document').ready(function(){
 			$("#type-input").val($activeField.eq(1).html());
 			if($activeField.eq(1).html() == "Combobox" || $activeField.eq(1).html() == "Radio button" || $activeField.eq(1).html() == "Checkbox"){
 				$("#options-div").show();
-				$("#options-input").html($activeField.eq(1).data("options"));
+				$("#options-input").val($activeField.eq(1).data("options"));
 			}else{
-				$("#options-input").val('');
+				$("#options-input").html("");
 				$("#options-div").hide();
 			}
 			if($activeField.eq(2).html() == "true"){
@@ -286,7 +265,6 @@ $('document').ready(function(){
 							'</div>'+
 							'</td>'+
 					'</tr>');
-					$row.attr("id", fieldLabel);
 					$("#tbody").append($row);
 				}
 				if(totalElements%(size*totalPages) == 0 || totalElements == 0){
@@ -298,7 +276,7 @@ $('document').ready(function(){
 				paginate(size, numberOfElements, totalElements, totalPages, number, "/get-fields-page?page=" + (number).toString());
 			}
 		}else{
-			sendAlert(3, "", "", errorMessage = "Label of field shouldn't be empty!")
+			sendAlert(2, "Label of field shouldn't be empty!", ".container")
 		}    
 		$.ajax({
 			url:"save-field",
@@ -311,34 +289,23 @@ $('document').ready(function(){
 					if(numberOfElements < size){
 						$row.children("td").eq(0).data("id", parseInt(data["message"]));
 					}
-					sendAlert(0, fieldLabel, $("#type-input").val());
+					sendAlert(0, "Field '" + fieldLabel + "' of type '" + $("#type-input").val() + "' "  + " has been created", ".container");
 				}else if($.isNumeric(data["message"])){
 					fieldToSend["oldLabel"]=$activeField.eq(0).html();
 					$activeField.eq(0).html(fieldLabel);
 					$activeField.eq(1).html($("#type-input").val());
 					if($("#type-input").val() == "Combobox" || $("#type-input").val() == "Radio button" || $("#type-input").val() == "Checkbox"){
-						$activeField.eq(1).data("options", options);
+						$activeField.eq(1).data("options", fieldOptions);
 					}
 					$activeField.eq(2).html($("#required-input").is(":checked")?"true":"false");
 					$activeField.eq(3).html($("#isActive-input").is(":checked")?"true":"false");
-					sendAlert(1, fieldLabel, $("#type-input").val());
+					sendAlert(0, "Field '" + fieldLabel + "' of type '" + $("#type-input").val() + "' "  + " has been updated", ".container");
 				} else {
-					sendAlert(3, fieldLabel, $("#type-input").val(), $("#message").html(data["message"]));
+					sendAlert(2, $("#message").html(data["message"]), ".container");
 				}
 			}
 		});
-	})
-	
-	$(document).on("hidden.bs.modal", "#editModal", function(e){
-		$("#message").html("");
-		$("#label-input").data("id");
-		$("#type-input").val("Single line text");
-		$("#options-input").html("");
-		$("#options-div").hide();
-		$("#required-input").prop("checked", false);
-		$("#isActive-input").prop("checked", false);
 	});
-
 
 	$(document).on("submit", ".js-page", function(e) {
 		e.preventDefault();
@@ -351,7 +318,7 @@ $('document').ready(function(){
 			$(".paging#2").empty();
 			load(url, s);
 		}else{
-			sendAlert(3, "", "", "Please, provide correct page size!");
+			sendAlert(2, "Please, provide correct page size!", ".container");
 		}
 	});
 	$(document).on("keyup", ".js-size", function(e) {
@@ -366,7 +333,7 @@ $('document').ready(function(){
 				$(".paging#2").empty();
 				load(url, s);
 			}else{
-				sendAlert(3, "", "", "Please, provide correct page size!");
+				sendAlert(2, "Please, provide correct page size!", ".container");
 			}
 		}
 	});

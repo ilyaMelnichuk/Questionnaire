@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="${contextPath}/css/style.css">
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="${contextPath}/js/alert.js"></script>
 </head>
 <body class="logotype-body">
 
@@ -35,9 +36,15 @@
 		</c:when>
 		<c:when test="${url=='/login-error'}">
 			<%@ include file="login.jsp"%>
+			<script type="text/javascript">
+			    sendAlert(2, "Login or password is incorrect!", "#div");
+			</script>
 		</c:when>
 		<c:when test="${url=='/signup-success'}">
 			<%@ include file="login.jsp"%>
+			<script type="text/javascript">
+			    sendAlert(0, "You've been registered successfully! Now you can sign in.", "#div");
+			</script>
 		</c:when>
 		<c:when test="${url=='/forgot-password'}">
             <%@ include file="forgotPassword.jsp"%>
@@ -65,6 +72,9 @@
 		</c:when>
 		<c:when test="${url=='/success'}">
 			<%@ include file="success.jsp"%>
+		</c:when>
+		<c:when test="${url=='/templates'}">
+			<%@ include file="templates.jsp"%>
 		</c:when>
 		<c:otherwise>
 		    <%@ include file="index.jsp"%>

@@ -11,7 +11,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "option", schema = "data")
 @IdClass(OptionId.class)
-public class Option {
+public class Option implements Comparable<Option>{
 	@Id
 	@Column(name = "id")
     private long id;
@@ -47,5 +47,13 @@ public class Option {
 	}
 	public void setValue(String value) {
 		this.value = value;
+	}
+	@Override
+	public int compareTo(Option option) {
+		if(option.getId() > id) {
+			return -1;	
+		}else{
+			return 1;
+		}
 	}
 }
