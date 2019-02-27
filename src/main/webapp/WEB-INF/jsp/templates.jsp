@@ -8,28 +8,29 @@
 				class="btn-primary form-control edit" value="+ ADD TEMPLATE"
 				style="max-width: 140px; text-align: center; float: right;">
 		</div>
-		<div id="content" >
+		<div id="content">
 			<table id="table" class="table table-striped">
 				<thead>
 					<tr>
-						<th>Label</th>
-						<th>Type</th>
-						<th>Required</th>
-						<th>Is Active</th>
-						<th></th>
+						<th>Title</th>
+						<th>fields</th>
+						<th>responses</th>
 					</tr>
 				</thead>
-				<tbody id="tbody" class="table table-striped">
+				<tbody id="templates-table" class="table table-striped">
 				</tbody>
 			</table>
 		</div>
 		<div
 			style="border-bottom: 2px solid #dddddd; min-height: 45px; min-width: 940px;">
-			<div style="float: left; width: 33%;" class="paging" id="1"></div>
-			<div style="float: left; width: 33%;" class="paging" id="2"></div>
-			<div style="float: left; width: 33%;" class="paging" id="3">
+			<div style="float: left; width: 33%;" class="paging templates-paging"
+				id="templates-1"></div>
+			<div style="float: left; width: 33%;" class="paging templates-paging"
+				id="templates-2"></div>
+			<div style="float: left; width: 33%;" class="paging templates-paging"
+				id="templates-3">
 				<label for="size">size of page</label> <input type="number"
-					class="js-size" name="size" />
+					class="templates-js-size" name="size" />
 			</div>
 		</div>
 	</div>
@@ -39,7 +40,7 @@
 
 
 <div class="modal" id="editModal" tabindex="-1" role="dialog"
-	aria-labelledby="myModalLabel" aria-hidden="true">
+	aria-labelledby="myModalLabel" aria-hidden="true" style="min-width:900px;">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -47,43 +48,89 @@
 					<span aria-hidden="true">&times;</span> <span class="sr-only">Close</span>
 				</button>
 			</div>
-			<div class="modal-body">
-				<form role="form">
-					<div class="form-group">
-						<label style="justify-content: center"><span
-							style="color: grey">Label</span>*</label> <input type="text"
-							class="form-control" id="label-input" data-id=""
-							style="justify-content: center">
-					</div>
-					<div class="form-group">
-						<label><span style="color: grey">Type</span>*</label> <select
-							class="form-control" id="type-input">
-							<option value="Single line text">Single line text</option>
-							<option value="Multiline text">Multiline text</option>
-							<option value="Radio button">Radio button</option>
-							<option value="Checkbox">Checkbox</option>
-							<option value="Combobox">Combobox</option>
-							<option value="Date">Date</option>
-						</select>
-					</div>
-					<div class="form-group" id="options-div">
-						<label><span style="color: grey;">Options</span>*</label>
-						<textarea rows="5" cols="25" class="form-control"
-							id="options-input"></textarea>
-					</div>
-					<div class="form-group">
-						<label> <input type="checkbox" id="required-input" />
-							Required <input type="checkbox" id="isActive-input" /> Is Active
-						</label>
-					</div>
 
-				</form>
+
+			<div>
+				<h4 style="float: left;">Name*  </h4>
+				<br>
+				<input id="name-input" type="text" style="min-width: 60px;" required />
 			</div>
+
+			<div class="modal-body">
+				<div
+					style="border-bottom: 2px solid #dddddd; min-height: 45px; padding-left: 10px; padding-right: 10px;">
+					<h4 style="float: left;">Fields</h4>
+				</div>
+				<div id="fields">
+					<table id="fields-table" class="table table-striped">
+						<thead>
+							<tr>
+								<th>Label</th>
+								<th>Type</th>
+								<th>Required</th>
+								<th>Is Active</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody id="fields-table" class="table table-striped">
+						</tbody>
+					</table>
+				</div>
+				<div
+					style="border-bottom: 2px solid #dddddd; min-height: 45px;">
+					<div style="float: left; width: 33%;" class="paging fields-paging"
+						id="fields-1"></div>
+					<div style="float: left; width: 33%;" class="paging fields-paging"
+						id="fields-2"></div>
+					<div style="float: left; width: 33%;" class="paging fields-paging"
+						id="fields-3">
+						<label for="size">size of page</label> <input type="number"
+							class="fields-js-size" name="size" />
+					</div>
+				</div>
+				
+				
+				<div
+					style="border-bottom: 2px solid #dddddd; min-height: 45px; padding-left: 10px; padding-right: 10px;">
+					<h4 style="float: left;">Chosen Fields</h4>
+				</div>
+				<div id="chosen">
+					<table id="chosen-table" class="table table-striped">
+						<thead>
+							<tr>
+								<th>Label</th>
+								<th>Type</th>
+								<th>Required</th>
+								<th>Is Active</th>
+								<th>Options</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody id="chosen-table" class="table table-striped">
+						</tbody>
+					</table>
+				</div>
+				<div
+					style="border-bottom: 2px solid #dddddd; min-height: 45px;">
+					<div style="float: left; width: 33%;" class="paging chosen-paging"
+						id="chosen-1"></div>
+					<div style="float: left; width: 33%;" class="paging chosen-paging"
+						id="chosen-2"></div>
+					<div style="float: left; width: 33%;" class="paging chosen-paging"
+						id="chosen-3">
+						<label for="size">size of page</label> <input type="number"
+							class="chosen-js-size" name="size" />
+					</div>
+				</div>
+			</div>
+
+
+
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">
 					CANCEL</button>
-				<button type="button" class="btn btn-primary" id="save" class="close" data-dismiss="modal">
-					SAVE</button>
+				<button type="button" class="btn btn-primary" id="save"
+					class="close" data-dismiss="modal">SAVE</button>
 			</div>
 		</div>
 	</div>

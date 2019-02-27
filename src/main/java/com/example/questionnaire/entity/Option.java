@@ -2,7 +2,6 @@ package com.example.questionnaire.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
@@ -25,6 +24,7 @@ public class Option implements Comparable<Option>{
     public Field getField() {
 		return field;
 	}
+    
 	public void setField(Field field) {
 		this.field = field;
 	}

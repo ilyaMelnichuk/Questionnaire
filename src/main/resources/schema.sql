@@ -153,6 +153,7 @@ CREATE INDEX IF NOT EXISTS fki_field_foreign_key
 CREATE TABLE IF NOT EXISTS data.poll_template
 (
   id bigint  NOT NULL default nextval('"data".poll_template_id_seq'),
+  name character varying(255) COLLATE pg_catalog."default",
   is_active boolean,
   CONSTRAINT poll_template_pkey PRIMARY KEY (id)
 )
@@ -198,7 +199,10 @@ CREATE TABLE IF NOT EXISTS data.poll
   CONSTRAINT poll_pkey PRIMARY KEY (id),
   CONSTRAINT user_foreign_key FOREIGN KEY (email)
       REFERENCES security."user" (email) MATCH SIMPLE
-      ON UPDATE CASCADE ON DELETE CASCADE
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT poll_template_foreign_key FOREIGN KEY (poll_template_id)
+      REFERENCES data.poll_template (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION    
 )
 WITH (
   OIDS=FALSE
@@ -207,7 +211,15 @@ ALTER TABLE data.poll
   OWNER TO postgres;
 ALTER SEQUENCE data.poll_id_seq
   OWNED BY data.poll.id;
-
+  
+CREATE INDEX IF NOT EXISTS poll_template_foreign_key
+  ON data.poll
+  USING btree
+  (poll_template_id);
+CREATE INDEX IF NOT EXISTS user_foreign_key
+  ON data.poll
+  USING btree
+  (email COLLATE pg_catalog."default");
 CREATE TABLE IF NOT EXISTS data.poll_field
 (
   id bigint NOT NULL,
@@ -228,9 +240,38 @@ ALTER TABLE data.poll_field
   OWNER TO postgres;
   
 CREATE INDEX IF NOT EXISTS f_poll_id_foreign_key
-  ON data.poll
+  ON data.poll_field
   USING btree
-  (email COLLATE pg_catalog."default");
+  (poll_id);
+
+CREATE TABLE IF NOT EXISTS data.poll_option
+(
+    id bigint NOT NULL,
+    value character varying(255) COLLATE pg_catalog."default",
+    poll_field_id serial,
+    CONSTRAINT poll_option_pkey PRIMARY KEY (poll_field_id, id),
+    CONSTRAINT poll_field_foreign_key FOREIGN KEY (poll_field_id)
+        REFERENCES data.poll_field (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+ 
+ALTER TABLE data.poll_option
+    OWNER to postgres;
+ 
+-- Index: fki_field_foreign_key
+ 
+-- DROP INDEX data.fki_field_foreign_key;
+ 
+CREATE INDEX IF NOT EXISTS poll_field_foreign_key
+    ON data.poll_option USING btree
+    (poll_field_id)
+    TABLESPACE pg_default;  
+  
   
 CREATE SEQUENCE IF NOT EXISTS data.response_id_seq;
 CREATE TABLE IF NOT EXISTS data.response
@@ -259,11 +300,7 @@ CREATE INDEX IF NOT EXISTS poll_field_id_foreign_key
   ON data.response
   USING btree
   (poll_field_id);
-  CREATE INDEX IF NOT EXISTS fki_poll_id_foreign_key
+CREATE INDEX IF NOT EXISTS fki_poll_id_foreign_key
   ON data.response
   USING btree
   (poll_id); 
-CREATE INDEX IF NOT EXISTS fki_user_foreign_key
-  ON data.poll
-  USING btree
-  (email COLLATE pg_catalog."default");

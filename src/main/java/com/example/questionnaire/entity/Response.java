@@ -8,23 +8,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "response", schema = "data")
-//@IdClass(ResponseId.class)
 public class Response {
 	
 	@Id
 	@Column(name="id")
 	@SequenceGenerator(name = "response_id_seq", schema = "data", sequenceName = "response_id_seq", allocationSize = 1)
 	@GeneratedValue(generator = "response_id_seq", strategy = GenerationType.SEQUENCE)
-    private long id;
+    private Long id;
 	
-	@ManyToOne
-	private Field field;
+	@OneToOne(optional = false, cascade = CascadeType.ALL)
+	@JoinColumn(name = "poll_field_id")
+	private PollField pollField;
 	
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "poll_id", insertable = true, updatable = true)
@@ -44,16 +45,16 @@ public class Response {
 	
 	@Override
 	public String toString() {
-		return "Response [id=" + id + ", field=" + field.getLabel() + ", value=" + value + "]";
+		return "Response [id=" + id + ", field=" + pollField.getLabel() + ", value=" + value + "]";
 	}
 
 	public Response() {
 	}
 	
-	public Response(long id, String value, Field field, Poll poll) {
+	public Response(Long id, String value, PollField pollField, Poll poll) {
 		this.id = id;
 		this.value = value;
-		this.field = field;
+		this.pollField = pollField;
 		this.poll = poll;
 	}
 	
@@ -63,11 +64,11 @@ public class Response {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Field getField() {
-		return field;
+	public PollField getPollField() {
+		return pollField;
 	}
-	public void setField(Field field) {
-		this.field = field;
+	public void setPollField(PollField pollField) {
+		this.pollField = pollField;
 	}
 	public String getValue() {
 		return value;

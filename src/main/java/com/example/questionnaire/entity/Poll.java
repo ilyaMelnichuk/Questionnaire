@@ -30,8 +30,11 @@ public class Poll {
 	@JoinColumn(name = "email")
 	private User user;
 	
-	@OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Response> responses = new ArrayList<Response>();
+	
+	@OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<PollField> pollFields = new ArrayList<PollField>();
 	
 	@ManyToOne
 	private PollTemplate pollTemplate;
@@ -79,7 +82,7 @@ public class Poll {
 	public List<ResponseDto> convertResponsesToResponsesDto() {
 		List<ResponseDto> responsesDto = new ArrayList<ResponseDto>();
 	    for(Response response : getResponses()) {
-	    	ResponseDto responseDto = new ResponseDto(response.getId(), response.getField().getId(), response.getValue());
+	    	ResponseDto responseDto = new ResponseDto(response.getId(), response.getPollField().getId(), response.getValue());
             responsesDto.add(responseDto);
 	    }
 	    return responsesDto;

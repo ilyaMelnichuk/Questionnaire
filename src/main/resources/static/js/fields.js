@@ -88,7 +88,6 @@ function load(pageAddress, pageSize){
 						'</div>'+
 						'</td>'+
 				'</tr>');
-				//$row.attr("id", fields[key].id);
 				$("#tbody").append($row);
 			}
 			
@@ -110,7 +109,7 @@ $('document').ready(function(){
 	$(document).on("click", ".delete", function(){
 		var fieldName = $(this).closest("tr").children("td").eq(0).html();
 		var fieldType = $(this).closest("tr").children("td").eq(1).html();
-		if(confirm("Are you sure you want to delete field \"" + fieldName + "\"?")){
+		if(confirm("Are you sure you want to delete field '" + fieldName + "'?")){
 			var label = {};
 			label["message"] = $(this).closest("tr").children("td").eq(0).data("id");
 			$.ajax({
@@ -155,8 +154,8 @@ $('document').ready(function(){
 				$(".paging#2").empty();
 				load(url, s);
 			}}, 100);
+			sendAlert(1, "Field '" + fieldName + "' of type '" + fieldType + "' "  + " has been deleted", ".container");
 		}
-		sendAlert(1, "Field '" + fieldName + "' of type '" + fieldType + "' "  + " has been deleted", ".container");
 	});
 
 

@@ -29,6 +29,9 @@ public class PollTemplate {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "poll_template_id_seq")
     private Long id;
 	
+	@Column(name = "name")
+	private boolean name;
+	
 	@Column(name = "is_active")
 	private boolean isActive;
     
@@ -82,5 +85,13 @@ public class PollTemplate {
 
 	public void setPolls(SortedSet<Poll> polls) {
 		this.polls = polls;
+	}
+
+	public long getTotalFields() {
+		return this.fields.size();
+	}
+	
+	public long getTotalResponses() {
+		return this.polls.size();
 	}
 }

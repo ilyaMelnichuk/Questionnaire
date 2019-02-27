@@ -40,15 +40,18 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.questionnaire.dto.FieldDto;
 import com.example.questionnaire.dto.MessageDto;
 import com.example.questionnaire.dto.PollDto;
+import com.example.questionnaire.dto.PollTemplateDto;
 import com.example.questionnaire.dto.ResponseDto;
 import com.example.questionnaire.entity.Field;
 import com.example.questionnaire.entity.Option;
 import com.example.questionnaire.entity.Poll;
+import com.example.questionnaire.entity.PollTemplate;
 import com.example.questionnaire.entity.Response;
 import com.example.questionnaire.entity.Type;
 import com.example.questionnaire.entity.User;
 import com.example.questionnaire.service.FieldService;
 import com.example.questionnaire.service.PollService;
+import com.example.questionnaire.service.PollTemplateService;
 import com.example.questionnaire.service.UserService;
 
 
@@ -61,6 +64,8 @@ public class MainController{
 	private UserService userService;
 	@Autowired
 	private PollService pollService;
+	@Autowired
+	private PollTemplateService pollTemplateService;
 	@Autowired
 	private SimpMessagingTemplate template;
 	@RequestMapping(value = "/")
@@ -107,6 +112,13 @@ public class MainController{
 	public @ResponseBody Page<PollDto> getPollsPage(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "5") int size){
 		Page<Poll> entities = pollService.findAll(PageRequest.of(page, size));
 		Page<PollDto> dtos = entities.map(getPollConverter());
+		return dtos;
+	}
+	
+	@GetMapping(value = "get-templates-page")
+	public @ResponseBody Page<PollTemplateDto> getTemplatesPage(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "5") int size){
+		Page<PollTemplate> entities = pollTemplateService.findAll(PageRequest.of(page, size, Sort.by("id").ascending()));
+		Page<PollTemplateDto> dtos = entities.map(getTemplateConverter());
 		return dtos;
 	}
 
@@ -209,7 +221,7 @@ public class MainController{
 			for(ResponseDto dto : responses) {
 				if(!dto.getValue().equals("")) {
 					entity = mapper.map(dto, Response.class);
-					entity.setField(fieldService.findById(dto.getFieldId()));
+					//entity.setPollField(PollService.findById(dto.getPollFieldId()));
 					entity.setValue(replaceSpecialCharacters(dto.getValue()));
 					poll.addResponse(entity);
 				} else {
@@ -282,6 +294,20 @@ public class MainController{
 			}
 		};
 	}
+	
+	private Function<PollTemplate, PollTemplateDto> getTemplateConverter() {
+		return new Function<PollTemplate, PollTemplateDto>() {
+
+			@Override
+			public PollTemplateDto apply(PollTemplate entity) {
+				PollTemplateDto dto = new PollTemplateDto();
+				ModelMapper mapper = getPollTemplateToPollTemplateDtoMapper();
+				dto = mapper.map(entity, PollTemplateDto.class);
+				return dto;
+			}
+		};
+	}
+	
 	private ModelMapper getFieldToFieldDtoMapper() {
 		ModelMapper mapper = new ModelMapper();
 		mapper.addMappings(new PropertyMap<Field, FieldDto>() {
@@ -300,6 +326,19 @@ public class MainController{
 			protected void configure() {
 				map().setUserName(source.convertUserToUserName());
 				map().setResponses(source.convertResponsesToResponsesDto());
+			}
+		});
+		return mapper;
+	}
+	
+	private ModelMapper getPollTemplateToPollTemplateDtoMapper() {
+		ModelMapper mapper = new ModelMapper();
+		mapper.addMappings(new PropertyMap<PollTemplate, PollTemplateDto>() {
+			@Override
+			protected void configure() {
+				map().setTotalFields(source.getTotalFields());
+				map().setTotalResponses(source.getTotalResponses());
+				map().setFields(null);
 			}
 		});
 		return mapper;
