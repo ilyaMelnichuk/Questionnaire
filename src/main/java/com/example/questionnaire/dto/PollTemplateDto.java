@@ -8,21 +8,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class PollTemplateDto {
 	private long id;
 	private String name;
+	private boolean isActive;
 	private long totalFields;
 	private long totalResponses;
-	private List<Long> fields;
-	private long fieldToDelete;
-	private long fieldToAdd;
+	private List<Long> fieldsToDelete;
+	private List<Long> fieldsToAdd;
 
 	public PollTemplateDto() {
 
 	}
 
 	@JsonCreator
-	public PollTemplateDto(@JsonProperty("id") long id, @JsonProperty("name") String name, @JsonProperty("totalFields") long totalFields, @JsonProperty("totalResponses") long totalResponses) {
+	public PollTemplateDto(@JsonProperty("id") long id, @JsonProperty("name") String name, @JsonProperty("isActive") boolean isActive, @JsonProperty("totalFields") long totalFields, @JsonProperty("totalResponses") long totalResponses) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.isActive = isActive;
 		this.totalFields = totalFields;
         this.setTotalResponses(totalResponses);
 	}
@@ -51,36 +52,36 @@ public class PollTemplateDto {
 		this.totalFields = totalFields;
 	}
 
-	public List<Long> getFields() {
-		return fields;
-	}
-
-	public void setFields(List<Long> fields) {
-		this.fields = fields;
-	}
-
-	public long getFieldToDelete() {
-		return fieldToDelete;
-	}
-
-	public void setFieldToDelete(long fieldToDelete) {
-		this.fieldToDelete = fieldToDelete;
-	}
-
-	public long getFieldToAdd() {
-		return fieldToAdd;
-	}
-
-	public void setFieldToAdd(long fieldToAdd) {
-		this.fieldToAdd = fieldToAdd;
-	}
-
 	public long getTotalResponses() {
 		return totalResponses;
 	}
 
 	public void setTotalResponses(long totalResponses) {
 		this.totalResponses = totalResponses;
+	}
+
+	public boolean isisActive() {
+		return isActive;
+	}
+
+	public void setisActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	public List<Long> getFieldsToDelete() {
+		return fieldsToDelete;
+	}
+
+	public void setFieldsToDelete(List<Long> fieldsToDelete) {
+		this.fieldsToDelete = fieldsToDelete;
+	}
+
+	public List<Long> getFieldsToAdd() {
+		return fieldsToAdd;
+	}
+
+	public void setFieldsToAdd(List<Long> fieldsToAdd) {
+		this.fieldsToAdd = fieldsToAdd;
 	}
 
 }

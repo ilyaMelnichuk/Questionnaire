@@ -31,4 +31,8 @@ public interface FieldRepository extends PagingAndSortingRepository<Field, Strin
 	@Modifying
 	void deleteById(Long id);
 	boolean existsById(String id);
+
+	Page<Field> findByPollTemplate_idNot(PageRequest of, Long id);
+
+	Page<Field> findByPollTemplate_id(PageRequest of, Long id);
 }

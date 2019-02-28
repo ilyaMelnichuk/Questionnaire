@@ -15,9 +15,10 @@
 						<th>Title</th>
 						<th>fields</th>
 						<th>responses</th>
+						<th>Is Active</th>
 					</tr>
 				</thead>
-				<tbody id="templates-table" class="table table-striped">
+				<tbody id="templates-body" class="table table-striped">
 				</tbody>
 			</table>
 		</div>
@@ -40,8 +41,9 @@
 
 
 <div class="modal" id="editModal" tabindex="-1" role="dialog"
-	aria-labelledby="myModalLabel" aria-hidden="true" style="min-width:900px;">
-	<div class="modal-dialog">
+	aria-labelledby="myModalLabel" aria-hidden="true"
+	style="min-width: 900px;">
+	<div class="modal-dialog" style="min-width: 900px !important;">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">
@@ -50,78 +52,83 @@
 			</div>
 
 
-			<div>
-				<h4 style="float: left;">Name*  </h4>
-				<br>
-				<input id="name-input" type="text" style="min-width: 60px;" required />
-			</div>
+
 
 			<div class="modal-body">
-				<div
-					style="border-bottom: 2px solid #dddddd; min-height: 45px; padding-left: 10px; padding-right: 10px;">
-					<h4 style="float: left;">Fields</h4>
-				</div>
-				<div id="fields">
-					<table id="fields-table" class="table table-striped">
-						<thead>
-							<tr>
-								<th>Label</th>
-								<th>Type</th>
-								<th>Required</th>
-								<th>Is Active</th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody id="fields-table" class="table table-striped">
-						</tbody>
-					</table>
-				</div>
-				<div
-					style="border-bottom: 2px solid #dddddd; min-height: 45px;">
-					<div style="float: left; width: 33%;" class="paging fields-paging"
-						id="fields-1"></div>
-					<div style="float: left; width: 33%;" class="paging fields-paging"
-						id="fields-2"></div>
-					<div style="float: left; width: 33%;" class="paging fields-paging"
-						id="fields-3">
-						<label for="size">size of page</label> <input type="number"
-							class="fields-js-size" name="size" />
+					<div class="form-group">
+						<label style="justify-content: center"><span
+							style="color: grey">Name</span>*</label> <input id="name-input"
+							type="text" style="min-width: 60px;" required />
 					</div>
-				</div>
-				
-				
-				<div
-					style="border-bottom: 2px solid #dddddd; min-height: 45px; padding-left: 10px; padding-right: 10px;">
-					<h4 style="float: left;">Chosen Fields</h4>
-				</div>
-				<div id="chosen">
-					<table id="chosen-table" class="table table-striped">
-						<thead>
-							<tr>
-								<th>Label</th>
-								<th>Type</th>
-								<th>Required</th>
-								<th>Is Active</th>
-								<th>Options</th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody id="chosen-table" class="table table-striped">
-						</tbody>
-					</table>
-				</div>
-				<div
-					style="border-bottom: 2px solid #dddddd; min-height: 45px;">
-					<div style="float: left; width: 33%;" class="paging chosen-paging"
-						id="chosen-1"></div>
-					<div style="float: left; width: 33%;" class="paging chosen-paging"
-						id="chosen-2"></div>
-					<div style="float: left; width: 33%;" class="paging chosen-paging"
-						id="chosen-3">
-						<label for="size">size of page</label> <input type="number"
-							class="chosen-js-size" name="size" />
+					<div class="form-group">
+						<label style="justify-content: center"><span
+							style="color: grey">Required</span>*</label> <input id="required-input"
+							type="checkbox" />
 					</div>
-				</div>
+					<div
+						style="border-bottom: 2px solid #dddddd; min-height: 45px; padding-left: 10px; padding-right: 10px;">
+						<h4 style="float: left;">Fields</h4>
+					</div>
+					<div id="fields">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>Label</th>
+									<th>Type</th>
+									<th>Required</th>
+									<th>Is Active</th>
+									<th>Options</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody id="fields-body" class="table table-striped">
+							</tbody>
+						</table>
+					</div>
+					<div style="border-bottom: 2px solid #dddddd; min-height: 45px;">
+						<div style="float: left; width: 33%;" class="paging fields-paging"
+							id="fields-1"></div>
+						<div style="float: left; width: 33%;" class="paging fields-paging"
+							id="fields-2"></div>
+						<div style="float: left; width: 33%;" class="paging fields-paging"
+							id="fields-3">
+							<label for="size">size of page</label> <input type="number"
+								class="fields-js-size" name="size" />
+						</div>
+					</div>
+
+
+					<div
+						style="border-bottom: 2px solid #dddddd; min-height: 45px; padding-left: 10px; padding-right: 10px;">
+						<h4 style="float: left;">Chosen Fields</h4>
+					</div>
+					<div id="chosen">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>Label</th>
+									<th>Type</th>
+									<th>Required</th>
+									<th>Is Active</th>
+									<th>Options</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody id="chosen-body" class="table table-striped">
+							</tbody>
+						</table>
+					</div>
+					<div style="border-bottom: 2px solid #dddddd; min-height: 45px;">
+						<div style="float: left; width: 33%;" class="paging chosen-paging"
+							id="chosen-1"></div>
+						<div style="float: left; width: 33%;" class="paging chosen-paging"
+							id="chosen-2"></div>
+						<div style="float: left; width: 33%;" class="paging chosen-paging"
+							id="chosen-3">
+							<label for="size">size of page</label> <input type="number"
+								class="chosen-js-size" name="size" />
+						</div>
+					</div>
 			</div>
 
 

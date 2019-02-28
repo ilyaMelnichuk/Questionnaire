@@ -51,26 +51,26 @@ function paginate(size, numberOfElements, totalElements, totalPages, number, pag
 	$("." + preffix + "-paging#" + preffix + "-2").append("<table id=\"" + preffix + "-pages\"></table>");
 	$pageList = $("<tr></tr>");
 	if(number != 0){
-		$pageList.append("<td><form class=\"" + preffix + "-js-page page-item\" id=\"" + (0).toString() + "\" action=\"/get-fields-page?page=" + (0).toString() + "\"><input class=\"page-link\" type=\"submit\" value=\"<<\" /></form></td>");
-		$pageList.append("<td><form class=\"" + preffix + "-js-page page-item\" id=\"" + (number - 1).toString() + "\" action=\"/get-fields-page?page=" + (number - 1).toString() + "=\"><input class=\"page-link\" type=\"submit\" value=\"<\" /></form></td>");
+		$pageList.append("<td><form class=\"js-page " + preffix + "-js-page page-item\" id=\"" + (0).toString() + "\" action=\"/get-" + preffix + "-page?page=" + (0).toString() + "\"><input class=\"page-link\" type=\"submit\" value=\"<<\" /></form></td>");
+		$pageList.append("<td><form class=\"js-page " + preffix + "-js-page page-item\" id=\"" + (number - 1).toString() + "\" action=\"/get-" + preffix + "-page?page=" + (number - 1).toString() + "\"><input class=\"page-link\" type=\"submit\" value=\"<\" /></form></td>");
 	}else{
-		$pageList.append("<td><form class=\"" + preffix + "-js-page page-item\" id=\"" + (0).toString() + "\" action=\"/get-fields-page?page=" + (0).toString() + "\"><input type=\"submit\" value=\"<<\" disabled/></form></td>");
-		$pageList.append("<td><form class=\"" + preffix + "-js-page page-item\" id=\"" + (number - 1).toString() + "\" action=\"/get-fields-page?page=" + (number - 1).toString() + "=\"><input class=\"page-link\" type=\"submit\" value=\"<\" disabled/></form></td>");
+		$pageList.append("<td><form class=\"js-page " + preffix + "-js-page page-item\" id=\"" + (0).toString() + "\" action=\"/get-" + preffix + "-page?page=" + (0).toString() + "\"><input type=\"submit\" value=\"<<\" disabled/></form></td>");
+		$pageList.append("<td><form class=\"js-page " + preffix + "-js-page page-item\" id=\"" + (number - 1).toString() + "\" action=\"/get-" + preffix + "-page?page=" + (number - 1).toString() + "\"><input class=\"page-link\" type=\"submit\" value=\"<\" disabled/></form></td>");
 	}
 	while(i < pages && i < totalPages){
 		if(number != startPage + i){
-			$pageList.append("<td><form class=\"" + preffix + "-js-page page-item\" id=\"" + (startPage + i + 1).toString() + "\" action=\"/get-fields-page?page=" + (startPage + i).toString() + "\"><input type=\"submit\" value=" + (startPage + i + 1).toString() + " /></form></td>");
+			$pageList.append("<td><form class=\"js-page " + preffix + "-js-page page-item\" id=\"" + (startPage + i + 1).toString() + "\" action=\"/get-" + preffix + "-page?page=" + (startPage + i).toString() + "\"><input type=\"submit\" value=" + (startPage + i + 1).toString() + " /></form></td>");
 		}else{
-			$pageList.append("<td><form class=\"" + preffix + "-js-page page-item\" id=\"" + (startPage + i + 1).toString() + "\" action=\"/get-fields-page?page=" + (startPage + i).toString() + "\"><input class=\"page-link\" style=\"color:blue;\"type=\"submit\" value=" + (startPage + i + 1).toString() + " disabled/></form></td>");
+			$pageList.append("<td><form class=\"js-page " + preffix + "-js-page page-item\" id=\"" + (startPage + i + 1).toString() + "\" action=\"/get-" + preffix + "-page?page=" + (startPage + i).toString() + "\"><input class=\"page-link\" style=\"color:blue;\"type=\"submit\" value=" + (startPage + i + 1).toString() + " disabled/></form></td>");
 		}
 		i++;
 	}
 	if(number != totalPages - 1 && totalPages != 0){
-		$pageList.append("<td><form class=\"" + preffix + "-js-page page-item\" id=\"" + (number + 1).toString() + "\" action=\"/get-fields-page?page=" + (number + 1).toString() + "\"><input class=\"page-link\" type=\"submit\" value=\">\" /></form></td>");
-		$pageList.append("<td><form class=\"" + preffix + "-js-page page-item disabled\" id=\"" + (totalPages - 1).toString() + "\" action=\"/get-fields-page?page=" + (totalPages - 1).toString() + "\"><input class=\"page-link\" type=\"submit\" value=\">>\" /></form></td>");
+		$pageList.append("<td><form class=\"js-page " + preffix + "-js-page page-item\" id=\"" + (number + 1).toString() + "\" action=\"/get-" + preffix + "-page?page=" + (number + 1).toString() + "\"><input class=\"page-link\" type=\"submit\" value=\">\" /></form></td>");
+		$pageList.append("<td><form class=\"js-page " + preffix + "-js-page page-item disabled\" id=\"" + (totalPages - 1).toString() + "\" action=\"/get-" + preffix + "-page?page=" + (totalPages - 1).toString() + "\"><input class=\"page-link\" type=\"submit\" value=\">>\" /></form></td>");
 	}else{
-		$pageList.append("<td><form class=\"" + preffix + "-js-page page-item\" id=\"" + (number + 1).toString() + "\" action=\"/get-fields-page?page=" + (number + 1).toString() + "\"><input class=\"page-link\" type=\"submit\" value=\">\" disabled/></form></td>");
-		$pageList.append("<td><form class=\"" + preffix + "-js-page page-item\" id=\"" + (totalPages - 1).toString() + "\" action=\"/get-fields-page?page=" + (totalPages - 1).toString() + "\"><input class=\"page-link\" type=\"submit\" value=\">>\" disabled/></form></td>");
+		$pageList.append("<td><form class=\"js-page " + preffix + "-js-page page-item\" id=\"" + (number + 1).toString() + "\" action=\"/get-" + preffix + "-page?page=" + (number + 1).toString() + "\"><input class=\"page-link\" type=\"submit\" value=\">\" disabled/></form></td>");
+		$pageList.append("<td><form class=\"js-page " + preffix + "-js-page page-item\" id=\"" + (totalPages - 1).toString() + "\" action=\"/get-" + preffix + "-page?page=" + (totalPages - 1).toString() + "\"><input class=\"page-link\" type=\"submit\" value=\">>\" disabled/></form></td>");
 	}
 	$pageList.appendTo("#" + preffix + "-pages");
 	$("." + preffix + "-js-size").attr("id", pageAddress);
@@ -87,14 +87,15 @@ function loadTemplates(pageAddress, pageSize){
 		datatype:"json",
 		success: function(data){
 			var templates = data["content"];
-			$("#templates-table").append("<tr></tr>")
+			$("#templates-body").append("<tr></tr>")
 			for(var key in templates){ 
 				$delete = "<button data-delete-id=\"" + templates[key].id + "\" class=\"delete\" style=\"background:transparent; border:none;\"> <span class=\"glyphicon glyphicon-trash\"> </span> </button>";
 				$edit = "<button data-id=\"" + templates[key].id + "\" class=\"edit\" style=\"background:transparent; border:none;\" data-toggle=\"modal\" data-target=\"#editModal\"> <span class=\"glyphicon glyphicon-edit\"> </span> </button>";
 				$row = $('<tr>'+
 						'<td class=\"template-name\" data-id=\"' + templates[key].id + '\">'+templates[key].name+'</td>'+
 						'<td class=\"template-fields\">'+templates[key].totalFields+'</td>'+
-						'<td class=\"field-responses\">'+templates[key].totalResponses+'</td>'+
+						'<td class=\"template-responses\">'+templates[key].totalResponses+'</td>'+
+						'<td class=\"template-is-active\">'+templates[key].isActive+'</td>'+
 						'<td>'+
 						'<div align=\"right\">'+
 						$edit+ 
@@ -102,9 +103,9 @@ function loadTemplates(pageAddress, pageSize){
 						'</div>'+
 						'</td>'+
 				'</tr>');
-				$("#templates-table").append($row);
+				$("#templates-body").append($row);
 			}
-			
+
 			sizeTemplates = parseInt(data["size"]);
 			numberOfElementsTemplates = parseInt(data["numberOfElements"]);
 			totalElementsTemplates = parseInt(data["totalElements"]);
@@ -123,25 +124,34 @@ function loadFields(pageAddress, pageSize){
 		datatype:"json",
 		success: function(data){
 			var fields = data["content"];
-			$("#fields-table").append("<tr></tr>")
+			$("#fields-body").append("<tr></tr>")
 			for(var key in fields){ 
-				$add = "<button data-id=\"" + fields[key].id + "\" class=\"edit\" style=\"background:transparent; border:none;\" data-toggle=\"modal\" data-target=\"#editModal\"> <span style=\"color:green\"class=\"glyphicon glyphicon-plus\"> </span> </button>";
-				$options = (fields[key].options == "" ? "N/A" : $("<button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\">options <span class=\"caret\"></span></button><ul class=\"dropdown-menu scrollable-menu\" role=\"menu\"><li>" + fields[key].options + "</li></ul>"));
+				$string = "</div></div>";
+				if(fields[key].options != null){
+					var options = fields[key].options.split("|");
+					$.each(options, function(i, opt){
+						$string = "<label class=\"dropdown-item\">" + opt + "</label><br>" + $string;
+					});
+					$opts = "<div class=\"dropdown\"><button class=\"btn btn-secondary dropdown-toggle\" type=\"button\" id=\"drop-" + fields[key].id + "\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">show options</button><div class=\"dropdown-menu\" aria-labelledby=\"drop-" + fields[key].id + "\"\>" + $string;
+				}else{
+					$opts = "N/A";
+				}
+				$plus = "<button data-id=\"" + fields[key].id + "\" class=\"plus\" style=\"background:transparent; border:none;\" data-toggle=\"modal\" data-target=\"#editModal\"> <span style=\"color:green\"class=\"glyphicon glyphicon-plus\"> </span> </button>";
 				$row = $('<tr>'+
 						'<td class=\"field-label\" data-id=\"' + fields[key].id + '\">'+fields[key].label+'</td>'+
 						'<td class=\"field-type\" data-options=\"'+ fields[key].options +'\">'+fields[key].type+'</td>'+
 						'<td class=\"field-required\">'+fields[key].required+'</td>'+
 						'<td class=\"field-isActive\">'+fields[key].isActive+'</td>'+
-						'<td class=\"field-options\">'+$options+'</td>'+
+						'<td class=\"field-options\">' + $opts + '</td>'+
 						'<td>'+
 						'<div align=\"right\">'+
-						$add+ 
+						$plus+ 
 						'</div>'+
 						'</td>'+
 				'</tr>');
-				$("#fields-table").append($row);
+				$("#fields-body").append($row);
 			}
-			
+
 			sizeFields = parseInt(data["size"]);
 			numberOfElementsFields = parseInt(data["numberOfElements"]);
 			totalElementsFields = parseInt(data["totalElements"]);
@@ -161,25 +171,34 @@ function loadChosen(pageAddress, pageSize){
 		datatype:"json",
 		success: function(data){
 			var chosen = data["content"];
-			$("#chosen-table").append("<tr></tr>")
+			$("#chosen-body").append("<tr></tr>")
 			for(var key in chosen){ 
-				$remove = "<button data-id=\"" + chosen[key].id + "\" class=\"edit\" style=\"background:transparent; border:none;\" data-toggle=\"modal\" data-target=\"#editModal\"> <span style=\"color:red\"class=\"glyphicon glyphicon-minus\"> </span> </button>";
-				$options = (chosen[key].options == "" ? "N/A" : $("<button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\">options <span class=\"caret\"></span></button><ul class=\"dropdown-menu scrollable-menu\" role=\"menu\"><li>" + chosen[key].options + "</li></ul>"));
+				$string = "</div></div>";
+				if(chosen[key].options != null){
+					var options = chosen[key].options.split("|");
+					$.each(options, function(i, opt){
+						$string = "<label class=\"dropdown-item\">" + opt + "</label><br>" + $string;
+					});
+					$opts = "<div class=\"dropdown\"><button class=\"btn btn-secondary dropdown-toggle\" type=\"button\" id=\"drop-" + chosen[key].id + "\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">show options</button><div class=\"dropdown-menu\" aria-labelledby=\"drop-" + chosen[key].id + "\"\>" + $string;
+				}else{
+					$opts = "N/A";
+				}
+				$minus = "<button data-id=\"" + chosen[key].id + "\" class=\"minus\" style=\"background:transparent; border:none;\" data-toggle=\"modal\" data-target=\"#editModal\"> <span style=\"color:red\"class=\"glyphicon glyphicon-minus\"> </span> </button>";
 				$row = $('<tr>'+
-						'<td class=\"field-label\" data-id=\"' + chosen[key].id + '\">'+chosen[key].label+'</td>'+
-						'<td class=\"field-type\" data-options=\"'+ chosen[key].options +'\">'+chosen[key].type+'</td>'+
-						'<td class=\"field-required\">'+chosen[key].required+'</td>'+
-						'<td class=\"field-isActive\">'+chosen[key].isActive+'</td>'+
-						'<td class=\"field-options\">'+$options+'</td>'+
+						'<td class=\"chosen-label\" data-id=\"' + chosen[key].id + '\">'+chosen[key].label+'</td>'+
+						'<td class=\"chosen-type\" data-options=\"'+ chosen[key].options +'\">'+chosen[key].type+'</td>'+
+						'<td class=\"chosen-required\">'+chosen[key].required+'</td>'+
+						'<td class=\"chosen-isActive\">'+chosen[key].isActive+'</td>'+
+						'<td class=\"chosen-options\">' + $opts + '</td>'+
 						'<td>'+
 						'<div align=\"right\">'+
-						remove+ 
+						$minus+ 
 						'</div>'+
 						'</td>'+
 				'</tr>');
-				$("#chosen-table").append($row);
+				$("#chosen-body").append($row);
 			}
-			
+
 			sizeChosen = parseInt(data["size"]);
 			numberOfElementsChosen = parseInt(data["numberOfElements"]);
 			totalElementsChosen = parseInt(data["totalElements"]);
@@ -195,78 +214,160 @@ function loadChosen(pageAddress, pageSize){
 
 $('document').ready(function(){
 	loadTemplates("/get-templates-page?page=0", "&size=5");
-	var $activeTemplate;
-	
-    //deleting field
-	$(document).on("click", ".delete", function(){
-		var templateName = $(this).closest("tr").children("td").eq(0).html();
-		if(confirm("Are you sure you want to delete template '" + templateName + "'?")){
-			var label = {};
-			label["message"] = $(this).closest("tr").children("td").eq(0).data("id");
-			$.ajax({
-				url:"delete-template",
-				type:"POST",
-				data:JSON.stringify(label),
-				datatype:"json",
-				contentType:"application/json",
-				success:function(data){
-				}
-			});
+	var $activeTemplate = -1;
+
+
+	//adding field to template
+	$(document).on("click", ".plus", function(){
+		fieldsToAdd.push($(this).closest("tr").children("td").eq(0).data("id"));
+		/*var array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+
+		var filtered = array.filter(function(value, index, arr){
+
+		    return value > 5;
+
+		});*/
+		if(numberOfElementsChosen < sizeChosen){
+			++numberOfElementsChosen;
+			$(this).closest("tr").remove().clone().appendTo("#chosen-body");
+		}else{
 			$(this).closest("tr").remove();
-			setTimeout(function(){if(numberOfElementsTemplates == 1){
-				if(numberTemplates != 0){
-					var s = "&size=" + (sizeTemplates).toString();
-					var url = "/get-templates-page?page=" + (numberTemplates - 1).toString();
-					$("#templates-table").empty();
-					$(".templates-paging#1").empty();
-					$(".templates-paging#2").empty();
-					load(url, s);
-				}else{
-					--numberOfElementsTemplates;
-					--totalElementsTemplates;
-					--totalPagesTemplates;
-					$(this).closest("tr").remove();
-					$(".templates-paging#1").empty();
-					$(".templates-paging#2").empty();
-					paginate(sizeTemplates, numberOfElementsTemplates, totalElementsTemplates, totalPagesTemplates, numberTemplates, "/get-templates-page?page=" + (numberTemplates).toString());
-				}
-			}else if(numberOfElementsTemplates < sizeTemplates || numberTemplates + 1 == totalPagesTemplates){
-				$(this).closest("tr").remove();
-				--numberOfElementsTemplates;
-				--totalElementsTemplates;
-				$(".templates-paging#1").empty();
-				$(".templates-paging#2").empty();
-				paginate(sizeTemplates, numberOfElementsTemplates, totalElementsTemplates, totalPagesTemplates, numberTemplates, "/get-templates-page?page=" + (numberTemplates).toString());
-			}else{
-				var s = "&size=" + (sizeTemplates).toString();
-				var url = "/get-templates-page?page=" + (numberTemplates).toString();
-				$("#templates-table").empty();
-				$(".templates-paging#1").empty();
-				$(".templates-paging#2").empty();
-				load(url, s);
-			}}, 100);
-			sendAlert(1, "template '" + templateName + "' has been deleted", ".container");
 		}
+
+		--numberOfElementsFields;
+		--totalElementsFields;
+		if(totalElementsFields%(sizeFields*totalPagesFields) == 0 || totalElementsFields == 0){
+			--totalPagesFields;
+		}
+
+		if(numberOfElementsFields == 1){
+			if(numberFields != 0){
+				var s = "&size=" + (sizeFields).toString();
+				var url = "/get-fields-page?page=" + (numberFields - 1).toString();
+				$("#fields-body").empty();
+				$(".fields-paging#1").empty();
+				$(".fields-paging#2").empty();
+				loadFields(url, s);
+			}else{
+				--numberOfElementsFields;
+				--totalElementsFields;
+				--totalPagesFields;
+				$(this).closest("tr").remove();
+				$(".fields-paging#1").empty();
+				$(".fields-paging#2").empty();
+				paginate(sizeFields, numberOfElementsFields, totalElementsFields, totalPagesFields, numberFields, "/get-fields-page?template=" + $activeTemplate + "&page=" + (numberFields).toString(), "fields");
+			}
+		}else if(numberOfElementsFields < sizeFields || numberFields + 1 == totalPagesFields){
+			$(this).closest("tr").remove();
+			--numberOfElementsFields;
+			--totalElementsFields;
+			$(".fields-paging#1").empty();
+			$(".fields-paging#2").empty();
+			paginate(sizeFields, numberOfElementsFields, totalElementsFields, totalPagesFields, numberFields, "/get-fields-page?template=" + $activeFields + "&page=" + (numberFields).toString(), "fields");
+		}else{
+			var s = "&size=" + (sizeFields).toString();
+			var url = "/get-fields-page?page=" + (numberFields).toString();
+			$("#fields-body").empty();
+			$(".fields-paging#1").empty();
+			$(".fields-paging#2").empty();
+			loadFields(url, s);
+		}
+
+		if(totalElementsChosen%(sizeChosen*totalPagesChosen) == 0 || totalElementsChosen == 0){
+			++totalPagesChosen;
+		}
+		++totalElementsChosen;
+		$(".chosen-paging#1").empty();
+		$(".chosen-paging#2").empty();
+		paginate(sizeChosen, numberOfElementsChosen, totalElementsChosen, totalPagesChosen, numberChosen, "/get-chosen-page?template=" + $activeTemplate + "&page=" + (numberChosen).toString(), "chosen");
+	});
+
+
+	//removing field from template
+	$(document).on("click", ".minus", function(){
+		fieldsToDelete.push($(this).closest("tr").children("td").eq(0).data("id"));
+		
+		if(numberOfElementsFields < sizeFields){
+			++numberOfElementsFields;
+			$(this).closest("tr").remove().clone().appendTo("#fields-body");
+		}else{
+			$(this).closest("tr").remove();
+		}
+
+		--numberOfElementsChosen;
+		--totalElementsChosen;
+		if(totalElementsChosen%(sizeChosen*totalPagesChosen) == 0 || totalElementsChosen == 0){
+			--totalPagesChosen;
+		}
+
+		if(numberOfElementsChosen == 1){
+			if(numberFields != 0){
+				var s = "&size=" + (sizeChosen).toString();
+				var url = "/get-chosen-page?page=" + (numberChosen - 1).toString();
+				$("#chosen-body").empty();
+				$(".chosen-paging#1").empty();
+				$(".chosen-paging#2").empty();
+				loadChosen(url, s);
+			}else{
+				--numberOfElementsChosen;
+				--totalElementsChosen;
+				--totalPagesChosen;
+				$(this).closest("tr").remove();
+				$(".chosen-paging#1").empty();
+				$(".chosen-paging#2").empty();
+				paginate(sizeChosen, numberOfElementsChosen, totalElementsChosen, totalPagesChosen, numberChosen, "/get-chosen-page?template=" + $activeTemplate + "&page=" + (numberChosen).toString(), "chosen");
+			}
+		}else if(numberOfElementsChosen < sizeChosen || numberChosen + 1 == totalPagesChosen){
+			$(this).closest("tr").remove();
+			--numberOfElementsChosen;
+			--totalElementsChosen;
+			$(".chosen-paging#1").empty();
+			$(".chosen-paging#2").empty();
+			paginate(sizeChosen, numberOfElementsChosen, totalElementsChosen, totalPagesChosen, numberChosen, "/get-chosen-page?template=" + $activeTemplate + "&page=" + (numberChosen).toString(), "chosen");
+		}else{
+			var s = "&size=" + (sizeChosen).toString();
+			var url = "/get-chosen-page?page=" + (numberChosen).toString();
+			$("#chosen-body").empty();
+			$(".chosen-paging#1").empty();
+			$(".chosen-paging#2").empty();
+			loadChosen(url, s);
+		}
+
+		if(totalElementsFields%(sizeFields*totalPagesFields) == 0 || totalElementsFields == 0){
+			++totalPagesFields;
+		}
+		++totalElementsFields;
+		$(".fields-paging#1").empty();
+		$(".fields-paging#2").empty();
+		paginate(sizeFields, numberOfElementsFields, totalElementsFields, totalPagesFields, numberFields, "/get-fields-page?template=" + $activeTemplate + "&page=" + (numberFields).toString(), "fields");
 	});
 
 
 
+
+
+
+
 	$(document).on("click", ".edit", function(e){
+		$activeTemplate = $(e.target).data("id");
 		$('#editModal').modal(); 
 	});
 
 
 	//filling in the inputs when modal opens 
 	$(document).on("shown.bs.modal", "#editModal", function(e){
+		var fieldsToAdd = [];
+		var fieldsToDelete = [];
 		loadFields("/get-fields-page?page=0", "&size=5");
+		loadChosen("/get-chosen-page?template=" + $activeTemplate + "&page=0", "&size=5");
 	});
-	//saving a field
+	//saving a template
 	$(document).on("click", '#save', function(){
 		var $row;
 		if($("#label-input").val() != ""){
 			var fieldToSend = {};
 			fieldToSend["label"] = $("#label-input").val();
-			
+
 			var fieldLabel = $("#label-input").val().replace(new RegExp("&", "g"), "&amp");
 			fieldLabel = fieldLabel.replace(new RegExp('"', "g"), '\"');
 			fieldLabel = fieldLabel.replace(new RegExp("'", "g"), "\'");
@@ -280,11 +381,11 @@ $('document').ready(function(){
 			fieldOptions = fieldOptions.replace(new RegExp(">", "g"), "&gt");
 
 			fieldToSend["required"]=$("#required-input").is(":checked");
-			
+
 			fieldToSend["isActive"]=$("#isActive-input").is(":checked");
-			
+
 			fieldToSend["type"]= $("#type-input").val();
-			
+
 			if($("#type-input").val() == "Combobox" || $("#type-input").val() == "Radio button" || $("#type-input").val() == "Checkbox"){
 				fieldToSend["options"] = fieldOptions;
 			}else{
@@ -300,7 +401,7 @@ $('document').ready(function(){
 				$activeField.eq(2).html($("#required-input").is(":checked")?"true":"false");
 				$activeField.eq(3).html($("#isActive-input").is(":checked")?"true":"false");
 			}else{
-				
+
 				if(numberOfElements < size){
 					++numberOfElements;
 					$row = $('<tr>'+
@@ -359,14 +460,29 @@ $('document').ready(function(){
 
 	$(document).on("submit", ".js-page", function(e) {
 		e.preventDefault();
-		var s = $(".js-size").first().val()==""?"5":$(".js-size").first().val();
+		var preffix;
+		if($(e.target).hasClass("templates-js-page")){
+			preffix = "templates";
+		}else if($(e.target).hasClass("fields-js-page")){
+			preffix = "fields";
+		}else{
+			preffix = "chosen";
+		}
+
+		var s = $("." + preffix + "-js-size").first().val()==""?"5":$("." + preffix + "-js-size").first().val();
 		if(parseInt(s) > 0){
 			s = "&size=" + s;
 			var url = $(e.target).attr("action").toString();
-			$("#tbody").empty();
-			$(".paging#1").empty();
-			$(".paging#2").empty();
-			load(url, s);
+			$("#" + preffix + "-body").empty();
+			$("." + preffix + "-paging#1").empty();
+			$("." + preffix + "-paging#2").empty();
+			if($(e.target).hasClass("templates-js-page")){
+				loadTemplates(url, s);
+			}else if($(e.target).hasClass("fields-js-page")){
+				loadFields(url, s);
+			}else{
+				loadChosen(url, s);
+			}
 		}else{
 			sendAlert(2, "Please, provide correct page size!", ".container");
 		}
@@ -374,24 +490,32 @@ $('document').ready(function(){
 	$(document).on("keyup", ".js-size", function(e) {
 		if(e.keyCode == 13){
 			e.preventDefault();
+			var preffix;
+			if($(e.target).hasClass("templates-js-size")){
+				preffix = "templates";
+			}else if($(e.target).hasClass("fields-js-size")){
+				preffix = "fields";
+			}else{
+				preffix = "chosen";
+			}
 			var s = $(e.target).val();
 			if(parseInt(s) > 0){
 				s = "&size=" + s;
 				var url = $(e.target).attr("id");
-				$("#tbody").empty();
-				$(".paging#1").empty();
-				$(".paging#2").empty();
+				$("#" + preffix + "-body").empty();
+				$("." + preffix + "-paging#1").empty();
+				$("." + preffix + "-paging#2").empty();
 				load(url, s);
 			}else{
 				sendAlert(2, "Please, provide correct page size!", ".container");
 			}
 		}
 	});
-	
-	$(document).on('keyup',  function (e) {
+
+	/*$(document).on('keyup',  function (e) {
 		if(e.keyCode == 13 && $('#editModal').is(':visible') == true && $("#options-input").is(":focus") == false) {
 			e.preventDefault();
 			$("#save").click();
 		}
-    });
+    });*/
 });

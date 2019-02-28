@@ -50,6 +50,7 @@ import com.example.questionnaire.entity.Response;
 import com.example.questionnaire.entity.Type;
 import com.example.questionnaire.entity.User;
 import com.example.questionnaire.service.FieldService;
+import com.example.questionnaire.service.PollFieldService;
 import com.example.questionnaire.service.PollService;
 import com.example.questionnaire.service.PollTemplateService;
 import com.example.questionnaire.service.UserService;
@@ -66,6 +67,8 @@ public class MainController{
 	private PollService pollService;
 	@Autowired
 	private PollTemplateService pollTemplateService;
+	@Autowired
+	private PollFieldService pollFieldService;
 	@Autowired
 	private SimpMessagingTemplate template;
 	@RequestMapping(value = "/")
@@ -101,7 +104,7 @@ public class MainController{
 		return dtos;
 	}
 
-	@GetMapping(value = "get-fields-page")
+	@GetMapping(value = "get-fields")
 	public @ResponseBody Page<FieldDto> getFieldsPage(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "5") int size){
 		Page<Field> entities = fieldService.findAll(PageRequest.of(page, size, Sort.by("id").ascending()));
 		Page<FieldDto> dtos = entities.map(getFieldConverter());
@@ -128,6 +131,66 @@ public class MainController{
 		Page<Poll> entities = pollService.findByEmail(email, PageRequest.of(page, size)); 
 		Page<PollDto> dtos = entities.map(getPollConverter());
 		return dtos; 
+	}
+	
+	@GetMapping(value = "get-fields-page")
+	public @ResponseBody Page<FieldDto> getFields(@RequestParam(value = "template", defaultValue = "0") Long template,@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "5") int size){
+		Page<Field> entities = fieldService.findByTemplate_idNot(PageRequest.of(page, size, Sort.by("id").ascending()), template);
+		ModelMapper mapper = new ModelMapper();
+		mapper.addMappings(new PropertyMap<Field, FieldDto>() {
+			@Override
+			protected void configure() {
+				
+			}
+		});
+		Page<FieldDto> dtos = entities.map(new Function<Field, FieldDto>() {
+
+			@Override
+			public FieldDto apply(Field entity) {
+				FieldDto dto = new FieldDto();
+				ModelMapper mapper = new ModelMapper();
+				mapper.addMappings(new PropertyMap<Field, FieldDto>() {
+					@Override
+					protected void configure() {
+						map().setOptions(source.convertOptionsToStringPipe());
+						map().setType(source.convertEnumToString());
+					}
+				});
+				dto = mapper.map(entity, FieldDto.class);
+				return dto;
+			}
+		});
+		return dtos;
+	}
+	
+	@GetMapping(value = "get-chosen-page")
+	public @ResponseBody Page<FieldDto> getChosenFields(@RequestParam(value = "template", defaultValue = "0") Long template,@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "5") int size){
+		Page<Field> entities = fieldService.findByTemplate_id(PageRequest.of(page, size, Sort.by("id").ascending()), template);
+		ModelMapper mapper = new ModelMapper();
+		mapper.addMappings(new PropertyMap<Field, FieldDto>() {
+			@Override
+			protected void configure() {
+				
+			}
+		});
+		Page<FieldDto> dtos = entities.map(new Function<Field, FieldDto>() {
+
+			@Override
+			public FieldDto apply(Field entity) {
+				FieldDto dto = new FieldDto();
+				ModelMapper mapper = new ModelMapper();
+				mapper.addMappings(new PropertyMap<Field, FieldDto>() {
+					@Override
+					protected void configure() {
+						map().setOptions(source.convertOptionsToStringPipe());
+						map().setType(source.convertEnumToString());
+					}
+				});
+				dto = mapper.map(entity, FieldDto.class);
+				return dto;
+			}
+		});
+		return dtos;
 	}
 
 	@PostMapping(value = "/save-field", consumes = "application/json", produces = "application/json")
@@ -338,7 +401,6 @@ public class MainController{
 			protected void configure() {
 				map().setTotalFields(source.getTotalFields());
 				map().setTotalResponses(source.getTotalResponses());
-				map().setFields(null);
 			}
 		});
 		return mapper;

@@ -81,4 +81,15 @@ public class FieldService {
 	Sort getSortAsc() {
 		return new Sort(Sort.Direction.ASC, "id");
 	}
+
+	public Page<Field> findByTemplate_id(PageRequest of, Long id) {
+		// TODO Auto-generated method stub
+		return fieldRepository.findByPollTemplate_id(of, id);
+	}
+	
+	
+	public Page<Field> findByTemplate_idNot(PageRequest of, Long id) {
+		// TODO Auto-generated method stub
+		return fieldRepository.findByPollTemplate_idNot(of, id);
+	}
 }
